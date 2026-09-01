@@ -34,8 +34,16 @@ Documentation = "https://github.com/BhuvaneshBhatt/asymptotic/tree/main/docs"
 flint = ["python-flint>=0.6"]
 ode = ["odeanalysis>=0.1.0"]
 release = ["build>=1", "twine>=5"]
-test = ["pytest>=8", "hypothesis>=6"]
-benchmark = ["pytest>=8", "pytest-benchmark>=4"]
+test = [
+    "pytest>=8",
+    "hypothesis>=6",
+    "tomli>=2; python_version < '3.11'",
+]
+benchmark = [
+    "pytest>=8",
+    "pytest-benchmark>=4",
+    "tomli>=2; python_version < '3.11'",
+]
 lint = ["ruff>=0.16"]
 
 [tool.setuptools]
