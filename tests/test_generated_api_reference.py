@@ -16,7 +16,9 @@ def test_enum_signatures_are_python_version_independent():
 
 
 def test_enum_docstrings_do_not_inherit_stdlib_enum_documentation():
-    assert _public_docstring(asymptotic.GrowthComparison) == "No public docstring."
+    assert _public_docstring(asymptotic.GrowthComparison) == (
+        "Relative asymptotic growth of two expressions at a fixed germ."
+    )
     assert _public_docstring(asymptotic.RemainderKind) == (
         "Semantic strength of an asymptotic remainder statement."
     )
