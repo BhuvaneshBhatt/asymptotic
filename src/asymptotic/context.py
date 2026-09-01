@@ -13,6 +13,8 @@ from .instrumentation import record_symbolic_event
 
 
 class GrowthComparison(Enum):
+    """Relative asymptotic growth of two expressions at a fixed germ."""
+
     SMALLER = auto()
     SAME_ORDER = auto()
     LARGER = auto()
