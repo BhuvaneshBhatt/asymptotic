@@ -135,7 +135,7 @@ A finite prefix together with its explicit remainder semantics.
 GrowthComparison(value)
 ```
 
-No public docstring.
+Relative asymptotic growth of two expressions at a fixed germ.
 
 ## `Multiseries`
 
