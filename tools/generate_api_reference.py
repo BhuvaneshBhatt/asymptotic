@@ -34,7 +34,7 @@ def _public_docstring(obj: object) -> str:
 
     if isinstance(obj, type) and issubclass(obj, Enum):
         doc = obj.__dict__.get("__doc__")
-        if not doc:
+        if not doc or inspect.cleandoc(doc) == "An enumeration.":
             return "No public docstring."
         return inspect.cleandoc(doc)
     return inspect.getdoc(obj) or "No public docstring."

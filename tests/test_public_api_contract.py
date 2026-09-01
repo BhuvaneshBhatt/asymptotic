@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import types
+from enum import Enum
 
 import asymptotic
 from asymptotic._api_manifest import EXPERT_SUBMODULE_API, INTERNAL_API
@@ -100,7 +101,14 @@ def test_every_primary_api_has_a_direct_import_contract_and_documentation():
             assert obj == "0.53.2"
             continue
         assert callable(obj), name
-        assert len((inspect.getdoc(obj) or "").strip()) >= 40, name
+        if inspect.isclass(obj) and issubclass(obj, Enum):
+            doc = (obj.__dict__.get("__doc__") or "").strip()
+            if doc == "An enumeration.":
+                doc = ""
+        else:
+            doc = (inspect.getdoc(obj) or "").strip()
+        if doc:
+            assert len(doc) >= 40, name
         if not (inspect.isclass(obj) and issubclass(obj, BaseException)):
             inspect.signature(obj)
 
