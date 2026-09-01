@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import sympy as sp
+from hypothesis import given, settings
+from hypothesis import strategies as st
 
 from asymptotic.discrete_scale import (
     DiscreteAsymptoticScale,
@@ -10,8 +12,6 @@ from asymptotic.discrete_scale import (
 )
 from asymptotic.mrv import mrv_decomposition
 from asymptotic.rsolve import asymptotic_rsolve
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 
 def test_factorial_scale_has_exact_shift_ratio():

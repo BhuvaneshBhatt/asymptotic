@@ -4,14 +4,15 @@
 from __future__ import annotations
 
 import argparse
+import importlib
 import os
 import subprocess
 import sys
 from pathlib import Path
-from tests.suite_layout import SHARDS
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
+SHARDS = importlib.import_module("tests.suite_layout").SHARDS
 
 
 def _run(paths: list[str]) -> int:
