@@ -1,0 +1,27 @@
+name: benchmarks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * 1"
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -U pip
+      - run: python -m pip install -e ".[test,benchmark]"
+      - run: pytest benchmarks/benchmark_*.py --benchmark-only --benchmark-json=pytest-benchmark.json
+      - run: PYTHONPATH=src python -m benchmarks.run_benchmarks --cycles 6 --json stateful.json
+      - run: python -m benchmarks.report stateful.json stateful.svg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            pytest-benchmark.json
+            stateful.json
+            stateful.svg

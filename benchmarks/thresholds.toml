@@ -1,0 +1,5 @@
+[stateful_smoke]
+max_degradation_ratio = 5.0
+max_general_solve_calls = 4
+max_general_limit_calls = 80
+max_general_integrate_calls = 8
