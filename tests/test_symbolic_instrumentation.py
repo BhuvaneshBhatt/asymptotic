@@ -12,7 +12,7 @@ from asymptotic._symbolic_policy import (
 from asymptotic.instrumentation import SymbolicMetrics, symbolic_metrics
 
 
-def test_symbolic_metrics_count_general_fallbacks_without_runtime_patching():
+def test_symbolic_metrics_count_general_runtime_patching():
     x = sp.symbols("x", positive=True)
     with symbolic_metrics() as metrics:
         assert bounded_limit(sp.sin(x) / x, x, sp.oo) == 0
@@ -56,7 +56,7 @@ def test_nested_symbolic_metric_contexts_are_independent():
 
 
 def test_symbolic_metrics_include_domain_specific_structural_counts():
-    from asymptotic import AsymptoticRemainder
+    from asymptotic import Remainder
     from asymptotic.multivariate import multivariate_scaling_regimes
     from asymptotic.parameter_auto import automatic_parameter_stratification
     from asymptotic.remainder_theorems import certify_reciprocal_remainder
@@ -73,7 +73,7 @@ def test_symbolic_metrics_include_domain_specific_structural_counts():
         multivariate_scaling_regimes(y**2 - x - z**2, y, (x, z))
         certify_reciprocal_remainder(
             sp.sin(xr),
-            AsymptoticRemainder.exact_zero(xr, sp.oo),
+            Remainder.exact_zero(xr, sp.oo),
         )
 
     assert metrics.parameter_strata >= 1

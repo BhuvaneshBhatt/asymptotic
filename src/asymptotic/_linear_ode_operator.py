@@ -21,7 +21,9 @@ def linear_operator_coefficients(
     order = max((d.derivative_count for d in derivatives), default=0)
     jets = tuple(sp.Dummy(f"linear_ode_D{k}") for k in range(order + 1))
     replacements: dict[sp.Expr, sp.Expr] = {delta: jets[0]}
-    replacements.update({sp.diff(delta, variable, k): jets[k] for k in range(1, order + 1)})
+    replacements.update(
+        {sp.diff(delta, variable, k): jets[k] for k in range(1, order + 1)}
+    )
     algebraic = sp.expand(operator.xreplace(replacements))
     try:
         poly = sp.Poly(algebraic, *jets)

@@ -6,10 +6,11 @@ from dataclasses import dataclass
 from typing import Literal
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._symbolic_policy import bounded_ask, bounded_limit
 from .context import AsymptoticContext
-from .solve import asymptotic_solve
+from .solve import solve
 
 
 @dataclass(frozen=True)
@@ -51,7 +52,7 @@ class OptimizationCertificate:
 
 
 @dataclass(frozen=True)
-class AsymptoticOptimizationResult:
+class OptimizationResult:
     """Result of a univariate asymptotic optimization problem."""
 
     optimum_value: sp.Expr
@@ -75,7 +76,9 @@ class AsymptoticOptimizationResult:
         return self.status in {"EXACT", "CERTIFIED"}
 
 
-def _truncate(expr: sp.Expr, parameter: sp.Symbol, point: sp.Expr, terms: int) -> sp.Expr:
+def _truncate(
+    expr: sp.Expr, parameter: sp.Symbol, point: sp.Expr, terms: int
+) -> sp.Expr:
     expr = sp.sympify(expr)
     if parameter not in expr.free_symbols:
         return expr
@@ -85,7 +88,9 @@ def _truncate(expr: sp.Expr, parameter: sp.Symbol, point: sp.Expr, terms: int) -
         return expr
 
 
-def _domain_contains(value: sp.Expr, domain: sp.Set, assumptions: sp.Expr) -> bool | None:
+def _domain_contains(
+    value: sp.Expr, domain: sp.Set, assumptions: sp.Expr
+) -> bool | None:
     if domain == sp.S.Reals:
         answer = bounded_ask(sp.Q.real(value), assumptions)
         if answer in (True, False):
@@ -107,7 +112,11 @@ def _interval_endpoints(domain: sp.Set) -> tuple[sp.Expr, ...]:
     out: list[sp.Expr] = []
     if not domain.left_open and domain.start not in (-sp.oo, sp.oo):
         out.append(domain.start)
-    if not domain.right_open and domain.end not in (-sp.oo, sp.oo) and domain.end != domain.start:
+    if (
+        not domain.right_open
+        and domain.end not in (-sp.oo, sp.oo)
+        and domain.end != domain.start
+    ):
         out.append(domain.end)
     return tuple(out)
 
@@ -185,7 +194,9 @@ def _candidate_stationary_points(
         solve_derivative = derivative.xreplace({variable: solve_variable})
         solve_domain = sp.S.Reals
     try:
-        exact_set = sp.solveset(sp.Eq(solve_derivative, 0), solve_variable, domain=solve_domain)
+        exact_set = sp.solveset(
+            sp.Eq(solve_derivative, 0), solve_variable, domain=solve_domain
+        )
     except (NotImplementedError, ValueError, TypeError):
         exact_set = None
     exact_complete = isinstance(exact_set, sp.FiniteSet) or exact_set is sp.S.EmptySet
@@ -196,8 +207,12 @@ def _candidate_stationary_points(
                 lattice = (sp.floor(root), sp.ceiling(root))
                 for candidate in lattice:
                     candidate = sp.refine(candidate, assumptions)
-                    if not any(sp.simplify(candidate - old[0]) == 0 for old in candidates):
-                        candidates.append((candidate, "lattice-rounded-stationary", None))
+                    if not any(
+                        sp.simplify(candidate - old[0]) == 0 for old in candidates
+                    ):
+                        candidates.append(
+                            (candidate, "lattice-rounded-stationary", None)
+                        )
             elif _domain_contains(root, domain, assumptions) is not False:
                 candidates.append((root, "exact-stationary", None))
 
@@ -205,7 +220,7 @@ def _candidate_stationary_points(
     # exact radicals/transcendentals would obscure the Hardy-field balance.
     if not exact_complete or derivative.has(sp.exp, sp.log):
         try:
-            solved = asymptotic_solve(
+            solved = solve(
                 derivative,
                 variable,
                 parameter=parameter,
@@ -249,7 +264,7 @@ def _global_curvature_decision(
     return None
 
 
-def _asymptotic_optimize(
+def _optimize(
     objective: sp.Expr,
     variable: sp.Symbol,
     *,
@@ -259,7 +274,7 @@ def _asymptotic_optimize(
     domain: sp.Set = sp.S.Reals,
     assumptions: sp.Expr | bool = sp.S.true,
     sense: Literal["min", "max"],
-) -> AsymptoticOptimizationResult:
+) -> OptimizationResult:
     """Compare optimizer candidates asymptotically and certify global coverage when possible."""
     if terms < 1:
         raise ValueError("terms must be positive")
@@ -270,7 +285,7 @@ def _asymptotic_optimize(
         raise TypeError("variable and parameter must be SymPy symbols")
     if variable == parameter:
         raise ValueError("optimization variable and asymptotic parameter must differ")
-    assumptions = sp.sympify(assumptions)
+    assumptions = normalize_assumptions(assumptions)
     domain = sp.sympify(domain)
     ctx = AsymptoticContext(parameter, point=point)
 
@@ -288,7 +303,8 @@ def _asymptotic_optimize(
         for location, method, certificate in stationary_candidates
     ]
     raw_candidates.extend(
-        (endpoint, "finite-endpoint", None, True) for endpoint in _interval_endpoints(domain)
+        (endpoint, "finite-endpoint", None, True)
+        for endpoint in _interval_endpoints(domain)
     )
 
     evaluated: list[tuple[sp.Expr, sp.Expr, str, object | None, bool]] = []
@@ -297,14 +313,16 @@ def _asymptotic_optimize(
         if value.has(sp.nan, sp.zoo):
             continue
         evaluated.append((location, value, method, certificate, attained))
-    for boundary, boundary_value in _interval_boundary_limits(objective, variable, domain):
+    for boundary, boundary_value in _interval_boundary_limits(
+        objective, variable, domain
+    ):
         value = _truncate(boundary_value, parameter, point, terms)
         if value.has(sp.nan, sp.zoo):
             continue
         evaluated.append((boundary, value, "open-boundary-limit", None, False))
 
     if not evaluated:
-        return AsymptoticOptimizationResult(
+        return OptimizationResult(
             sp.nan, (), variable, parameter, point, sense, "UNKNOWN", "no-candidates"
         )
 
@@ -337,7 +355,9 @@ def _asymptotic_optimize(
     )
     globally_covered = isinstance(domain, sp.Interval) or curvature is True
     status = (
-        "CERTIFIED" if not undecided and all_stationary_found and globally_covered else "FORMAL"
+        "CERTIFIED"
+        if not undecided and all_stationary_found and globally_covered
+        else "FORMAL"
     )
     methods = {item[2] for item in best}
     method = methods.pop() if len(methods) == 1 else "mixed-stationary-comparison"
@@ -356,7 +376,7 @@ def _asymptotic_optimize(
             stationary_complete=all_stationary_found,
             globally_covered=globally_covered,
         )
-    return AsymptoticOptimizationResult(
+    return OptimizationResult(
         value,
         locations,
         variable,
@@ -370,7 +390,7 @@ def _asymptotic_optimize(
     )
 
 
-def asymptotic_minimize(
+def minimize(
     objective: sp.Expr,
     variable: sp.Symbol,
     *,
@@ -379,9 +399,9 @@ def asymptotic_minimize(
     terms: int = 4,
     domain: sp.Set = sp.S.Reals,
     assumptions: sp.Expr | bool = sp.S.true,
-) -> AsymptoticOptimizationResult:
+) -> OptimizationResult:
     """Asymptotically minimize a univariate parameter-dependent objective."""
-    return _asymptotic_optimize(
+    return _optimize(
         objective,
         variable,
         parameter=parameter,
@@ -393,7 +413,7 @@ def asymptotic_minimize(
     )
 
 
-def asymptotic_maximize(
+def maximize(
     objective: sp.Expr,
     variable: sp.Symbol,
     *,
@@ -402,9 +422,9 @@ def asymptotic_maximize(
     terms: int = 4,
     domain: sp.Set = sp.S.Reals,
     assumptions: sp.Expr | bool = sp.S.true,
-) -> AsymptoticOptimizationResult:
+) -> OptimizationResult:
     """Asymptotically maximize a univariate parameter-dependent objective."""
-    return _asymptotic_optimize(
+    return _optimize(
         objective,
         variable,
         parameter=parameter,
@@ -416,11 +436,45 @@ def asymptotic_maximize(
     )
 
 
-def asymptotic_argmin(*args, **kwargs) -> tuple[sp.Expr, ...]:
+def argmin(
+    objective: sp.Expr,
+    variable: sp.Symbol,
+    *,
+    parameter: sp.Symbol,
+    point: sp.Expr = sp.oo,
+    terms: int = 4,
+    domain: sp.Set = sp.S.Reals,
+    assumptions: sp.Expr | bool = sp.S.true,
+) -> tuple[sp.Expr, ...]:
     """Return the asymptotic minimizers of a scalar objective."""
-    return asymptotic_minimize(*args, **kwargs).optimizers
+    return minimize(
+        objective,
+        variable,
+        parameter=parameter,
+        point=point,
+        terms=terms,
+        domain=domain,
+        assumptions=assumptions,
+    ).optimizers
 
 
-def asymptotic_argmax(*args, **kwargs) -> tuple[sp.Expr, ...]:
+def argmax(
+    objective: sp.Expr,
+    variable: sp.Symbol,
+    *,
+    parameter: sp.Symbol,
+    point: sp.Expr = sp.oo,
+    terms: int = 4,
+    domain: sp.Set = sp.S.Reals,
+    assumptions: sp.Expr | bool = sp.S.true,
+) -> tuple[sp.Expr, ...]:
     """Return the asymptotic maximizers of a scalar objective."""
-    return asymptotic_maximize(*args, **kwargs).optimizers
+    return maximize(
+        objective,
+        variable,
+        parameter=parameter,
+        point=point,
+        terms=terms,
+        domain=domain,
+        assumptions=assumptions,
+    ).optimizers

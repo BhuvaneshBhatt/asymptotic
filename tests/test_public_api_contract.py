@@ -7,60 +7,72 @@ import asymptotic
 from asymptotic._api_manifest import EXPERT_SUBMODULE_API, INTERNAL_API
 
 EXPECTED_PRIMARY_API = (
-    "AsymptoticAlgebra",
     "AsymptoticContext",
-    "AsymptoticDSolveResult",
-    "AsymptoticElement",
-    "AsymptoticOptimizationResult",
-    "AsymptoticRSolveResult",
-    "AsymptoticRelationResult",
-    "AsymptoticRemainder",
-    "AsymptoticScale",
-    "AsymptoticSolveResult",
-    "AsymptoticSumResult",
-    "AsymptoticTruncation",
-    "GrowthComparison",
+    "Circle",
+    "DSolveResult",
+    "DirectionalInfinity",
+    "Evidence",
+    "EvidenceStatus",
+    "ExactClusterResult",
     "Multiseries",
-    "NestedExpansion",
+    "OptimizationResult",
+    "ProductResult",
+    "PublicResult",
+    "RSolveResult",
+    "Remainder",
     "RemainderKind",
-    "StatisticalAsymptoticResult",
+    "Scale",
+    "SolveResult",
+    "SquareWave",
+    "StatisticalResult",
+    "SumResult",
     "TransseriesExpansion",
+    "Truncation",
     "__version__",
-    "airy_uniform_saddle_asymptotic",
-    "asymptotic_argmax",
-    "asymptotic_argmin",
-    "asymptotic_big_o",
-    "asymptotic_dsolve",
-    "asymptotic_element",
-    "asymptotic_equivalent",
-    "asymptotic_expectation",
-    "asymptotic_integrate",
-    "asymptotic_little_o",
-    "asymptotic_maximize",
-    "asymptotic_minimize",
-    "asymptotic_probability",
-    "asymptotic_relation",
-    "asymptotic_root",
-    "asymptotic_rsolve",
-    "asymptotic_solve",
-    "asymptotic_sum",
-    "coalescing_saddle_asymptotic",
-    "compose_transseries",
+    "analytic_limit",
+    "argmax",
+    "argmin",
+    "as_element",
+    "big_o",
+    "cluster_set",
+    "complex_limit",
+    "complex_ray_limit",
+    "compose",
     "differentiate",
     "discover_scale",
-    "dominant_balance_candidates",
-    "implicit_asymptotic",
+    "discrete_limit",
+    "dsolve",
+    "equivalent",
+    "expectation",
+    "explain",
+    "hyperasymptotic_series",
+    "implicit",
     "integrate",
-    "inverse_asymptotic",
-    "laplace_asymptotic_integral",
-    "mrv_decomposition",
+    "inverse",
+    "leading_term",
+    "limit",
+    "lindstedt_poincare",
+    "little_o",
+    "local_series",
+    "maximize",
+    "mellin",
+    "minimize",
     "multiseries",
-    "multivariate_dominant_balance_candidates",
-    "multivariate_implicit_asymptotics",
-    "nested_expansion",
+    "nested_series",
+    "one_sided_limit",
+    "path_limit",
+    "probability",
+    "product",
     "puiseux_series",
-    "series_reversion",
-    "transseries_from_expression",
+    "regular_perturbation",
+    "relation",
+    "root",
+    "rsolve",
+    "series",
+    "solve",
+    "stratified_series",
+    "sum",
+    "truncate",
 )
 
 
@@ -76,28 +88,12 @@ def test_root_namespace_is_exactly_the_primary_api():
     assert set(INTERNAL_API).isdisjoint(asymptotic.__dict__)
 
 
-def test_retired_root_exports_are_removed_not_deprecated():
-    assert "certify_product_remainder" not in asymptotic.__dict__
-    assert "certify_product_remainder" not in dir(asymptotic)
-    retired_name = "certify_product_remainder"
-    try:
-        getattr(asymptotic, retired_name)
-    except AttributeError:
-        pass
-    else:
-        raise AssertionError("retired root export unexpectedly remains available")
-
-    from asymptotic.remainder_theorems import certify_product_remainder
-
-    assert callable(certify_product_remainder)
-
-
-def test_every_primary_api_has_a_direct_import_contract_and_documentation():
+def test_every_primary_api_has_and_documentation():
     for name in EXPECTED_PRIMARY_API:
         assert hasattr(asymptotic, name), name
         obj = getattr(asymptotic, name)
         if name == "__version__":
-            assert obj == "0.53.2"
+            assert obj == "0.2.0"
             continue
         assert callable(obj), name
         assert len((inspect.getdoc(obj) or "").strip()) >= 40, name

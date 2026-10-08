@@ -6,24 +6,28 @@ import sympy as sp
 from sympy.stats import Normal
 
 from asymptotic import (
-    AsymptoticRemainder,
+    Remainder,
     RemainderKind,
-    asymptotic_expectation,
-    asymptotic_probability,
-    asymptotic_sum,
-    implicit_asymptotic,
-    laplace_asymptotic_integral,
+    expectation,
+    implicit,
     multiseries,
-    nested_expansion,
-    series_reversion,
-    transseries_from_expression,
+    nested_series,
+    probability,
+    sum,
 )
 from asymptotic.multivariate import multivariate_scaling_regimes
-from asymptotic.nonlinear_ode import nonlinear_differential_transseries
+from asymptotic.nonlinear_ode import differential_transseries
 from asymptotic.parameter_auto import automatic_parameter_stratification
+from asymptotic.probability import (
+    laplace_asymptotic_integral,
+)
 from asymptotic.remainder_theorems import (
     certify_green_inverse_operator_remainder,
     certify_reciprocal_remainder,
+)
+from asymptotic.reversion import series_reversion
+from asymptotic.transseries import (
+    transseries_from_expression,
 )
 
 
@@ -40,7 +44,7 @@ def nested_logexp(depth: int = 3):
 
     x = sp.symbols("x", positive=True)
     expr = sp.exp(1 / x)
-    return nested_expansion(expr, x, depth=min(depth, 2))
+    return nested_series(expr, x, depth=min(depth, 2))
 
 
 def transseries_conversion(terms: int = 8):
@@ -59,7 +63,9 @@ def transseries_product_workload(size: int = 8):
         raise ValueError("size must be positive")
     x = sp.symbols("x", positive=True)
     left_expr = sp.Add(*(sp.Rational(1, i + 1) / x**i for i in range(1, size + 1)))
-    right_expr = sp.Add(*(sp.Rational(1, i + 2) / x ** (2 * i - 1) for i in range(1, size + 1)))
+    right_expr = sp.Add(
+        *(sp.Rational(1, i + 2) / x ** (2 * i - 1) for i in range(1, size + 1))
+    )
     left = transseries_from_expression(left_expr, x, point=sp.oo, complete=True)
     right = transseries_from_expression(right_expr, x, point=sp.oo, complete=True)
     return left * right
@@ -76,7 +82,7 @@ def implicit_workload(terms: int = 5):
     """Resolve a singular implicit branch through Newton--Puiseux scaling."""
 
     x, y = sp.symbols("x y", positive=True)
-    return implicit_asymptotic(y**2 - x, y, x, terms=min(terms, 4))
+    return implicit(y**2 - x, y, x, terms=min(terms, 4))
 
 
 def parameter_strata_workload():
@@ -105,7 +111,7 @@ def nonlinear_ode_workload(terms: int = 3):
     x = sp.symbols("x", positive=True)
     y = sp.Function("y")
     equation = x * sp.diff(y(x), x) - y(x) + y(x) ** 2
-    return nonlinear_differential_transseries(equation, y, x, point=0, terms=terms)
+    return differential_transseries(equation, y, x, point=0, terms=terms)
 
 
 def green_certificate_workload():
@@ -126,7 +132,7 @@ def remainder_certificate_workload():
     """Exercise nonvanishing and relative-smallness remainder decisions."""
 
     x = sp.symbols("x", positive=True)
-    remainder = AsymptoticRemainder.big_o(x**-2, x, sp.oo)
+    remainder = Remainder.big_o(x**-2, x, sp.oo)
     cert = certify_reciprocal_remainder(1 + 1 / x, remainder)
     if cert.conclusion.kind is RemainderKind.UNKNOWN:
         raise RuntimeError("benchmark reciprocal problem unexpectedly remained UNKNOWN")
@@ -138,7 +144,7 @@ def probability_tail_workload(terms: int = 3):
 
     n, a = sp.symbols("n a", positive=True)
     x = Normal("X_benchmark_tail", 0, sp.sqrt(n))
-    return asymptotic_probability(x > a * n, x, parameter=n, terms=terms)
+    return probability(x > a * n, x, parameter=n, terms=terms)
 
 
 def saddle_expectation_workload(terms: int = 3):
@@ -146,7 +152,7 @@ def saddle_expectation_workload(terms: int = 3):
 
     n = sp.symbols("n", positive=True)
     x = Normal("X_benchmark_expectation", 0, 1 / sp.sqrt(n))
-    return asymptotic_expectation(sp.exp(x), x, parameter=n, terms=terms, method="laplace")
+    return expectation(sp.exp(x), x, parameter=n, terms=terms, method="laplace")
 
 
 def degenerate_saddle_workload(terms: int = 2):
@@ -164,8 +170,14 @@ def discrete_saddle_workload(terms: int = 2):
 
     n = sp.symbols("n", positive=True)
     k = sp.symbols("k", integer=True)
-    return asymptotic_sum(
-        sp.exp(-n * (k / n) ** 2 / 2), k, -sp.oo, sp.oo, parameter=n, terms=terms, method="saddle"
+    return sum(
+        sp.exp(-n * (k / n) ** 2 / 2),
+        k,
+        -sp.oo,
+        sp.oo,
+        parameter=n,
+        terms=terms,
+        method="saddle",
     )
 
 

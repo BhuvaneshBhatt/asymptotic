@@ -5,15 +5,17 @@ formal power group but need not preserve principal complex branches.  Analytic
 code must therefore use :func:`analytic_powsimp`; only representation layers
 whose powers are formal monomials should use :func:`formal_powsimp`.
 
-When an analytic calculation genuinely needs PowerExpand-style identities,
-:func:`power_expand_exact` keeps the identities exact by inserting principal-
-argument winding corrections.  This is the SymPy analogue of a branch-correct
-``PowerExpandExact`` rather than another spelling of ``force=True``.
+When an analytic calculation genuinely needs branch-sensitive power identities,
+:func:`power_expand_exact` keeps them exact by inserting principal-argument
+winding corrections rather than applying an unconditional forced rewrite.
 """
 
 from __future__ import annotations
 
 import sympy as sp
+from funcprops import normalize_assumptions
+
+from ._symbolic_policy import bounded_ask
 
 
 def analytic_powsimp(expr: sp.Expr) -> sp.Expr:
@@ -25,7 +27,7 @@ def analytic_powsimp(expr: sp.Expr) -> sp.Expr:
 def formal_powsimp(expr: sp.Expr) -> sp.Expr:
     """Canonicalize an expression that is *entirely* a formal monomial.
 
-    This operation is intentionally PowerExpand-like.  It is suitable only for
+    This operation uses branch-insensitive formal power semantics.  It is suitable only for
     internal formal scale/monomial coordinates whose algebra defines these
     power identities.  User coefficients, exact residuals, limits, domains,
     and proof obligations must not be passed to this function.
@@ -63,7 +65,7 @@ def _assumption_truth(predicate: sp.Expr, assumptions: sp.Expr) -> bool | None:
     if refined is sp.S.false:
         return False
     try:
-        answer = sp.ask(predicate, assumptions)
+        answer = bounded_ask(predicate, assumptions)
     except (TypeError, ValueError, NotImplementedError):
         return None
     return answer if answer in (True, False) else None
@@ -113,7 +115,7 @@ def _guard_zeros(
     """Keep the original expression on unresolved zero loci.
 
     Argument/logarithm correction formulae require nonzero bases.  Instead of
-    silently assuming that, retain the original expression on any unresolved
+    assuming that, retain the original expression on any unresolved
     zero locus.  Under nonzero assumptions the guard disappears entirely.
     """
 
@@ -138,14 +140,18 @@ def _expand_log_exact(argument: sp.Expr, assumptions: sp.Expr) -> sp.Expr | None
         for factor in factors:
             if isinstance(factor, sp.Pow):
                 expanded_factor = _expand_log_exact(factor, assumptions)
-                log_factors.append(sp.log(factor) if expanded_factor is None else expanded_factor)
+                log_factors.append(
+                    sp.log(factor) if expanded_factor is None else expanded_factor
+                )
             else:
                 log_factors.append(sp.log(factor))
         transformed = sp.Add(
             *log_factors,
             2 * sp.pi * sp.I * winding,
         )
-        return _guard_zeros(sp.log(argument), sp.simplify(transformed), factors, assumptions)
+        return _guard_zeros(
+            sp.log(argument), sp.simplify(transformed), factors, assumptions
+        )
 
     if isinstance(argument, sp.Pow):
         base, exponent = argument.as_base_exp()
@@ -156,7 +162,9 @@ def _expand_log_exact(argument: sp.Expr, assumptions: sp.Expr) -> sp.Expr | None
             pass
         winding = _principal_winding(logarithmic_phase, assumptions)
         transformed = exponent * sp.log(base) + 2 * sp.pi * sp.I * winding
-        return _guard_zeros(sp.log(argument), sp.simplify(transformed), (base,), assumptions)
+        return _guard_zeros(
+            sp.log(argument), sp.simplify(transformed), (base,), assumptions
+        )
     return None
 
 
@@ -182,7 +190,9 @@ def _expand_power_exact(power: sp.Pow, assumptions: sp.Expr) -> sp.Expr | None:
         transformed = inner_base ** (inner_exponent * exponent) * sp.exp(
             2 * sp.pi * sp.I * exponent * winding
         )
-        return _guard_zeros(power, analytic_powsimp(transformed), (inner_base,), assumptions)
+        return _guard_zeros(
+            power, analytic_powsimp(transformed), (inner_base,), assumptions
+        )
     return None
 
 
@@ -208,7 +218,7 @@ def power_expand_exact(
     correction terms.
     """
 
-    assumptions = sp.sympify(assumptions)
+    assumptions = normalize_assumptions(assumptions)
 
     def visit(node: sp.Expr) -> sp.Expr:
         node = sp.sympify(node)

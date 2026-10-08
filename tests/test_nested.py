@@ -1,6 +1,6 @@
 import sympy as sp
 
-from asymptotic import nested_expansion
+from asymptotic import nested_series
 from asymptotic.nested import nested_form
 
 
@@ -52,7 +52,7 @@ def test_finite_limit_peeling():
 def test_nested_expansion_refines_remainder():
     x = sp.symbols("x", positive=True)
     expr = x**2 * (1 + 1 / sp.log(x))
-    ne = nested_expansion(expr, x, depth=3)
+    ne = nested_series(expr, x, depth=3, return_result=True)
     assert len(ne.forms) >= 2
     assert sp.simplify(ne.forms[0].reconstruct() - expr) == 0
     assert ne.forms[1].constant == 1

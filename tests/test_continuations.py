@@ -22,7 +22,9 @@ class DeferredZeroContext(AsymptoticContext):
 def test_fact_obligation_resumes_same_sparse_tree():
     z, a = sp.symbols("z a")
     knowledge = AsymptoticKnowledge()
-    sparse = LazySparseSeries(sp.log(a + z), z, DeferredZeroContext(z), knowledge=knowledge)
+    sparse = LazySparseSeries(
+        sp.log(a + z), z, DeferredZeroContext(z), knowledge=knowledge
+    )
     continuation = sparse.continuation(3)
 
     assert continuation.run() is None
@@ -79,7 +81,7 @@ def test_one_continuation_can_suspend_on_successive_facts():
 def test_product_frontier_survives_fact_obligation_resume():
     z, a = sp.symbols("z a")
     knowledge = AsymptoticKnowledge()
-    # Preserve factor order so stage 1 builds a heap frontier before stage 2
+    # Preserve factor order so the heap frontier is built before the next continuation
     # suspends inside log(a + z).
     expr = sp.Mul(1 + z, 1 + z**2, sp.log(a + z), evaluate=False)
     sparse = LazySparseSeries(expr, z, DeferredZeroContext(z), knowledge=knowledge)
@@ -109,7 +111,9 @@ def test_analytic_frontier_is_reused_when_request_grows():
     sparse = LazySparseSeries(sp.sin(z + z**2), z, AsymptoticContext(z))
     first = sparse.terms(3)
     assert first is not None
-    state = next(state for state in sparse.node_states if state.expr == sp.sin(z + z**2))
+    state = next(
+        state for state in sparse.node_states if state.expr == sp.sin(z + z**2)
+    )
     frontier = state.payload.get("analytic:generic:sin")
     assert frontier is not None
 

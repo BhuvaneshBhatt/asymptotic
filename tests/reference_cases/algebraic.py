@@ -3,10 +3,10 @@
 import sympy as sp
 
 from asymptotic import (
-    implicit_asymptotic,
-    series_reversion,
+    implicit,
 )
 from asymptotic.implicit import implicit_singularity_profile
+from asymptotic.reversion import series_reversion
 
 from . import CapabilityStatus, ReferenceCase
 
@@ -14,9 +14,13 @@ from . import CapabilityStatus, ReferenceCase
 def _square_root_turning_point() -> bool:
     x, y = sp.symbols("x y", positive=True)
     profile = implicit_singularity_profile(y**2 - x, y, x)
-    branches = implicit_asymptotic(y**2 - x, y, x, terms=3)
+    branches = implicit(y**2 - x, y, x, terms=3, return_result=True)
     prefixes = {sp.expand(branch.truncate()) for branch in branches}
-    return profile.multiplicity == 2 and profile.turning_point is True and len(prefixes) == 2
+    return (
+        profile.multiplicity == 2
+        and profile.turning_point is True
+        and len(prefixes) == 2
+    )
 
 
 def _reversion_round_trip() -> bool:
@@ -29,9 +33,15 @@ def _reversion_round_trip() -> bool:
 
 CASES = (
     ReferenceCase(
-        "square-root-turning-point", "implicit", CapabilityStatus.FORMAL, _square_root_turning_point
+        "square-root-turning-point",
+        "implicit",
+        CapabilityStatus.FORMAL,
+        _square_root_turning_point,
     ),
     ReferenceCase(
-        "quadratic-reversion", "reversion", CapabilityStatus.FORMAL, _reversion_round_trip
+        "quadratic-reversion",
+        "reversion",
+        CapabilityStatus.FORMAL,
+        _reversion_round_trip,
     ),
 )

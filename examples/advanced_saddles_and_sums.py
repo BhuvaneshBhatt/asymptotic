@@ -3,7 +3,9 @@
 import sympy as sp
 
 from asymptotic import (
-    asymptotic_sum,
+    sum,
+)
+from asymptotic.probability import (
     coalescing_saddle_asymptotic,
     laplace_asymptotic_integral,
 )
@@ -30,7 +32,7 @@ def main() -> None:
     print("coalescing saddle:", transition.expression)
 
     k = sp.symbols("k", integer=True)
-    lattice = asymptotic_sum(
+    lattice = sum(
         sp.exp(-n * (k / n) ** 2 / 2),
         k,
         -sp.oo,
@@ -38,6 +40,7 @@ def main() -> None:
         parameter=n,
         method="saddle",
         terms=2,
+        return_result=True,
     )
     print("lattice saddle:", lattice.expression)
     print("lattice certified:", lattice.certified)

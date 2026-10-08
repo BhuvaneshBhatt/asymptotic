@@ -14,7 +14,10 @@ def test_every_recorded_symbolic_event_has_a_declared_counter():
         for node in ast.walk(tree):
             if not isinstance(node, ast.Call):
                 continue
-            if not isinstance(node.func, ast.Name) or node.func.id != "record_symbolic_event":
+            if (
+                not isinstance(node.func, ast.Name)
+                or node.func.id != "record_symbolic_event"
+            ):
                 continue
             if node.args and isinstance(node.args[0], ast.Constant):
                 used.add(node.args[0].value)

@@ -1,71 +1,77 @@
 # API classification
 
-The root namespace contains **54** intentionally selected primary entry points. Other names are classified as expert submodule APIs or internal implementation details so the boundary is explicit rather than accidental.
-
-The rule is simple: ordinary users should start with the primary root API; algorithm developers may use expert submodule APIs; internal names are not stability contracts.
+The root namespace contains **66** primary entry points. Specialized theorem, geometry, and algorithm-building names live in their defining submodules. The root is task-oriented.
 
 ## Primary root API
 
-Stable, commonly discoverable workflow entry points; import these from `asymptotic`.
-
-| Name | Defining/import module |
+| Name | Import module |
 |---|---|
-| `AsymptoticAlgebra` | `asymptotic` |
 | `AsymptoticContext` | `asymptotic` |
-| `AsymptoticDSolveResult` | `asymptotic` |
-| `AsymptoticElement` | `asymptotic` |
-| `AsymptoticOptimizationResult` | `asymptotic` |
-| `AsymptoticRSolveResult` | `asymptotic` |
-| `AsymptoticRelationResult` | `asymptotic` |
-| `AsymptoticRemainder` | `asymptotic` |
-| `AsymptoticScale` | `asymptotic` |
-| `AsymptoticSolveResult` | `asymptotic` |
-| `AsymptoticSumResult` | `asymptotic` |
-| `AsymptoticTruncation` | `asymptotic` |
-| `GrowthComparison` | `asymptotic` |
+| `Circle` | `asymptotic` |
+| `DSolveResult` | `asymptotic` |
+| `DirectionalInfinity` | `asymptotic` |
+| `Evidence` | `asymptotic` |
+| `EvidenceStatus` | `asymptotic` |
+| `ExactClusterResult` | `asymptotic` |
 | `Multiseries` | `asymptotic` |
-| `NestedExpansion` | `asymptotic` |
+| `OptimizationResult` | `asymptotic` |
+| `ProductResult` | `asymptotic` |
+| `PublicResult` | `asymptotic` |
+| `RSolveResult` | `asymptotic` |
+| `Remainder` | `asymptotic` |
 | `RemainderKind` | `asymptotic` |
-| `StatisticalAsymptoticResult` | `asymptotic` |
+| `Scale` | `asymptotic` |
+| `SolveResult` | `asymptotic` |
+| `SquareWave` | `asymptotic` |
+| `StatisticalResult` | `asymptotic` |
+| `SumResult` | `asymptotic` |
 | `TransseriesExpansion` | `asymptotic` |
+| `Truncation` | `asymptotic` |
 | `__version__` | `asymptotic` |
-| `airy_uniform_saddle_asymptotic` | `asymptotic` |
-| `asymptotic_argmax` | `asymptotic` |
-| `asymptotic_argmin` | `asymptotic` |
-| `asymptotic_big_o` | `asymptotic` |
-| `asymptotic_dsolve` | `asymptotic` |
-| `asymptotic_element` | `asymptotic` |
-| `asymptotic_equivalent` | `asymptotic` |
-| `asymptotic_expectation` | `asymptotic` |
-| `asymptotic_integrate` | `asymptotic` |
-| `asymptotic_little_o` | `asymptotic` |
-| `asymptotic_maximize` | `asymptotic` |
-| `asymptotic_minimize` | `asymptotic` |
-| `asymptotic_probability` | `asymptotic` |
-| `asymptotic_relation` | `asymptotic` |
-| `asymptotic_root` | `asymptotic` |
-| `asymptotic_rsolve` | `asymptotic` |
-| `asymptotic_solve` | `asymptotic` |
-| `asymptotic_sum` | `asymptotic` |
-| `coalescing_saddle_asymptotic` | `asymptotic` |
-| `compose_transseries` | `asymptotic` |
+| `analytic_limit` | `asymptotic` |
+| `argmax` | `asymptotic` |
+| `argmin` | `asymptotic` |
+| `as_element` | `asymptotic` |
+| `big_o` | `asymptotic` |
+| `cluster_set` | `asymptotic` |
+| `complex_limit` | `asymptotic` |
+| `complex_ray_limit` | `asymptotic` |
+| `compose` | `asymptotic` |
 | `differentiate` | `asymptotic` |
 | `discover_scale` | `asymptotic` |
-| `dominant_balance_candidates` | `asymptotic` |
-| `implicit_asymptotic` | `asymptotic` |
+| `discrete_limit` | `asymptotic` |
+| `dsolve` | `asymptotic` |
+| `equivalent` | `asymptotic` |
+| `expectation` | `asymptotic` |
+| `explain` | `asymptotic` |
+| `hyperasymptotic_series` | `asymptotic` |
+| `implicit` | `asymptotic` |
 | `integrate` | `asymptotic` |
-| `inverse_asymptotic` | `asymptotic` |
-| `laplace_asymptotic_integral` | `asymptotic` |
-| `mrv_decomposition` | `asymptotic` |
+| `inverse` | `asymptotic` |
+| `leading_term` | `asymptotic` |
+| `limit` | `asymptotic` |
+| `lindstedt_poincare` | `asymptotic` |
+| `little_o` | `asymptotic` |
+| `local_series` | `asymptotic` |
+| `maximize` | `asymptotic` |
+| `mellin` | `asymptotic` |
+| `minimize` | `asymptotic` |
 | `multiseries` | `asymptotic` |
-| `multivariate_dominant_balance_candidates` | `asymptotic` |
-| `multivariate_implicit_asymptotics` | `asymptotic` |
-| `nested_expansion` | `asymptotic` |
+| `nested_series` | `asymptotic` |
+| `one_sided_limit` | `asymptotic` |
+| `path_limit` | `asymptotic` |
+| `probability` | `asymptotic` |
+| `product` | `asymptotic` |
 | `puiseux_series` | `asymptotic` |
-| `series_reversion` | `asymptotic` |
-| `transseries_from_expression` | `asymptotic` |
-
-Expert names are available from their defining submodules only. There is no lazy root alias: `asymptotic.NAME` raises `AttributeError` for a name outside the primary root API.
+| `regular_perturbation` | `asymptotic` |
+| `relation` | `asymptotic` |
+| `root` | `asymptotic` |
+| `rsolve` | `asymptotic` |
+| `series` | `asymptotic` |
+| `solve` | `asymptotic` |
+| `stratified_series` | `asymptotic` |
+| `sum` | `asymptotic` |
+| `truncate` | `asymptotic` |
 
 ## Expert submodule API
 
@@ -125,6 +131,9 @@ Specialized/result/building-block API; import from its defining submodule.
 | `MultivariateDominantBalanceCandidate` | `asymptotic.multivariate` |
 | `MultivariateImplicitBranch` | `asymptotic.multivariate_implicit` |
 | `MultivariateImplicitRegime` | `asymptotic.multivariate_implicit` |
+| `MultivariateLaplaceCertificate` | `asymptotic.multivariate_laplace` |
+| `MultivariateStationaryPoint` | `asymptotic.multivariate_laplace` |
+| `stationary_point_geometry` | `asymptotic.multivariate_laplace` |
 | `NestedLevel` | `asymptotic.nested` |
 | `NewtonCandidate` | `asymptotic.puiseux` |
 | `NewtonPolyhedronTerm` | `asymptotic.multivariate` |
@@ -141,6 +150,8 @@ Specialized/result/building-block API; import from its defining submodule.
 | `PropertyKnowledge` | `asymptotic.function_properties` |
 | `PropertyProvenance` | `asymptotic.function_properties` |
 | `PropertyRule` | `asymptotic.function_properties` |
+| `PeriodicSolvabilityResult` | `asymptotic.resonance` |
+| `periodic_solvability_conditions` | `asymptotic.resonance` |
 | `PuiseuxSeries` | `asymptotic.puiseux` |
 | `PuiseuxTerm` | `asymptotic.puiseux` |
 | `RamificationModel` | `asymptotic.monomial` |
@@ -157,6 +168,7 @@ Specialized/result/building-block API; import from its defining submodule.
 | `ShadowGhostDecomposition` | `asymptotic.asymptotic_field` |
 | `SingularityLocus` | `asymptotic.function_properties` |
 | `SingularityProperties` | `asymptotic.function_properties` |
+| `SolvabilityCondition` | `asymptotic.perturbation` |
 | `SparseContinuation` | `asymptotic.sparse` |
 | `SparseNodeState` | `asymptotic.sparse` |
 | `SparseTerm` | `asymptotic.frontier` |

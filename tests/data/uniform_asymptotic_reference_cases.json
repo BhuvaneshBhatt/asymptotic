@@ -1,0 +1,1475 @@
+{
+  "schema": 1,
+  "description": "Uniform and beyond-all-orders specialist reference corpus",
+  "cases": [
+    {
+      "id": "uniform_0001",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": -2,
+      "reference": "0.00490592174184451092378258919836036179061897133"
+    },
+    {
+      "id": "uniform_0002",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": -1,
+      "reference": "0.043709866703817811693087261357689776600980707"
+    },
+    {
+      "id": "uniform_0003",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": -0.25,
+      "reference": "0.128176899526665628448673861298247415621584461"
+    },
+    {
+      "id": "uniform_0004",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": 0,
+      "reference": "0.16474777377532653234118513901798191890022098"
+    },
+    {
+      "id": "uniform_0005",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": 0.5,
+      "reference": "0.22804315904998552895963222315083472595730823"
+    },
+    {
+      "id": "uniform_0006",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": 1,
+      "reference": "0.237354155803431402792964697724781956430661203"
+    },
+    {
+      "id": "uniform_0007",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 20,
+      "a": 2,
+      "reference": "-0.00146094667795728187844888221318686240896240849"
+    },
+    {
+      "id": "uniform_0008",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": -2,
+      "reference": "0.0045464247964768542634741574688730883790924719"
+    },
+    {
+      "id": "uniform_0009",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": -1,
+      "reference": "0.0353114825826626144888143748106278288491746874"
+    },
+    {
+      "id": "uniform_0010",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": -0.25,
+      "reference": "0.101604221038769479609110667343425491543799257"
+    },
+    {
+      "id": "uniform_0011",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": 0,
+      "reference": "0.130780545285166722102978027874284129427183257"
+    },
+    {
+      "id": "uniform_0012",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": 0.5,
+      "reference": "0.182169004600034869848341157311053463154700577"
+    },
+    {
+      "id": "uniform_0013",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": 1,
+      "reference": "0.189428044441619292575217581501580366487662157"
+    },
+    {
+      "id": "uniform_0014",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 40,
+      "a": 2,
+      "reference": "-0.0160687054323127325435910743002267821437925893"
+    },
+    {
+      "id": "uniform_0015",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": -2,
+      "reference": "0.00392579098886170513166438366626760081671283311"
+    },
+    {
+      "id": "uniform_0016",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": -1,
+      "reference": "0.0283149376719477753524520160830670860084122644"
+    },
+    {
+      "id": "uniform_0017",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": -0.25,
+      "reference": "0.0805748756475307172038153354673189125273923841"
+    },
+    {
+      "id": "uniform_0018",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": 0,
+      "reference": "0.103806809113127670527452310047478785654875807"
+    },
+    {
+      "id": "uniform_0019",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": 0.5,
+      "reference": "0.145181630219444282290612872893242028624847451"
+    },
+    {
+      "id": "uniform_0020",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": 1,
+      "reference": "0.150847842846802463927717439060626537521116115"
+    },
+    {
+      "id": "uniform_0021",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 80,
+      "a": 2,
+      "reference": "-0.0210356653981953169321755671056360584024093234"
+    },
+    {
+      "id": "uniform_0022",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": -2,
+      "reference": "0.00327145812996161002455925410280708734410524468"
+    },
+    {
+      "id": "uniform_0023",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": -1,
+      "reference": "0.0226114340624993861375150590185010011424644243"
+    },
+    {
+      "id": "uniform_0024",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": -0.25,
+      "reference": "0.0639170407378309157688251033085899016740431535"
+    },
+    {
+      "id": "uniform_0025",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": 0,
+      "reference": "0.0823934535626635849317915865873179687518786398"
+    },
+    {
+      "id": "uniform_0026",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": 0.5,
+      "reference": "0.115530533181202613499955650245269787572308287"
+    },
+    {
+      "id": "uniform_0027",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": 1,
+      "reference": "0.119969435816500314643473653835392196246343711"
+    },
+    {
+      "id": "uniform_0028",
+      "category": "turning_numeric",
+      "family": "J",
+      "n": 160,
+      "a": 2,
+      "reference": "-0.0211191756437678149679089923978767382602725656"
+    },
+    {
+      "id": "uniform_0029",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": -2,
+      "reference": "-4.77855411182413139681282488586344856540797485"
+    },
+    {
+      "id": "uniform_0030",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": -1,
+      "reference": "-0.752358361983625661203562772540020664009142659"
+    },
+    {
+      "id": "uniform_0031",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": -0.25,
+      "reference": "-0.355864249417063271418322498669495067484911464"
+    },
+    {
+      "id": "uniform_0032",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": 0,
+      "reference": "-0.285489458600203489851803759379264697175003525"
+    },
+    {
+      "id": "uniform_0033",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": 0.5,
+      "reference": "-0.146414410431958561079808180322050128589059446"
+    },
+    {
+      "id": "uniform_0034",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": 1,
+      "reference": "0.0104699903967565741897718922469270227875621258"
+    },
+    {
+      "id": "uniform_0035",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 20,
+      "a": 2,
+      "reference": "0.200323494193660261262089414240610569724778459"
+    },
+    {
+      "id": "uniform_0036",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": -2,
+      "reference": "-3.16189349374435428913531589833977087669325406"
+    },
+    {
+      "id": "uniform_0037",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": -1,
+      "reference": "-0.578957454379131897039847161385817462851813643"
+    },
+    {
+      "id": "uniform_0038",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": -0.25,
+      "reference": "-0.281473808312334731906482172201214249276740941"
+    },
+    {
+      "id": "uniform_0039",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": 0,
+      "reference": "-0.226562005459432703077423356454297762533476319"
+    },
+    {
+      "id": "uniform_0040",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": 0.5,
+      "reference": "-0.115878780888546963989133937682363333169433977"
+    },
+    {
+      "id": "uniform_0041",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": 1,
+      "reference": "0.0120653415813063069085447150301855398344670211"
+    },
+    {
+      "id": "uniform_0042",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 40,
+      "a": 2,
+      "reference": "0.160054267344611100716593441900823719711638664"
+    },
+    {
+      "id": "uniform_0043",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": -2,
+      "reference": "-2.26962565081099672849539116010652320066486615"
+    },
+    {
+      "id": "uniform_0044",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": -1,
+      "reference": "-0.451111197859994714948653455938946139966064896"
+    },
+    {
+      "id": "uniform_0045",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": -0.25,
+      "reference": "-0.222929367683356470867961348905650781382596616"
+    },
+    {
+      "id": "uniform_0046",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": 0,
+      "reference": "-0.179812355990802420270408167663781998336653121"
+    },
+    {
+      "id": "uniform_0047",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": 0.5,
+      "reference": "-0.0918043189817720656943220505187420011057228326"
+    },
+    {
+      "id": "uniform_0048",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": 1,
+      "reference": "0.0115613731911372601326553938059386221238762475"
+    },
+    {
+      "id": "uniform_0049",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 80,
+      "a": 2,
+      "reference": "0.126915488392012402341287093039167779701350297"
+    },
+    {
+      "id": "uniform_0050",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": -2,
+      "reference": "-1.69876792384652535076639437150951793148135423"
+    },
+    {
+      "id": "uniform_0051",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": -1,
+      "reference": "-0.35403862939245945044437259519096739267258515"
+    },
+    {
+      "id": "uniform_0052",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": -0.25,
+      "reference": "-0.17670448035731170585611526596010427427678784"
+    },
+    {
+      "id": "uniform_0053",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": 0,
+      "reference": "-0.142713959410435932049196298399641896266212967"
+    },
+    {
+      "id": "uniform_0054",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": 0.5,
+      "reference": "-0.0727796403276461899980740532285342315015651864"
+    },
+    {
+      "id": "uniform_0055",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": 1,
+      "reference": "0.0102051250834772070099979762971676282967270634"
+    },
+    {
+      "id": "uniform_0056",
+      "category": "turning_numeric",
+      "family": "Y",
+      "n": 160,
+      "a": 2,
+      "reference": "0.100411864744915433062640413224368865121780894"
+    },
+    {
+      "id": "uniform_0057",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 0.4,
+      "reference": "0.000000208058296397170490505171459458124389041757156"
+    },
+    {
+      "id": "uniform_0058",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 0.7,
+      "reference": "0.00275272499522776704457371702538578861157658461"
+    },
+    {
+      "id": "uniform_0059",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 0.9,
+      "reference": "0.0673059474374059859307725699580225462065402177"
+    },
+    {
+      "id": "uniform_0060",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 1.0,
+      "reference": "0.16474777377532653234118513901798191890022098"
+    },
+    {
+      "id": "uniform_0061",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 1.1,
+      "reference": "0.242221887436988211899408743757329136287676724"
+    },
+    {
+      "id": "uniform_0062",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 20,
+      "z": 1.4,
+      "reference": "-0.177930784714299000100150641920339580678255885"
+    },
+    {
+      "id": "uniform_0063",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 0.4,
+      "reference": "0.000000000000331725923416969574928366667763046335346274706"
+    },
+    {
+      "id": "uniform_0064",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 0.7,
+      "reference": "0.0000521072809959464239768159619986023892137669187"
+    },
+    {
+      "id": "uniform_0065",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 0.9,
+      "reference": "0.026229806161750630246653483213285589003708538"
+    },
+    {
+      "id": "uniform_0066",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 1.0,
+      "reference": "0.130780545285166722102978027874284129427183257"
+    },
+    {
+      "id": "uniform_0067",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 1.1,
+      "reference": "0.174786718613165676742495665304904984696888001"
+    },
+    {
+      "id": "uniform_0068",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 40,
+      "z": 1.4,
+      "reference": "0.0570026736920481205587211030957142314309885593"
+    },
+    {
+      "id": "uniform_0069",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 0.4,
+      "reference": "1.18682759203561994409526130056351320296879654e-24"
+    },
+    {
+      "id": "uniform_0070",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 0.7,
+      "reference": "0.0000000260813081870125003628776328971558404294333366"
+    },
+    {
+      "id": "uniform_0071",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 0.9,
+      "reference": "0.00541283379754282911317520370529942859754923596"
+    },
+    {
+      "id": "uniform_0072",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 1.0,
+      "reference": "0.103806809113127670527452310047478785654875807"
+    },
+    {
+      "id": "uniform_0073",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 1.1,
+      "reference": "0.0130758230863997481941595093203736996790969579"
+    },
+    {
+      "id": "uniform_0074",
+      "category": "scaled_numeric",
+      "family": "J",
+      "n": 80,
+      "z": 1.4,
+      "reference": "-0.0893550094692980037589979860633899773810053794"
+    },
+    {
+      "id": "uniform_0075",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 0.4,
+      "reference": "-83492.8982026504207263374133787259081741431087"
+    },
+    {
+      "id": "uniform_0076",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 0.7,
+      "reference": "-8.14549865187211359913900650406292648198962344"
+    },
+    {
+      "id": "uniform_0077",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 0.9,
+      "reference": "-0.554228374318814037762397760115881646868003598"
+    },
+    {
+      "id": "uniform_0078",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 1.0,
+      "reference": "-0.285489458600203489851803759379264697175003525"
+    },
+    {
+      "id": "uniform_0079",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 1.1,
+      "reference": "-0.0735816907424553565842092104136657188240713221"
+    },
+    {
+      "id": "uniform_0080",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 20,
+      "z": 1.4,
+      "reference": "-0.0265373102609381687264150683238866703560799078"
+    },
+    {
+      "id": "uniform_0081",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 0.4,
+      "reference": "-26176361861.8409486928905877023858831884891056"
+    },
+    {
+      "id": "uniform_0082",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 0.7,
+      "reference": "-214.135464302534919377972921266269807904351456"
+    },
+    {
+      "id": "uniform_0083",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 0.9,
+      "reference": "-0.721713933317351937565225679859151696784249315"
+    },
+    {
+      "id": "uniform_0084",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 1.0,
+      "reference": "-0.226562005459432703077423356454297762533476319"
+    },
+    {
+      "id": "uniform_0085",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 1.1,
+      "reference": "0.0553264763694649757328565699517955696467328316"
+    },
+    {
+      "id": "uniform_0086",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 40,
+      "z": 1.4,
+      "reference": "0.113921017645544872577799087537778939811976996"
+    },
+    {
+      "id": "uniform_0087",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 0.4,
+      "reference": "-3657988996045312837369.70532222098684781948366"
+    },
+    {
+      "id": "uniform_0088",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 0.7,
+      "reference": "-213691.602553041920621150984006842925033505455"
+    },
+    {
+      "id": "uniform_0089",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 0.9,
+      "reference": "-1.71011855578550879244016361177290830173507209"
+    },
+    {
+      "id": "uniform_0090",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 1.0,
+      "reference": "-0.179812355990802420270408167663781998336653121"
+    },
+    {
+      "id": "uniform_0091",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 1.1,
+      "reference": "0.130405436544734313159912672727217545781273223"
+    },
+    {
+      "id": "uniform_0092",
+      "category": "scaled_numeric",
+      "family": "Y",
+      "n": 80,
+      "z": 1.4,
+      "reference": "0.011637948126192190472870922948573611817415625"
+    },
+    {
+      "id": "uniform_0093",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 0.4,
+      "reference": "0.000000956038511399654781591993813117127397824781673"
+    },
+    {
+      "id": "uniform_0094",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 0.7,
+      "reference": "0.30312081021755280593876328978680961093182174"
+    },
+    {
+      "id": "uniform_0095",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 0.9,
+      "reference": "178.823834301897788601979955549259906542725668"
+    },
+    {
+      "id": "uniform_0096",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 1.0,
+      "reference": "3188.75032885361480155313050690234787255632519"
+    },
+    {
+      "id": "uniform_0097",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 1.1,
+      "reference": "49310.3707439827337496149954744040048932378526"
+    },
+    {
+      "id": "uniform_0098",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 20,
+      "z": 1.4,
+      "reference": "101558829.354535842192525153585744810458944529"
+    },
+    {
+      "id": "uniform_0099",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 0.4,
+      "reference": "0.0000000000075483424474311841997915304843264855723066028"
+    },
+    {
+      "id": "uniform_0100",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 0.7,
+      "reference": "0.805518201651859640573409954720365210772099079"
+    },
+    {
+      "id": "uniform_0101",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 0.9,
+      "reference": "293882.407763346244561845103129495724156609691"
+    },
+    {
+      "id": "uniform_0102",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 1.0,
+      "reference": "95753466.317139004279098043025766680626675735"
+    },
+    {
+      "id": "uniform_0103",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 1.1,
+      "reference": "23465496723.9087483419155499706793660853498124"
+    },
+    {
+      "id": "uniform_0104",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 40,
+      "z": 1.4,
+      "reference": "106987651954820717.878466116805746154002319723"
+    },
+    {
+      "id": "uniform_0105",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 0.4,
+      "reference": "6.64140093121407649563461784086861405421624012e-22"
+    },
+    {
+      "id": "uniform_0106",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 0.7,
+      "reference": "8.04017341392934710820443226120863226854023909"
+    },
+    {
+      "id": "uniform_0107",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 0.9,
+      "reference": "1122703320176.98870004807156920679415993671803"
+    },
+    {
+      "id": "uniform_0108",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 1.0,
+      "reference": "122163882421243598.362949218175293685040406487"
+    },
+    {
+      "id": "uniform_0109",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 1.1,
+      "reference": "7520302271442824941232.46330114959777969779279"
+    },
+    {
+      "id": "uniform_0110",
+      "category": "scaled_numeric",
+      "family": "I",
+      "n": 80,
+      "z": 1.4,
+      "reference": "168105870354332196278417371292003821.045298048"
+    },
+    {
+      "id": "uniform_0111",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 0.4,
+      "reference": "24276.2850945647121277148018874830970114077809"
+    },
+    {
+      "id": "uniform_0112",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 0.7,
+      "reference": "0.0675554921049975234519469977340593765617594036"
+    },
+    {
+      "id": "uniform_0113",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 0.9,
+      "reference": "0.000103900164253683426914451521416662098905418354"
+    },
+    {
+      "id": "uniform_0114",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 1.0,
+      "reference": "0.00000554311163612581625722030477865228055956824274"
+    },
+    {
+      "id": "uniform_0115",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 1.1,
+      "reference": "0.000000341006892524953539283017774222579005862867594"
+    },
+    {
+      "id": "uniform_0116",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 20,
+      "z": 1.4,
+      "reference": "0.00000000014307228417695449107744741780069010942538424"
+    },
+    {
+      "id": "uniform_0117",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 0.4,
+      "reference": "1537503347.14277175253101762232807463568685486"
+    },
+    {
+      "id": "uniform_0118",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 0.7,
+      "reference": "0.0127122927672932304276400998752964315978420685"
+    },
+    {
+      "id": "uniform_0119",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 0.9,
+      "reference": "0.0000000316142115350157057026244705481323262426942828"
+    },
+    {
+      "id": "uniform_0120",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 1.0,
+      "reference": "0.0000000000923055445360649202739620944171765248248444691"
+    },
+    {
+      "id": "uniform_0121",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 1.1,
+      "reference": "0.000000000000358322032190703547609613331286198957625838046"
+    },
+    {
+      "id": "uniform_0122",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 40,
+      "z": 1.4,
+      "reference": "6.79086767871006318523139117719650955632713392e-20"
+    },
+    {
+      "id": "uniform_0123",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 0.4,
+      "reference": "8737516025337287338.41876131720745546706794642"
+    },
+    {
+      "id": "uniform_0124",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 0.7,
+      "reference": "0.000636820532312644603011052231200987837921822359"
+    },
+    {
+      "id": "uniform_0125",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 0.9,
+      "reference": "4.13782412091312752211111588357428423078812309e-15"
+    },
+    {
+      "id": "uniform_0126",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 1.0,
+      "reference": "3.61758723375451564742347762422215389630783278e-20"
+    },
+    {
+      "id": "uniform_0127",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 1.1,
+      "reference": "5.59043922562299004792256624340731797180755732e-25"
+    },
+    {
+      "id": "uniform_0128",
+      "category": "scaled_numeric",
+      "family": "K",
+      "n": 80,
+      "z": 1.4,
+      "reference": "2.16097615336626992124942677902016897873986379e-38"
+    },
+    {
+      "id": "uniform_0129",
+      "category": "regime_adversarial",
+      "power": "1/4",
+      "coefficient": 1,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0130",
+      "category": "regime_adversarial",
+      "power": "1/4",
+      "coefficient": 2,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0131",
+      "category": "regime_adversarial",
+      "power": "1/4",
+      "coefficient": -1,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0132",
+      "category": "regime_adversarial",
+      "power": "1/3",
+      "coefficient": 1,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0133",
+      "category": "regime_adversarial",
+      "power": "1/3",
+      "coefficient": 2,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0134",
+      "category": "regime_adversarial",
+      "power": "1/3",
+      "coefficient": -1,
+      "expected": "turning-point"
+    },
+    {
+      "id": "uniform_0135",
+      "category": "regime_adversarial",
+      "power": "1/2",
+      "coefficient": 1,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0136",
+      "category": "regime_adversarial",
+      "power": "1/2",
+      "coefficient": 2,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0137",
+      "category": "regime_adversarial",
+      "power": "1/2",
+      "coefficient": -1,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0138",
+      "category": "regime_adversarial",
+      "power": "2/3",
+      "coefficient": 1,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0139",
+      "category": "regime_adversarial",
+      "power": "2/3",
+      "coefficient": 2,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0140",
+      "category": "regime_adversarial",
+      "power": "2/3",
+      "coefficient": -1,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0141",
+      "category": "regime_adversarial",
+      "power": "1",
+      "coefficient": 1,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0142",
+      "category": "regime_adversarial",
+      "power": "1",
+      "coefficient": 2,
+      "expected": "large-order-scaled-argument"
+    },
+    {
+      "id": "uniform_0143",
+      "category": "regime_adversarial",
+      "power": "1",
+      "coefficient": -1,
+      "expected": "unknown"
+    },
+    {
+      "id": "uniform_0144",
+      "category": "olver_exact",
+      "family": "A",
+      "k": 0,
+      "value": "1"
+    },
+    {
+      "id": "uniform_0145",
+      "category": "olver_exact",
+      "family": "A",
+      "k": 1,
+      "value": "-1/225"
+    },
+    {
+      "id": "uniform_0146",
+      "category": "olver_exact",
+      "family": "A",
+      "k": 2,
+      "value": "151439/218295000"
+    },
+    {
+      "id": "uniform_0147",
+      "category": "olver_exact",
+      "family": "B",
+      "k": 0,
+      "value": "2**(1/3)/70"
+    },
+    {
+      "id": "uniform_0148",
+      "category": "olver_exact",
+      "family": "B",
+      "k": 1,
+      "value": "-1213*2**(1/3)/1023750"
+    },
+    {
+      "id": "uniform_0149",
+      "category": "olver_exact",
+      "family": "C",
+      "k": 0,
+      "value": "2**(2/3)/10"
+    },
+    {
+      "id": "uniform_0150",
+      "category": "olver_exact",
+      "family": "C",
+      "k": 1,
+      "value": "-947*2**(2/3)/693000"
+    },
+    {
+      "id": "uniform_0151",
+      "category": "olver_exact",
+      "family": "D",
+      "k": 0,
+      "value": "1"
+    },
+    {
+      "id": "uniform_0152",
+      "category": "olver_exact",
+      "family": "D",
+      "k": 1,
+      "value": "23/3150"
+    },
+    {
+      "id": "uniform_0153",
+      "category": "olver_exact",
+      "family": "D",
+      "k": 2,
+      "value": "-604523/644962500"
+    },
+    {
+      "id": "uniform_0154",
+      "category": "wronskian",
+      "case": 0
+    },
+    {
+      "id": "uniform_0155",
+      "category": "wronskian",
+      "case": 1
+    },
+    {
+      "id": "uniform_0156",
+      "category": "wronskian",
+      "case": 2
+    },
+    {
+      "id": "uniform_0157",
+      "category": "wronskian",
+      "case": 3
+    },
+    {
+      "id": "uniform_0158",
+      "category": "wronskian",
+      "case": 4
+    },
+    {
+      "id": "uniform_0159",
+      "category": "wronskian",
+      "case": 5
+    },
+    {
+      "id": "uniform_0160",
+      "category": "recurrence",
+      "case": 0
+    },
+    {
+      "id": "uniform_0161",
+      "category": "recurrence",
+      "case": 1
+    },
+    {
+      "id": "uniform_0162",
+      "category": "recurrence",
+      "case": 2
+    },
+    {
+      "id": "uniform_0163",
+      "category": "recurrence",
+      "case": 3
+    },
+    {
+      "id": "uniform_0164",
+      "category": "recurrence",
+      "case": 4
+    },
+    {
+      "id": "uniform_0165",
+      "category": "recurrence",
+      "case": 5
+    },
+    {
+      "id": "uniform_0166",
+      "category": "connection",
+      "case": 0
+    },
+    {
+      "id": "uniform_0167",
+      "category": "connection",
+      "case": 1
+    },
+    {
+      "id": "uniform_0168",
+      "category": "connection",
+      "case": 2
+    },
+    {
+      "id": "uniform_0169",
+      "category": "connection",
+      "case": 3
+    },
+    {
+      "id": "uniform_0170",
+      "category": "connection",
+      "case": 4
+    },
+    {
+      "id": "uniform_0171",
+      "category": "connection",
+      "case": 5
+    },
+    {
+      "id": "uniform_0172",
+      "category": "conjugation",
+      "case": 0
+    },
+    {
+      "id": "uniform_0173",
+      "category": "conjugation",
+      "case": 1
+    },
+    {
+      "id": "uniform_0174",
+      "category": "conjugation",
+      "case": 2
+    },
+    {
+      "id": "uniform_0175",
+      "category": "conjugation",
+      "case": 3
+    },
+    {
+      "id": "uniform_0176",
+      "category": "conjugation",
+      "case": 4
+    },
+    {
+      "id": "uniform_0177",
+      "category": "conjugation",
+      "case": 5
+    },
+    {
+      "id": "uniform_0178",
+      "category": "sector_boundary",
+      "case": 0
+    },
+    {
+      "id": "uniform_0179",
+      "category": "sector_boundary",
+      "case": 1
+    },
+    {
+      "id": "uniform_0180",
+      "category": "sector_boundary",
+      "case": 2
+    },
+    {
+      "id": "uniform_0181",
+      "category": "sector_boundary",
+      "case": 3
+    },
+    {
+      "id": "uniform_0182",
+      "category": "sector_boundary",
+      "case": 4
+    },
+    {
+      "id": "uniform_0183",
+      "category": "sector_boundary",
+      "case": 5
+    },
+    {
+      "id": "uniform_0184",
+      "category": "stokes_jump",
+      "case": 0
+    },
+    {
+      "id": "uniform_0185",
+      "category": "stokes_jump",
+      "case": 1
+    },
+    {
+      "id": "uniform_0186",
+      "category": "stokes_jump",
+      "case": 2
+    },
+    {
+      "id": "uniform_0187",
+      "category": "stokes_jump",
+      "case": 3
+    },
+    {
+      "id": "uniform_0188",
+      "category": "stokes_jump",
+      "case": 4
+    },
+    {
+      "id": "uniform_0189",
+      "category": "stokes_jump",
+      "case": 5
+    },
+    {
+      "id": "uniform_0190",
+      "category": "optimal_truncation",
+      "case": 0
+    },
+    {
+      "id": "uniform_0191",
+      "category": "optimal_truncation",
+      "case": 1
+    },
+    {
+      "id": "uniform_0192",
+      "category": "optimal_truncation",
+      "case": 2
+    },
+    {
+      "id": "uniform_0193",
+      "category": "optimal_truncation",
+      "case": 3
+    },
+    {
+      "id": "uniform_0194",
+      "category": "optimal_truncation",
+      "case": 4
+    },
+    {
+      "id": "uniform_0195",
+      "category": "optimal_truncation",
+      "case": 5
+    },
+    {
+      "id": "uniform_0196",
+      "category": "ode_residual",
+      "case": 0
+    },
+    {
+      "id": "uniform_0197",
+      "category": "ode_residual",
+      "case": 1
+    },
+    {
+      "id": "uniform_0198",
+      "category": "ode_residual",
+      "case": 2
+    },
+    {
+      "id": "uniform_0199",
+      "category": "ode_residual",
+      "case": 3
+    },
+    {
+      "id": "uniform_0200",
+      "category": "ode_residual",
+      "case": 4
+    },
+    {
+      "id": "uniform_0201",
+      "category": "ode_residual",
+      "case": 5
+    },
+    {
+      "id": "uniform_0202",
+      "category": "zero",
+      "case": 0
+    },
+    {
+      "id": "uniform_0203",
+      "category": "zero",
+      "case": 1
+    },
+    {
+      "id": "uniform_0204",
+      "category": "zero",
+      "case": 2
+    },
+    {
+      "id": "uniform_0205",
+      "category": "zero",
+      "case": 3
+    },
+    {
+      "id": "uniform_0206",
+      "category": "zero",
+      "case": 4
+    },
+    {
+      "id": "uniform_0207",
+      "category": "zero",
+      "case": 5
+    }
+  ]
+}

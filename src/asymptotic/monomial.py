@@ -1,6 +1,6 @@
 """Canonical asymptotic monomials on a ramified local uniformizer.
 
-The core representation is deliberately small: on a local cover ``h=t**r`` a
+The core representation is compact: on a local cover ``h=t**r`` a
 monomial is stored as
 
     exp(Q(t)) * t**alpha * log(h)**beta,   h=t**r.
@@ -19,7 +19,7 @@ import sympy as sp
 
 from ._integer_utils import integer_lcm as _lcm
 from ._power_simplify import analytic_powsimp, formal_powsimp
-from .context import AsymptoticContext, GrowthComparison
+from .context import AsymptoticContext, AsymptoticGrowthComparison
 
 
 def ramification_index(*indices: int) -> int:
@@ -85,14 +85,20 @@ class RamificationModel:
         """Rewrite a cover expression back using the principal rational power of ``h``."""
 
         root = self.local_coordinate ** sp.Rational(1, self.index)
-        return sp.powsimp(sp.sympify(expr).xreplace({self.parameter: root}), force=False)
+        return sp.powsimp(
+            sp.sympify(expr).xreplace({self.parameter: root}), force=False
+        )
 
-    def refine(self, new_index: int, *, parameter: sp.Symbol | None = None) -> RamificationModel:
+    def refine(
+        self, new_index: int, *, parameter: sp.Symbol | None = None
+    ) -> RamificationModel:
         """Return a common finer cover, preserving the asymptotic point."""
 
         new_index = int(new_index)
         if new_index < 1 or new_index % self.index:
-            raise ValueError("new ramification index must be a positive multiple of the old index")
+            raise ValueError(
+                "new ramification index must be a positive multiple of the old index"
+            )
         return RamificationModel(
             self.variable,
             self.point,
@@ -121,9 +127,11 @@ class AsymptoticMonomial:
         power = sp.simplify(sp.sympify(self.power))
         log_power = sp.simplify(sp.sympify(self.log_power))
         # All structural pieces must live on this one cover.  Constants in Q
-        # are intentionally retained: they are harmless for ordering and keep
+        # are retained: they are harmless for ordering and keep
         # exact reconstruction possible when the object was built explicitly.
-        foreign = (exponential.free_symbols | power.free_symbols | log_power.free_symbols) - {t}
+        foreign = (
+            exponential.free_symbols | power.free_symbols | log_power.free_symbols
+        ) - {t}
         allowed_parameters = foreign - {self.ramification.variable}
         if self.ramification.variable in foreign:
             raise ValueError("monomial data must be written in the local parameter")
@@ -141,7 +149,9 @@ class AsymptoticMonomial:
     def parameter_expression(self) -> sp.Expr:
         t = self.parameter
         log_h = self.ramification.index * sp.log(t)
-        return formal_powsimp(sp.exp(self.exponential) * t**self.power * log_h**self.log_power)
+        return formal_powsimp(
+            sp.exp(self.exponential) * t**self.power * log_h**self.log_power
+        )
 
     @property
     def expression(self) -> sp.Expr:
@@ -150,8 +160,13 @@ class AsymptoticMonomial:
     def on_ramification(self, target: RamificationModel) -> AsymptoticMonomial:
         """Lift this monomial to a compatible finer cover."""
 
-        if self.ramification.variable != target.variable or self.ramification.point != target.point:
-            raise ValueError("ramifications refer to different asymptotic variables/points")
+        if (
+            self.ramification.variable != target.variable
+            or self.ramification.point != target.point
+        ):
+            raise ValueError(
+                "ramifications refer to different asymptotic variables/points"
+            )
         if target.index % self.ramification.index:
             raise ValueError("target is not a refinement of this ramification")
         factor = target.index // self.ramification.index
@@ -175,7 +190,9 @@ class AsymptoticMonomial:
             raise ValueError("monomials refer to different asymptotic variables/points")
         r = ramification_index(self.ramification.index, other.ramification.index)
         t = sp.Dummy("t", positive=True)
-        target = RamificationModel(self.ramification.variable, self.ramification.point, r, t)
+        target = RamificationModel(
+            self.ramification.variable, self.ramification.point, r, t
+        )
         return self.on_ramification(target), other.on_ramification(target)
 
     def __mul__(self, other: AsymptoticMonomial) -> AsymptoticMonomial:
@@ -218,7 +235,7 @@ def _extract_parameter_monomial(
 
     The accepted structural group is exactly products of exponentials, powers
     of ``t``, and powers of ``log(t)``.  Refusing an unrecognized t-dependent
-    factor is preferable to silently pretending it is a coefficient.
+    factor is preferable to pretending it is a coefficient.
     """
 
     t = ramification.parameter
@@ -250,7 +267,9 @@ def _extract_parameter_monomial(
 
     return (
         sp.simplify(coefficient),
-        AsymptoticMonomial(ramification, sp.expand(q), sp.simplify(alpha), sp.simplify(beta)),
+        AsymptoticMonomial(
+            ramification, sp.expand(q), sp.simplify(alpha), sp.simplify(beta)
+        ),
     )
 
 
@@ -301,7 +320,7 @@ def _sign_of_real_expression(expr: sp.Expr, ctx: AsymptoticContext) -> int | Non
 def compare_asymptotic_monomials(
     left: AsymptoticMonomial,
     right: AsymptoticMonomial,
-) -> GrowthComparison:
+) -> AsymptoticGrowthComparison:
     """Compare monomial magnitudes by exponential, power, then logarithmic level.
 
     The comparison is lexicographic only after cancellation on a common cover.
@@ -320,31 +339,43 @@ def compare_asymptotic_monomials(
         real_dq = dq if dq.is_real is True else sp.re(dq)
         lim = ctx.limit(real_dq)
         if lim is sp.oo:
-            return GrowthComparison.LARGER
+            return AsymptoticGrowthComparison.LARGER
         if lim is -sp.oo:
-            return GrowthComparison.SMALLER
+            return AsymptoticGrowthComparison.SMALLER
         # A finite Q-difference contributes only a bounded nonzero factor.
         if getattr(lim, "is_finite", False) is not True:
             # Sometimes the sign is decidable even when SymPy declines a limit.
             sign = _sign_of_real_expression(real_dq, ctx)
             magnitude = ctx.limit(sp.Abs(real_dq)) if sign else None
             if sign and magnitude is sp.oo:
-                return GrowthComparison.LARGER if sign > 0 else GrowthComparison.SMALLER
-            return GrowthComparison.UNKNOWN
+                return (
+                    AsymptoticGrowthComparison.LARGER
+                    if sign > 0
+                    else AsymptoticGrowthComparison.SMALLER
+                )
+            return AsymptoticGrowthComparison.UNKNOWN
 
     dp = sp.simplify(left.power - right.power)
     sign = _sign_of_real_expression(dp, ctx)
     if sign is None:
-        return GrowthComparison.UNKNOWN
+        return AsymptoticGrowthComparison.UNKNOWN
     if sign:
         # t -> 0+: a smaller power exponent means a larger magnitude.
-        return GrowthComparison.SMALLER if sign > 0 else GrowthComparison.LARGER
+        return (
+            AsymptoticGrowthComparison.SMALLER
+            if sign > 0
+            else AsymptoticGrowthComparison.LARGER
+        )
 
     dl = sp.simplify(left.log_power - right.log_power)
     sign = _sign_of_real_expression(dl, ctx)
     if sign is None:
-        return GrowthComparison.UNKNOWN
+        return AsymptoticGrowthComparison.UNKNOWN
     if sign:
         # |log t| -> infinity.
-        return GrowthComparison.LARGER if sign > 0 else GrowthComparison.SMALLER
-    return GrowthComparison.SAME_ORDER
+        return (
+            AsymptoticGrowthComparison.LARGER
+            if sign > 0
+            else AsymptoticGrowthComparison.SMALLER
+        )
+    return AsymptoticGrowthComparison.SAME_ORDER

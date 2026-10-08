@@ -1,0 +1,5928 @@
+[
+  {
+    "id": "comprehensive_001",
+    "capability": "continuous_composition",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_002",
+    "capability": "continuous_composition",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Piecewise((0,x>=0),(1,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_003",
+    "capability": "continuous_composition",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "gamma(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_004",
+    "capability": "continuous_composition",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "cos((x-1)*(y+2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "1",
+      "-2"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_005",
+    "capability": "removable_radial",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin(x**2+y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_006",
+    "capability": "removable_radial",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin(x**2+y**2)/(x**2-y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_007",
+    "capability": "removable_radial",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "airyai((x**2+y**2))/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_008",
+    "capability": "removable_radial",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1+x**2+y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_009",
+    "capability": "squeeze_envelope",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x**3/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_010",
+    "capability": "squeeze_envelope",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x**2/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_011",
+    "capability": "squeeze_envelope",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "web_inspired",
+    "expression": "sin(exp(1/(x**2+y**2)))*(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_012",
+    "capability": "squeeze_envelope",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "2*x**2*y**3/(x**4+y**4)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_013",
+    "capability": "ray_conflict",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x**2*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_014",
+    "capability": "ray_conflict",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_015",
+    "capability": "ray_conflict",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "web_inspired",
+    "expression": "sin(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_016",
+    "capability": "ray_conflict",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_017",
+    "capability": "curved_path_detection",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x**3*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_018",
+    "capability": "curved_path_detection",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x**2*y/(x**4+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_019",
+    "capability": "curved_path_detection",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "web_inspired",
+    "expression": "sin(x*y)/(x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_020",
+    "capability": "curved_path_detection",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x*y**2/(x**2+y**4)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_021",
+    "capability": "homogeneous_order",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**4*y**2/(x**2+y**2)**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_022",
+    "capability": "homogeneous_order",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2*y**2/(x**2+y**2)**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_023",
+    "capability": "homogeneous_order",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Abs(x+y)**a/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_024",
+    "capability": "homogeneous_order",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**6+y**6)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_025",
+    "capability": "anisotropic_newton",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**7*y**5/(x**12+y**8)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_026",
+    "capability": "anisotropic_newton",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**6*y**4/(x**12+y**8)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_027",
+    "capability": "anisotropic_newton",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**a*y**b/(x**12+y**8)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_028",
+    "capability": "anisotropic_newton",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**5*y**3/(x**8+y**6)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_029",
+    "capability": "bounded_oscillation",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*sin(1/(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_030",
+    "capability": "bounded_oscillation",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin(1/(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_031",
+    "capability": "bounded_oscillation",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sin(exp(1/x)+exp(1/y))*(x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_032",
+    "capability": "bounded_oscillation",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y*sin(1/(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_033",
+    "capability": "oscillatory_paths",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "y*sin(1/x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_034",
+    "capability": "oscillatory_paths",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_035",
+    "capability": "oscillatory_paths",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sin(exp(y/x))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_036",
+    "capability": "oscillatory_paths",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*sin(y/x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_037",
+    "capability": "rational_poles",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)/(1+x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_038",
+    "capability": "rational_poles",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_039",
+    "capability": "rational_poles",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "1/(x**2+a*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_040",
+    "capability": "rational_poles",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "1/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo"
+  },
+  {
+    "id": "comprehensive_041",
+    "capability": "domain_boundary",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "sqrt(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x>=y"
+  },
+  {
+    "id": "comprehensive_042",
+    "capability": "domain_boundary",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "y>=0"
+  },
+  {
+    "id": "comprehensive_043",
+    "capability": "domain_boundary",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "web_inspired",
+    "expression": "sqrt(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "a*x>=y"
+  },
+  {
+    "id": "comprehensive_044",
+    "capability": "domain_boundary",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "x+y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "1",
+      "1"
+    ],
+    "expected_kind": "value",
+    "expected": "2",
+    "domain": "x>=1"
+  },
+  {
+    "id": "comprehensive_045",
+    "capability": "domain_equality",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x+y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y,-x)"
+  },
+  {
+    "id": "comprehensive_046",
+    "capability": "domain_equality",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Eq(y**2,x**2)"
+  },
+  {
+    "id": "comprehensive_047",
+    "capability": "domain_equality",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Eq(y**3,x**2)"
+  },
+  {
+    "id": "comprehensive_048",
+    "capability": "domain_equality",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2+y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y,x**2)"
+  },
+  {
+    "id": "comprehensive_049",
+    "capability": "piecewise_accumulation",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "Piecewise((x**2+y**2,Ne(x**2+y**2,0)),(1,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_050",
+    "capability": "piecewise_accumulation",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "Piecewise((1,x>=0),(2,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_051",
+    "capability": "piecewise_accumulation",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "web_inspired",
+    "expression": "Piecewise((sin(1/x),x>0),(0,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_052",
+    "capability": "piecewise_accumulation",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "web_inspired",
+    "expression": "Piecewise((x+y,x>=y),(x-y,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_053",
+    "capability": "piecewise_priority",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Piecewise((x**2+y**2,True),(7,x>0),evaluate=False)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_054",
+    "capability": "piecewise_priority",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Piecewise((0,x>0),(1,y>0),(2,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_055",
+    "capability": "piecewise_priority",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Piecewise((sin(1/x),x!=0),(0,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_056",
+    "capability": "piecewise_priority",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Piecewise((x,x>=0),(-x,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_057",
+    "capability": "parameter_threshold",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**16*y**22/(x**2+y**2)**p",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "conditional",
+    "expected": "p < 19 -> 0"
+  },
+  {
+    "id": "comprehensive_058",
+    "capability": "parameter_threshold",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**16*y**22/(x**2+y**2)**19",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_059",
+    "capability": "parameter_threshold",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**a*y**b/(x**2+y**2)**p",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_060",
+    "capability": "parameter_threshold",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**8*y**10/(x**2+y**2)**p",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "conditional",
+    "expected": "p < 9 -> 0"
+  },
+  {
+    "id": "comprehensive_061",
+    "capability": "parameter_fibers",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2+a*y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_062",
+    "capability": "parameter_fibers",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y/(x**2+a*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_063",
+    "capability": "parameter_fibers",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**a+y**a",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_064",
+    "capability": "parameter_fibers",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2/(x**2+a*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "conditional",
+    "expected": "fiber-dependent"
+  },
+  {
+    "id": "comprehensive_065",
+    "capability": "exp_vs_power",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/x**5",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_066",
+    "capability": "exp_vs_power",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(1/x)*x**5",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_067",
+    "capability": "exp_vs_power",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**a)/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_068",
+    "capability": "exp_vs_power",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**2)/x**100",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_069",
+    "capability": "power_vs_log",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**5*Abs(log(x))**3",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_070",
+    "capability": "power_vs_log",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Abs(log(x))/x",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo"
+  },
+  {
+    "id": "comprehensive_071",
+    "capability": "power_vs_log",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**N*Abs(log(x))**M",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_072",
+    "capability": "power_vs_log",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2*log(log(1/x))",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_073",
+    "capability": "nested_exp_log",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-exp(1/x))/exp(-1/x)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_074",
+    "capability": "nested_exp_log",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(exp(1/x))*exp(-1/x)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo"
+  },
+  {
+    "id": "comprehensive_075",
+    "capability": "nested_exp_log",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-exp(1/x**a))/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_076",
+    "capability": "nested_exp_log",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-exp(exp(1/x)))/exp(-exp(1/x))",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_077",
+    "capability": "relative_growth",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)+x**2",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_078",
+    "capability": "relative_growth",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_079",
+    "capability": "relative_growth",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/exp(-1/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_080",
+    "capability": "relative_growth",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2+Abs(log(y))**-2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x>0 & y>0"
+  },
+  {
+    "id": "comprehensive_081",
+    "capability": "complex_argument",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "arg(1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_082",
+    "capability": "complex_argument",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "arg(x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_083",
+    "capability": "complex_argument",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "arg(exp(-1/x)+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_084",
+    "capability": "complex_argument",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "arg(-1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_085",
+    "capability": "complex_log",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_086",
+    "capability": "complex_log",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_087",
+    "capability": "complex_log",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "log(exp(-1/x)+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_088",
+    "capability": "complex_log",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(2+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "log(2)"
+  },
+  {
+    "id": "comprehensive_089",
+    "capability": "fractional_power",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(1+x+I*y)**Rational(1,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_090",
+    "capability": "fractional_power",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(-1+x+I*y)**Rational(1,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_091",
+    "capability": "fractional_power",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "(x+I*y)**a",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_092",
+    "capability": "fractional_power",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x+I*y)**Rational(1,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_093",
+    "capability": "branch_monodromy",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(log(1+x+I*y))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_094",
+    "capability": "branch_monodromy",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "arg(x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_095",
+    "capability": "branch_monodromy",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "log((x+I*y)**a)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_096",
+    "capability": "branch_monodromy",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x+I*y)**sqrt(2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_097",
+    "capability": "vector_componentwise",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x**2+y**2,x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0)"
+  },
+  {
+    "id": "comprehensive_098",
+    "capability": "vector_componentwise",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2),0)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_099",
+    "capability": "vector_componentwise",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(gamma(x/y),x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_100",
+    "capability": "vector_componentwise",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(sin(x*y),exp(x+y)-1)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0)"
+  },
+  {
+    "id": "comprehensive_101",
+    "capability": "joint_cluster",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x,y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0)"
+  },
+  {
+    "id": "comprehensive_102",
+    "capability": "joint_cluster",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2),y/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "cluster",
+    "expected": "unit circle"
+  },
+  {
+    "id": "comprehensive_103",
+    "capability": "joint_cluster",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(sin(x/y),cos(x/y))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_104",
+    "capability": "joint_cluster",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2),y/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "cluster",
+    "expected": "unit circle"
+  },
+  {
+    "id": "comprehensive_105",
+    "capability": "higher_dim_squeeze",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y*z/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_106",
+    "capability": "higher_dim_squeeze",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_107",
+    "capability": "higher_dim_squeeze",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x*y*z/(x**a+y**a+z**a)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_108",
+    "capability": "higher_dim_squeeze",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2+z**2)*sin(1/(x**2+y**2+z**2))",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_109",
+    "capability": "higher_dim_paths",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2*y*z/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_110",
+    "capability": "higher_dim_paths",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_111",
+    "capability": "higher_dim_paths",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sin(x/(y+z))",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_112",
+    "capability": "higher_dim_paths",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y*z/(x**4+y**4+z**4)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_113",
+    "capability": "special_bessel",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "besselj(0,sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_114",
+    "capability": "special_bessel",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "bessely(0,sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "-oo"
+  },
+  {
+    "id": "comprehensive_115",
+    "capability": "special_bessel",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "bessely(a,sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_116",
+    "capability": "special_bessel",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "besselj(1,sqrt(x**2+y**2))/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1/2"
+  },
+  {
+    "id": "comprehensive_117",
+    "capability": "special_erf",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erf(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_118",
+    "capability": "special_erf",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erfi(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_119",
+    "capability": "special_erf",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "erf(x**a*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_120",
+    "capability": "special_erf",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erf(sqrt(x**2+y**2))/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "2/sqrt(pi)"
+  },
+  {
+    "id": "comprehensive_121",
+    "capability": "absolute_value",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Abs(x*y)/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_122",
+    "capability": "absolute_value",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Abs(x)/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_123",
+    "capability": "absolute_value",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Abs(x**a-y**a)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_124",
+    "capability": "absolute_value",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Abs(x)-Abs(y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_125",
+    "capability": "discontinuous_maps",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*sign(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_126",
+    "capability": "discontinuous_maps",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sign(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_127",
+    "capability": "discontinuous_maps",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "floor(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_128",
+    "capability": "discontinuous_maps",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*floor(x/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_129",
+    "capability": "modular_maps",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Mod(x**2+y**2,1)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_130",
+    "capability": "modular_maps",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Mod(x/y,1)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_131",
+    "capability": "modular_maps",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Mod(x**a,y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_132",
+    "capability": "modular_maps",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Mod(x**2+y**2,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_133",
+    "capability": "translated_targets",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin((x-1)**2+(y+2)**2)/((x-1)**2+(y+2)**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "1",
+      "-2"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_134",
+    "capability": "translated_targets",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x-1)*(y-2)/((x-1)**2+(y-2)**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "1",
+      "2"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_135",
+    "capability": "translated_targets",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "gamma((x-1)/(y-2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "1",
+      "2"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_136",
+    "capability": "translated_targets",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp((x-3)+(y+4))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "3",
+      "-4"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_137",
+    "capability": "real_roots",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sign(x)*Abs(x)**Rational(1,3)*y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_138",
+    "capability": "real_roots",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sign(x*y)*Abs(x*y)**Rational(1,3)/sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_139",
+    "capability": "real_roots",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sign(x)*Abs(x)**(1/a)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_140",
+    "capability": "real_roots",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sign(x**3+y**3)*Abs(x**3+y**3)**Rational(1,3)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_141",
+    "capability": "normalized_derivatives",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "2*x*y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_142",
+    "capability": "normalized_derivatives",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_143",
+    "capability": "normalized_derivatives",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Derivative(f(x,y),x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_144",
+    "capability": "normalized_derivatives",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "cos(x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1"
+  },
+  {
+    "id": "comprehensive_145",
+    "capability": "cusp_domains",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_146",
+    "capability": "cusp_domains",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_147",
+    "capability": "cusp_domains",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x/y**a",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_148",
+    "capability": "cusp_domains",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Abs(x)<=y**3 & y>0"
+  },
+  {
+    "id": "comprehensive_149",
+    "capability": "deleted_varieties",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Ne(x*y,0)"
+  },
+  {
+    "id": "comprehensive_150",
+    "capability": "deleted_varieties",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Ne(x*y,0)"
+  },
+  {
+    "id": "comprehensive_151",
+    "capability": "deleted_varieties",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sin(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Ne(y,0)"
+  },
+  {
+    "id": "comprehensive_152",
+    "capability": "deleted_varieties",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x+y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Ne(x**2-y**2,0)"
+  },
+  {
+    "id": "comprehensive_153",
+    "capability": "infinite_targets",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_154",
+    "capability": "infinite_targets",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_155",
+    "capability": "infinite_targets",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_156",
+    "capability": "infinite_targets",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "1/x+1/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_157",
+    "capability": "nonalgebraic_paths",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*sin(exp(1/(x**2+y**2)))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_158",
+    "capability": "nonalgebraic_paths",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sin(x*y)/(x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_159",
+    "capability": "nonalgebraic_paths",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sin(exp(y/x))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_160",
+    "capability": "nonalgebraic_paths",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*sin(y/x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_161",
+    "capability": "polar_angular",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**4+y**4)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_162",
+    "capability": "polar_angular",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_163",
+    "capability": "polar_angular",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "cos(arg(x+I*y))*gamma(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_164",
+    "capability": "polar_angular",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*cos(3*arg(x+I*y))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_165",
+    "capability": "principal_cut_sides",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_166",
+    "capability": "principal_cut_sides",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(-1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_167",
+    "capability": "principal_cut_sides",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(-1+x**2+I*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_168",
+    "capability": "principal_cut_sides",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "log(-2+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_169",
+    "capability": "independent_monodromy",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "log(1+x+I*y)+log(2+x-I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "log(2)"
+  },
+  {
+    "id": "comprehensive_170",
+    "capability": "independent_monodromy",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(-1+x+I*y)+arg(-2+x-I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_171",
+    "capability": "independent_monodromy",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "log((x+I*y)*(x-I*y))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_172",
+    "capability": "independent_monodromy",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(-1+x+I*y)-arg(-2+x-I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_173",
+    "capability": "branch_point_radial_winding",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x+I*y)**Rational(1,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_174",
+    "capability": "branch_point_radial_winding",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "arg(x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_175",
+    "capability": "branch_point_radial_winding",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "log(x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_176",
+    "capability": "branch_point_radial_winding",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x+I*y)**Rational(3,2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_177",
+    "capability": "piecewise_boundary_intersections",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((x+y,x>=0),(x-y,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_178",
+    "capability": "piecewise_boundary_intersections",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((1,x>=0),(2,y>=0),(3,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_179",
+    "capability": "piecewise_boundary_intersections",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((sin(1/x),x>y),(0,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_180",
+    "capability": "piecewise_boundary_intersections",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((x**2,x>=y),(y**2,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_181",
+    "capability": "nonaccumulating_pieces",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((7,Eq(x**2+y**2,0)),(x+y,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_182",
+    "capability": "nonaccumulating_pieces",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((1,Eq(y,0)),(2,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_183",
+    "capability": "nonaccumulating_pieces",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((1,Eq(y,x**a)),(0,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_184",
+    "capability": "nonaccumulating_pieces",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Piecewise((5,Eq(x,0)&Eq(y,0)),(x**2+y**2,True))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_185",
+    "capability": "disconnected_approach_domains",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x**2+y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "(x>0) | (x<0)"
+  },
+  {
+    "id": "comprehensive_186",
+    "capability": "disconnected_approach_domains",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "sign(x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "(x>0) | (x<0)"
+  },
+  {
+    "id": "comprehensive_187",
+    "capability": "disconnected_approach_domains",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "(x*y>0) | (x*y<0)"
+  },
+  {
+    "id": "comprehensive_188",
+    "capability": "disconnected_approach_domains",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Abs(x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "(x>0) | (x<0)"
+  },
+  {
+    "id": "comprehensive_189",
+    "capability": "strict_weak_domains",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x+y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x>=0"
+  },
+  {
+    "id": "comprehensive_190",
+    "capability": "strict_weak_domains",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "sign(y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "x>=0"
+  },
+  {
+    "id": "comprehensive_191",
+    "capability": "strict_weak_domains",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "x>a*y"
+  },
+  {
+    "id": "comprehensive_192",
+    "capability": "strict_weak_domains",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "sqrt(x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x>0"
+  },
+  {
+    "id": "comprehensive_193",
+    "capability": "singular_domain_boundaries",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_194",
+    "capability": "singular_domain_boundaries",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_195",
+    "capability": "singular_domain_boundaries",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/y**a",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Abs(x)<=y**2 & y>0"
+  },
+  {
+    "id": "comprehensive_196",
+    "capability": "singular_domain_boundaries",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x**2/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Abs(x)<=y**3 & y>0"
+  },
+  {
+    "id": "comprehensive_197",
+    "capability": "denominator_strata",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x**2*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_198",
+    "capability": "denominator_strata",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_199",
+    "capability": "denominator_strata",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x*y/(x**2+a*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_200",
+    "capability": "denominator_strata",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x**3+y**3)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0"
+  },
+  {
+    "id": "comprehensive_201",
+    "capability": "deleted_variety_cancellation",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x**2-y**2)/(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Ne(x,y)"
+  },
+  {
+    "id": "comprehensive_202",
+    "capability": "deleted_variety_cancellation",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x+y)/(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Ne(x,y)"
+  },
+  {
+    "id": "comprehensive_203",
+    "capability": "deleted_variety_cancellation",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x**a-y**a)/(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Ne(x,y)"
+  },
+  {
+    "id": "comprehensive_204",
+    "capability": "deleted_variety_cancellation",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "(x**3-y**3)/(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Ne(x,y)"
+  },
+  {
+    "id": "comprehensive_205",
+    "capability": "signed_infinity",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "1/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo"
+  },
+  {
+    "id": "comprehensive_206",
+    "capability": "signed_infinity",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_207",
+    "capability": "signed_infinity",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "1/(x**2+a*y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_208",
+    "capability": "signed_infinity",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "-1/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "-oo"
+  },
+  {
+    "id": "comprehensive_209",
+    "capability": "finite_infinite_clusters",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "sign(x)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "cluster",
+    "expected": "{-1,1}"
+  },
+  {
+    "id": "comprehensive_210",
+    "capability": "finite_infinite_clusters",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "x/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne"
+  },
+  {
+    "id": "comprehensive_211",
+    "capability": "finite_infinite_clusters",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "floor(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown"
+  },
+  {
+    "id": "comprehensive_212",
+    "capability": "finite_infinite_clusters",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed_soundness_boundary",
+    "expression": "Tuple(x/sqrt(x**2+y**2),y/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "cluster",
+    "expected": "unit circle"
+  },
+  {
+    "id": "comprehensive_213",
+    "capability": "symbolic_power_exponents",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**N/x**M",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "N > M",
+    "growth_comparison": [
+      "x**N",
+      "x**M",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_214",
+    "capability": "symbolic_power_exponents",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**N/x**M",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "assumptions": "N < M",
+    "growth_comparison": [
+      "x**N",
+      "x**M",
+      "greater"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_215",
+    "capability": "symbolic_power_exponents",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**N/x**M",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "growth_comparison": [
+      "x**N",
+      "x**M",
+      "unknown"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_216",
+    "capability": "symbolic_power_exponents",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**(N+2)/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "N > 0",
+    "growth_comparison": [
+      "x**(N+2)",
+      "x**N",
+      "less"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_217",
+    "capability": "symbolic_log_exponents",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1/x)**(-N)/log(1/x)**(-M)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "N > M & M > 0",
+    "growth_comparison": [
+      "log(1/x)**(-N)",
+      "log(1/x)**(-M)",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_218",
+    "capability": "symbolic_log_exponents",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1/x)**(-N)/log(1/x)**(-M)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "assumptions": "M > N & N > 0",
+    "growth_comparison": [
+      "log(1/x)**(-N)",
+      "log(1/x)**(-M)",
+      "greater"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_219",
+    "capability": "symbolic_log_exponents",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "log(1/x)**(-N)/log(1/x)**(-M)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "growth_comparison": [
+      "log(1/x)**(-N)",
+      "log(1/x)**(-M)",
+      "unknown"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_220",
+    "capability": "symbolic_log_exponents",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1/x)**(-(N+1))/log(1/x)**(-N)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "N > 0",
+    "growth_comparison": [
+      "log(1/x)**(-(N+1))",
+      "log(1/x)**(-N)",
+      "less"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_221",
+    "capability": "exp_power_assumptions",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**q)/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "q > 0 & N > 0",
+    "growth_comparison": [
+      "exp(-1/x**q)",
+      "x**N",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_222",
+    "capability": "exp_power_assumptions",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**N/exp(-1/x**q)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "assumptions": "q > 0 & N > 0",
+    "growth_comparison": [
+      "x**N",
+      "exp(-1/x**q)",
+      "greater"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_223",
+    "capability": "exp_power_assumptions",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**q)/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "growth_comparison": [
+      "exp(-1/x**q)",
+      "x**N",
+      "unknown"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_224",
+    "capability": "exp_power_assumptions",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "3*exp(-1/x**2)/x**17",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "growth_comparison": [
+      "exp(-1/x**2)",
+      "x**17",
+      "less"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_225",
+    "capability": "iterated_logarithms",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(log(1/x))**(-2)/log(1/x)**(-1)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_226",
+    "capability": "iterated_logarithms",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "log(1/x)**(-2)/log(log(1/x))**(-1)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_227",
+    "capability": "iterated_logarithms",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "log(log(1/x))**(-N)/log(1/x)**(-M)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_228",
+    "capability": "iterated_logarithms",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*log(log(1/x))**5",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_229",
+    "capability": "nested_exponentials",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-exp(1/x))/exp(-1/x)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "growth_comparison": [
+      "exp(-exp(1/x))",
+      "exp(-1/x)",
+      "less"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_230",
+    "capability": "nested_exponentials",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/exp(-exp(1/x))",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "growth_comparison": [
+      "exp(-1/x)",
+      "exp(-exp(1/x))",
+      "greater"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_231",
+    "capability": "nested_exponentials",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-exp(1/x**q))/exp(-1/x**N)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_232",
+    "capability": "nested_exponentials",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-exp(exp(1/x)))/exp(-exp(1/x))",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "growth_comparison": [
+      "exp(-exp(exp(1/x)))",
+      "exp(-exp(1/x))",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_233",
+    "capability": "mixed_exp_log_products",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)*log(1/x)**7/x**3",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "growth_comparison": [
+      "exp(-1/x)*log(1/x)**7",
+      "x**3",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_234",
+    "capability": "mixed_exp_log_products",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**3/(exp(-1/x)*log(1/x)**7)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "growth_comparison": [
+      "x**3",
+      "exp(-1/x)*log(1/x)**7",
+      "greater"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_235",
+    "capability": "mixed_exp_log_products",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**q)*log(1/x)**M/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_236",
+    "capability": "mixed_exp_log_products",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "5*exp(-1/x**2)*log(1/x)**11/x**100",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_237",
+    "capability": "scale_composition",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/sqrt(x))/x**3",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "growth_comparison": [
+      "exp(-1/sqrt(x))",
+      "x**3",
+      "less"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_238",
+    "capability": "scale_composition",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**3/exp(-1/sqrt(x))",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "oo",
+    "growth_comparison": [
+      "x**3",
+      "exp(-1/sqrt(x))",
+      "greater"
+    ],
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_239",
+    "capability": "scale_composition",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/f(x))/x",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_240",
+    "capability": "scale_composition",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x**2)/sqrt(x)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_241",
+    "capability": "positive_constant_scales",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "7*x**N/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "7",
+    "assumptions": "N > 0",
+    "growth_comparison": [
+      "7*x**N",
+      "x**N",
+      "equivalent"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_242",
+    "capability": "positive_constant_scales",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**N/(7*x**N)",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1/7",
+    "assumptions": "N > 0",
+    "growth_comparison": [
+      "x**N",
+      "7*x**N",
+      "equivalent"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_243",
+    "capability": "positive_constant_scales",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "a*x**N/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "growth_comparison": [
+      "a*x**N",
+      "x**N",
+      "unknown"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_244",
+    "capability": "positive_constant_scales",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "a*x**N/x**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "a",
+    "assumptions": "a > 0 & N > 0",
+    "growth_comparison": [
+      "a*x**N",
+      "x**N",
+      "equivalent"
+    ],
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_245",
+    "capability": "one_sided_scales",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/x**2",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_246",
+    "capability": "one_sided_scales",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/x**2",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Ne(x,0)",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_247",
+    "capability": "one_sided_scales",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "(-x)**N",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "x < 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_248",
+    "capability": "one_sided_scales",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(1/x)*x**3",
+    "variables": [
+      "x"
+    ],
+    "target": [
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x < 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_249",
+    "capability": "cross_variable_growth_cells",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_250",
+    "capability": "cross_variable_growth_cells",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)+y**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_251",
+    "capability": "cross_variable_growth_cells",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)/exp(-1/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_252",
+    "capability": "cross_variable_growth_cells",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "exp(-1/x)+y**N",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "assumptions": "N > 0",
+    "domain": "x > 0",
+    "suite": "growth_scale"
+  },
+  {
+    "id": "comprehensive_253",
+    "capability": "algebraic_multibranch_curves",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(y**2-x**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y**2,x**2)",
+    "proof_sketch": "both branches y=\u00b1x give zero",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_254",
+    "capability": "algebraic_multibranch_curves",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Eq(y**2,x**2)",
+    "proof_sketch": "branches y=\u00b1x give \u00b11/2",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_255",
+    "capability": "algebraic_multibranch_curves",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Eq(y**2,x**3)",
+    "proof_sketch": "singular branch parametrization required",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_256",
+    "capability": "algebraic_multibranch_curves",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(y**2-x**2)**2/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y**2,x**2)",
+    "proof_sketch": "multibranch composition",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_257",
+    "capability": "singular_cusps_tacnodes",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(y**2-x**3)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y**2,x**3)",
+    "proof_sketch": "numerator vanishes on cusp",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_258",
+    "capability": "singular_cusps_tacnodes",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "y/x**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Eq(y**2,x**4)",
+    "proof_sketch": "tacnode branches y=\u00b1x\u00b2 give \u00b11",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_259",
+    "capability": "singular_cusps_tacnodes",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "y/x",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Eq(y**3,x**5)",
+    "proof_sketch": "Puiseux normalization prerequisite",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_260",
+    "capability": "singular_cusps_tacnodes",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(y**2-x**4)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(y**2,x**4)",
+    "proof_sketch": "both tacnode branches",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_261",
+    "capability": "reducible_varieties",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(x*y,0)",
+    "proof_sketch": "coordinate-axis components both zero",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_262",
+    "capability": "reducible_varieties",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Eq(x*y,0)",
+    "proof_sketch": "x-axis gives 1, y-axis -1",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_263",
+    "capability": "reducible_varieties",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Eq(x*y*(x-y),0)",
+    "proof_sketch": "undefined component requires domain decomposition",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_264",
+    "capability": "reducible_varieties",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x*y)**2/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Eq(x*y*(x-y),0)",
+    "proof_sketch": "reducible three-component variety",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_265",
+    "capability": "projective_directions_infinity",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)/(x**2+y**2+1)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "value",
+    "expected": "1",
+    "proof_sketch": "projective compactification",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_266",
+    "capability": "projective_directions_infinity",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x/y",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "different projective directions",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_267",
+    "capability": "projective_directions_infinity",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "(x**a+y**a)/(x**a-y**a)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic degree/sign prevents projective certification",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_268",
+    "capability": "projective_directions_infinity",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**4+y**4)/(x**2+y**2)**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "oo",
+      "oo"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "direction-dependent homogeneous degree zero",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_269",
+    "capability": "weighted_blowup_geometry",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**4/(x**4+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "weighted ray y=c x\u00b2 gives 1/(1+c\u00b2)",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_270",
+    "capability": "weighted_blowup_geometry",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**6+y**4)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "positive weighted orders",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_271",
+    "capability": "weighted_blowup_geometry",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**a/(x**a+y**b)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic weights unavailable",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_272",
+    "capability": "weighted_blowup_geometry",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**6*y**2/(x**8+y**4)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "weighted blowup numerator has positive residual order",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_273",
+    "capability": "compact_angular_optimization",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**4+y**4)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "bounded angular coefficient times r\u00b2",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_274",
+    "capability": "compact_angular_optimization",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**4+y**4)/(x**2+y**2)**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "angular image non-singleton",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_275",
+    "capability": "compact_angular_optimization",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "(x**a+y**a)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic angular degree",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_276",
+    "capability": "compact_angular_optimization",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x**2*y**2/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "compact sphere maximum bounds coefficient",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_277",
+    "capability": "disconnected_angular_images",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "angular image spans conflicting values",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_278",
+    "capability": "disconnected_angular_images",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Abs(x*y)/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "angular image [0,1/2] non-singleton",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_279",
+    "capability": "disconnected_angular_images",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "sign(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "discontinuous angular map",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_280",
+    "capability": "disconnected_angular_images",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x*y)**2/(x**2+y**2)**2",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "disconnected critical strata still non-singleton",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_281",
+    "capability": "higher_dimensional_geometry",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y*z/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "sphere bound gives O(r)",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_282",
+    "capability": "higher_dimensional_geometry",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2-y**2)/(x**2+y**2+z**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "axis directions conflict",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_283",
+    "capability": "higher_dimensional_geometry",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "x**a*y/(x**2+y**2+z**2+w**2)",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic weighted degree",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_284",
+    "capability": "higher_dimensional_geometry",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "x*y*z*w/(x**2+y**2+z**2+w**2)",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "4D sphere bound O(r\u00b2)",
+    "suite": "geometry"
+  },
+  {
+    "id": "comprehensive_285",
+    "capability": "bessel_varying_order",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "besselj(0,sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1",
+    "proof_sketch": "J0(z)->1",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_286",
+    "capability": "bessel_varying_order",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "besselj(0,x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "different ratios give different J0 values",
+    "domain": "Ne(y,0)",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_287",
+    "capability": "bessel_varying_order",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "besselj(n,sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "free order changes origin germ",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_288",
+    "capability": "bessel_varying_order",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "besselj(2,sqrt(x**2+y**2))/(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1/8",
+    "proof_sketch": "J2(r)~r\u00b2/8",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_289",
+    "capability": "erf_erfi_germs",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erf(x*y)/(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "2/sqrt(pi)",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "erf z~2z/sqrt(pi)",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_290",
+    "capability": "erf_erfi_germs",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erf(x/y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "domain": "Ne(y,0)",
+    "proof_sketch": "different ratios give different erf values",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_291",
+    "capability": "erf_erfi_germs",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "erf(a*x*y)/(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "free complex/real parameter protocol",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_292",
+    "capability": "erf_erfi_germs",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(erfi(x*y)-erf(x*y))/(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "linear terms cancel",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_293",
+    "capability": "gamma_poles",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "1/gamma(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "reciprocal gamma has simple zero at 0",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_294",
+    "capability": "gamma_poles",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "gamma(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "opposite signed approaches to pole do not share an extended-real limit",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_295",
+    "capability": "gamma_poles",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "gamma(x-y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "signed approaches cross gamma pole",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_296",
+    "capability": "gamma_poles",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "(x**2+y**2)*gamma(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "1",
+    "proof_sketch": "z Gamma(z)->1",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_297",
+    "capability": "inverse_trig_branch_points",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "acos(1-(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "principal acos continuous from real interior",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_298",
+    "capability": "inverse_trig_branch_points",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "acos(-2+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "upper/lower principal-cut germs differ outside [-1,1]",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_299",
+    "capability": "inverse_trig_branch_points",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "acos(-1+x+I*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "principal branch point needs side-germ geometry",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_300",
+    "capability": "inverse_trig_branch_points",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "atan(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "analytic composition",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_301",
+    "capability": "special_function_singularity_composition",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "1/gamma(sin(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "inner germ lands at gamma pole, reciprocal removes pole",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_302",
+    "capability": "special_function_singularity_composition",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "bessely(0,x**2-y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "inner signed germs approach logarithmic branch singularity differently",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_303",
+    "capability": "special_function_singularity_composition",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "bessely(0,x**2-y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "inner germ reaches logarithmic singularity with sign changes",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_304",
+    "capability": "special_function_singularity_composition",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "erf(sin(x*y))/(x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "2/sqrt(pi)",
+    "domain": "Ne(x*y,0)",
+    "proof_sketch": "nested analytic inner germ",
+    "suite": "special_functions"
+  },
+  {
+    "id": "comprehensive_305",
+    "capability": "vector_component_disagreement",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x*y, x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0)",
+    "proof_sketch": "both components converge",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_306",
+    "capability": "vector_component_disagreement",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x*y/(x**2+y**2), x+y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "first component has angular disagreement",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_307",
+    "capability": "vector_component_disagreement",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(x**a, y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic exponent prevents first-component certificate",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_308",
+    "capability": "vector_component_disagreement",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x**2-y**2, x*y)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0)",
+    "proof_sketch": "polynomial vector germ",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_309",
+    "capability": "noncartesian_joint_clusters",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2), y/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "joint cluster is S1, not [-1,1]^2",
+    "joint_cluster_expected": "unit_circle",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_310",
+    "capability": "noncartesian_joint_clusters",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x**2/(x**2+y**2), y**2/(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "components correlated by u+v=1",
+    "joint_cluster_expected": "simplex_arc",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_311",
+    "capability": "noncartesian_joint_clusters",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(x**a/(x**a+y**a), y**a/(x**a+y**a))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic angular exponent",
+    "joint_cluster_expected": "unknown",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_312",
+    "capability": "noncartesian_joint_clusters",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(cos(1/(x**2+y**2)), sin(1/(x**2+y**2)))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "shared phase gives circle, not Cartesian square",
+    "joint_cluster_expected": "unit_circle",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_313",
+    "capability": "sphere_norm_direction_maps",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2), y/sqrt(x**2+y**2))",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "direction map has S1 cluster set",
+    "joint_cluster_expected": "unit_circle",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_314",
+    "capability": "sphere_norm_direction_maps",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "sqrt(x**2+y**2)",
+    "variables": [
+      "x",
+      "y"
+    ],
+    "target": [
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "0",
+    "proof_sketch": "norm converges although direction does not",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_315",
+    "capability": "sphere_norm_direction_maps",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2+z**2), y/sqrt(x**2+y**2+z**2), z/sqrt(x**2+y**2+z**2))",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "3D direction cluster requires joint angular certificate",
+    "joint_cluster_expected": "unit_sphere",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_316",
+    "capability": "sphere_norm_direction_maps",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x/sqrt(x**2+y**2+z**2+w**2), y/sqrt(x**2+y**2+z**2+w**2), z/sqrt(x**2+y**2+z**2+w**2), w/sqrt(x**2+y**2+z**2+w**2))",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "4D direction map on S3",
+    "joint_cluster_expected": "unit_sphere_3",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_317",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "role": "prove",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x**2/(x**2+y**4+z**6), y**2)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "weighted approaches change first component",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_318",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "role": "dne_neighbor",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x*y/(x**2+y**2+z**2), y*z/(x**2+y**2+z**2), z*x/(x**2+y**2+z**2))",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "dne",
+    "proof_sketch": "degree-zero correlated angular image",
+    "joint_cluster_expected": "angular_surface",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_319",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "role": "prerequisite_fail",
+    "scope": "capability",
+    "provenance": "constructed",
+    "expression": "Tuple(x**a, y**b, z**c)",
+    "variables": [
+      "x",
+      "y",
+      "z"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "unknown",
+    "proof_sketch": "symbolic anisotropic orders need assumptions",
+    "suite": "vector_geometry"
+  },
+  {
+    "id": "comprehensive_320",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "role": "variant",
+    "scope": "global",
+    "provenance": "constructed",
+    "expression": "Tuple(x*y*z/(x**2+y**2+z**2+w**2), y*z*w/(x**2+y**2+z**2+w**2), z*w*x/(x**2+y**2+z**2+w**2), w*x*y/(x**2+y**2+z**2+w**2))",
+    "variables": [
+      "x",
+      "y",
+      "z",
+      "w"
+    ],
+    "target": [
+      "0",
+      "0",
+      "0",
+      "0"
+    ],
+    "expected_kind": "value",
+    "expected": "Tuple(0,0,0,0)",
+    "proof_sketch": "each cubic component is O(r)",
+    "suite": "vector_geometry"
+  }
+]

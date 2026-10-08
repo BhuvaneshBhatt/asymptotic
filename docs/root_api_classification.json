@@ -1,0 +1,1046 @@
+[
+  {
+    "old_root_name": "AsymptoticAlgebra",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "AsymptoticAlgebra",
+    "module": "algebra"
+  },
+  {
+    "old_root_name": "AsymptoticContext",
+    "classification": "ROOT",
+    "canonical_name": "AsymptoticContext",
+    "module": "context"
+  },
+  {
+    "old_root_name": "DSolveResult",
+    "classification": "ROOT",
+    "canonical_name": "DSolveResult",
+    "module": "dsolve"
+  },
+  {
+    "old_root_name": "AsymptoticElement",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "AsymptoticElement",
+    "module": "algebra"
+  },
+  {
+    "old_root_name": "AsymptoticGrowthComparison",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "AsymptoticGrowthComparison",
+    "module": "context"
+  },
+  {
+    "old_root_name": "OptimizationResult",
+    "classification": "ROOT",
+    "canonical_name": "OptimizationResult",
+    "module": "optimization"
+  },
+  {
+    "old_root_name": "ProductResult",
+    "classification": "ROOT",
+    "canonical_name": "ProductResult",
+    "module": "products"
+  },
+  {
+    "old_root_name": "RSolveResult",
+    "classification": "ROOT",
+    "canonical_name": "RSolveResult",
+    "module": "rsolve"
+  },
+  {
+    "old_root_name": "AsymptoticRegime",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "AsymptoticRegime",
+    "module": "regime_selection"
+  },
+  {
+    "old_root_name": "RelationResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "RelationResult",
+    "module": "relations"
+  },
+  {
+    "old_root_name": "Remainder",
+    "classification": "ROOT",
+    "canonical_name": "Remainder",
+    "module": "remainder"
+  },
+  {
+    "old_root_name": "Scale",
+    "classification": "ROOT",
+    "canonical_name": "Scale",
+    "module": "scale"
+  },
+  {
+    "old_root_name": "SolveResult",
+    "classification": "ROOT",
+    "canonical_name": "SolveResult",
+    "module": "solve"
+  },
+  {
+    "old_root_name": "SumResult",
+    "classification": "ROOT",
+    "canonical_name": "SumResult",
+    "module": "sums"
+  },
+  {
+    "old_root_name": "Truncation",
+    "classification": "ROOT",
+    "canonical_name": "Truncation",
+    "module": "remainder"
+  },
+  {
+    "old_root_name": "CertifiedPowerExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "CertifiedPowerExpansion",
+    "module": "stratified_expansion"
+  },
+  {
+    "old_root_name": "ComplexDomainCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ComplexDomainCertificate",
+    "module": "complex_domains"
+  },
+  {
+    "old_root_name": "ConvergenceDiagnostics",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ConvergenceDiagnostics",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "DiscreteLimitResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "DiscreteLimitResult",
+    "module": "discrete_limits"
+  },
+  {
+    "old_root_name": "Evidence",
+    "classification": "ROOT",
+    "canonical_name": "Evidence",
+    "module": "evidence"
+  },
+  {
+    "old_root_name": "EvidenceStatus",
+    "classification": "ROOT",
+    "canonical_name": "EvidenceStatus",
+    "module": "evidence"
+  },
+  {
+    "old_root_name": "ExpansionCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ExpansionCertificate",
+    "module": "local_expansion"
+  },
+  {
+    "old_root_name": "ExponentialRemainderCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ExponentialRemainderCertificate",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "ExponentialScale",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ExponentialScale",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "HyperasymptoticExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "HyperasymptoticExpansion",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "LaplaceRatioResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "LaplaceRatioResult",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "LindstedtPoincareResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "LindstedtPoincareResult",
+    "module": "lindstedt"
+  },
+  {
+    "old_root_name": "LocalGaussianForm",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "LocalGaussianForm",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "MRVTiming",
+    "classification": "INTERNAL",
+    "canonical_name": "MRVTiming",
+    "module": "mrv_profile"
+  },
+  {
+    "old_root_name": "MellinResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "MellinResult",
+    "module": "mellin"
+  },
+  {
+    "old_root_name": "MethodRecommendation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "MethodRecommendation",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "Multiseries",
+    "classification": "ROOT",
+    "canonical_name": "Multiseries",
+    "module": "multiseries"
+  },
+  {
+    "old_root_name": "MultivariateLaplaceResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "MultivariateLaplaceResult",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "NestedExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "NestedExpansion",
+    "module": "nested"
+  },
+  {
+    "old_root_name": "OlverErrorControl",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "OlverErrorControl",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "PerturbationCondition",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "PerturbationCondition",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "PerturbationHierarchy",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "PerturbationHierarchy",
+    "module": "perturbation"
+  },
+  {
+    "old_root_name": "PerturbationOrder",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "PerturbationOrder",
+    "module": "perturbation"
+  },
+  {
+    "old_root_name": "PerturbationProblem",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "PerturbationProblem",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "PerturbationResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "PerturbationResult",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "PublicResult",
+    "classification": "ROOT",
+    "canonical_name": "PublicResult",
+    "module": "public_result"
+  },
+  {
+    "old_root_name": "RegimeCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "RegimeCertificate",
+    "module": "regime_selection"
+  },
+  {
+    "old_root_name": "RegimeGeometry",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "RegimeGeometry",
+    "module": "regime_selection"
+  },
+  {
+    "old_root_name": "RegularPerturbationResult",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "RegularPerturbationResult",
+    "module": "regular_perturbation"
+  },
+  {
+    "old_root_name": "RemainderBound",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "RemainderBound",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "RemainderKind",
+    "classification": "ROOT",
+    "canonical_name": "RemainderKind",
+    "module": "remainder"
+  },
+  {
+    "old_root_name": "ResultExplanation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ResultExplanation",
+    "module": "public_result"
+  },
+  {
+    "old_root_name": "SaddleGeometryCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "SaddleGeometryCertificate",
+    "module": "saddle_geometry"
+  },
+  {
+    "old_root_name": "SectorCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "SectorCertificate",
+    "module": "local_expansion"
+  },
+  {
+    "old_root_name": "StatisticalResult",
+    "classification": "ROOT",
+    "canonical_name": "StatisticalResult",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "StokesCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StokesCertificate",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "StokesGeometryCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StokesGeometryCertificate",
+    "module": "stokes_geometry"
+  },
+  {
+    "old_root_name": "StokesTransition",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StokesTransition",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "StratifiedExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StratifiedExpansion",
+    "module": "stratified_expansion"
+  },
+  {
+    "old_root_name": "StruveH",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StruveH",
+    "module": "special_functions"
+  },
+  {
+    "old_root_name": "StruveL",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "StruveL",
+    "module": "special_functions"
+  },
+  {
+    "old_root_name": "TerminantLevel",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "TerminantLevel",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "TotalVariation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "TotalVariation",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "TransseriesExpansion",
+    "classification": "ROOT",
+    "canonical_name": "TransseriesExpansion",
+    "module": "transseries"
+  },
+  {
+    "old_root_name": "TurningPointAdapter",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "TurningPointAdapter",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "TurningPointCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "TurningPointCertificate",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "TurningPointFamily",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "TurningPointFamily",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "UniformCompositeExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "UniformCompositeExpansion",
+    "module": "uniform_integration"
+  },
+  {
+    "old_root_name": "UniformExpansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "UniformExpansion",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "UniformZeroApproximation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "UniformZeroApproximation",
+    "module": "uniform_zeros"
+  },
+  {
+    "old_root_name": "ValidationReport",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "ValidationReport",
+    "module": "perturbation_problem"
+  },
+  {
+    "old_root_name": "VariationCertificate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "VariationCertificate",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "__version__",
+    "classification": "ROOT",
+    "canonical_name": "__version__",
+    "module": null
+  },
+  {
+    "old_root_name": "airy_ai_exponentially_improved",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "airy_ai_exponentially_improved",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "airy_stokes_expansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "airy_stokes_expansion",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "airy_u",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "airy_u",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "airy_uniform_saddle_asymptotic",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "airy_uniform_saddle_asymptotic",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "airy_v",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "airy_v",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "analyze_exponential_integral",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "analyze_exponential_integral",
+    "module": "saddle_geometry"
+  },
+  {
+    "old_root_name": "analyze_saddle_geometry",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "analyze_saddle_geometry",
+    "module": "saddle_geometry"
+  },
+  {
+    "old_root_name": "analyze_stokes_geometry",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "analyze_stokes_geometry",
+    "module": "stokes_geometry"
+  },
+  {
+    "old_root_name": "associated_legendre_large_degree",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "associated_legendre_large_degree",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "associated_legendre_turning_point",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "associated_legendre_turning_point",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "argmax",
+    "classification": "ROOT",
+    "canonical_name": "argmax",
+    "module": "optimization"
+  },
+  {
+    "old_root_name": "argmin",
+    "classification": "ROOT",
+    "canonical_name": "argmin",
+    "module": "optimization"
+  },
+  {
+    "old_root_name": "big_o",
+    "classification": "ROOT",
+    "canonical_name": "big_o",
+    "module": "relations"
+  },
+  {
+    "old_root_name": "dsolve",
+    "classification": "ROOT",
+    "canonical_name": "dsolve",
+    "module": "dsolve"
+  },
+  {
+    "old_root_name": "as_element",
+    "classification": "ROOT",
+    "canonical_name": "as_element",
+    "module": "algebra"
+  },
+  {
+    "old_root_name": "equivalent",
+    "classification": "ROOT",
+    "canonical_name": "equivalent",
+    "module": "relations"
+  },
+  {
+    "old_root_name": "expectation",
+    "classification": "ROOT",
+    "canonical_name": "expectation",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "integrate",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "integrate",
+    "module": "general_ops"
+  },
+  {
+    "old_root_name": "little_o",
+    "classification": "ROOT",
+    "canonical_name": "little_o",
+    "module": "relations"
+  },
+  {
+    "old_root_name": "maximize",
+    "classification": "ROOT",
+    "canonical_name": "maximize",
+    "module": "optimization"
+  },
+  {
+    "old_root_name": "minimize",
+    "classification": "ROOT",
+    "canonical_name": "minimize",
+    "module": "optimization"
+  },
+  {
+    "old_root_name": "probability",
+    "classification": "ROOT",
+    "canonical_name": "probability",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "product",
+    "classification": "ROOT",
+    "canonical_name": "product",
+    "module": "products"
+  },
+  {
+    "old_root_name": "relation",
+    "classification": "ROOT",
+    "canonical_name": "relation",
+    "module": "relations"
+  },
+  {
+    "old_root_name": "root",
+    "classification": "ROOT",
+    "canonical_name": "root",
+    "module": "roots"
+  },
+  {
+    "old_root_name": "rsolve",
+    "classification": "ROOT",
+    "canonical_name": "rsolve",
+    "module": "rsolve"
+  },
+  {
+    "old_root_name": "solve",
+    "classification": "ROOT",
+    "canonical_name": "solve",
+    "module": "solve"
+  },
+  {
+    "old_root_name": "sum",
+    "classification": "ROOT",
+    "canonical_name": "sum",
+    "module": "sums"
+  },
+  {
+    "old_root_name": "bessel_complex_domain",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_complex_domain",
+    "module": "complex_domains"
+  },
+  {
+    "old_root_name": "bessel_j_exponentially_improved",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_j_exponentially_improved",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_j_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_j_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_j_prime_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_j_prime_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_j_transition",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_j_transition",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_y_exponentially_improved",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_y_exponentially_improved",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_y_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_y_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_y_prime_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_y_prime_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "bessel_zero_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "bessel_zero_large_order",
+    "module": "uniform_zeros"
+  },
+  {
+    "old_root_name": "coalescing_saddle_asymptotic",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "coalescing_saddle_asymptotic",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "compose_transseries",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "compose_transseries",
+    "module": "general_ops"
+  },
+  {
+    "old_root_name": "debye_u",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "debye_u",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "debye_v",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "debye_v",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "debye_variation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "debye_variation",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "differentiate",
+    "classification": "ROOT",
+    "canonical_name": "differentiate",
+    "module": "calculus"
+  },
+  {
+    "old_root_name": "discover_scale",
+    "classification": "ROOT",
+    "canonical_name": "discover_scale",
+    "module": "scale"
+  },
+  {
+    "old_root_name": "discrete_limit",
+    "classification": "ROOT",
+    "canonical_name": "discrete_limit",
+    "module": "discrete_limits"
+  },
+  {
+    "old_root_name": "dominant_balance_candidates",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "dominant_balance_candidates",
+    "module": "dominant"
+  },
+  {
+    "old_root_name": "expand",
+    "classification": "ROOT",
+    "canonical_name": "series",
+    "module": "expand"
+  },
+  {
+    "old_root_name": "explain_result",
+    "classification": "ROOT",
+    "canonical_name": "explain",
+    "module": "public_result"
+  },
+  {
+    "old_root_name": "hankel_exponentially_improved",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "hankel_exponentially_improved",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "hankel_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "hankel_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "hankel_prime_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "hankel_prime_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "hyperasymptotic_series",
+    "classification": "ROOT",
+    "canonical_name": "hyperasymptotic_series",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "implicit",
+    "classification": "ROOT",
+    "canonical_name": "implicit",
+    "module": "implicit"
+  },
+  {
+    "old_root_name": "integrate",
+    "classification": "ROOT",
+    "canonical_name": "integrate",
+    "module": "calculus"
+  },
+  {
+    "old_root_name": "inverse",
+    "classification": "ROOT",
+    "canonical_name": "inverse",
+    "module": "reversion"
+  },
+  {
+    "old_root_name": "laplace_asymptotic_integral",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "laplace_asymptotic_integral",
+    "module": "probability"
+  },
+  {
+    "old_root_name": "laplace_ratio_asymptotic",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "laplace_ratio_asymptotic",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "least_term_index",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "least_term_index",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "limit",
+    "classification": "ROOT",
+    "canonical_name": "limit",
+    "module": "limits"
+  },
+  {
+    "old_root_name": "lindstedt_poincare",
+    "classification": "ROOT",
+    "canonical_name": "lindstedt_poincare",
+    "module": "lindstedt"
+  },
+  {
+    "old_root_name": "local_expansion",
+    "classification": "ROOT",
+    "canonical_name": "local_series",
+    "module": "local_expansion"
+  },
+  {
+    "old_root_name": "local_gaussian_form",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "local_gaussian_form",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "log_laplace_asymptotic",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "log_laplace_asymptotic",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "materialize_turning_point_variation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "materialize_turning_point_variation",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "mellin",
+    "classification": "ROOT",
+    "canonical_name": "mellin",
+    "module": "mellin"
+  },
+  {
+    "old_root_name": "modified_bessel_complex_domain",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "modified_bessel_complex_domain",
+    "module": "complex_domains"
+  },
+  {
+    "old_root_name": "modified_bessel_i_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "modified_bessel_i_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "modified_bessel_i_prime_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "modified_bessel_i_prime_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "modified_bessel_k_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "modified_bessel_k_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "modified_bessel_k_prime_large_order",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "modified_bessel_k_prime_large_order",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "mrv_decomposition",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "mrv_decomposition",
+    "module": "mrv"
+  },
+  {
+    "old_root_name": "mrv_hardy_timing",
+    "classification": "INTERNAL",
+    "canonical_name": "mrv_hardy_timing",
+    "module": "mrv_profile"
+  },
+  {
+    "old_root_name": "multiseries",
+    "classification": "ROOT",
+    "canonical_name": "multiseries",
+    "module": "multiseries"
+  },
+  {
+    "old_root_name": "multivariate_dominant_balance_candidates",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "multivariate_dominant_balance_candidates",
+    "module": "multivariate"
+  },
+  {
+    "old_root_name": "multivariate_implicit",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "multivariate_implicit",
+    "module": "multivariate_implicit"
+  },
+  {
+    "old_root_name": "multivariate_laplace_integral",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "multivariate_laplace_integral",
+    "module": "multivariate_laplace"
+  },
+  {
+    "old_root_name": "nested_expansion",
+    "classification": "ROOT",
+    "canonical_name": "nested_series",
+    "module": "nested"
+  },
+  {
+    "old_root_name": "olver_coefficient",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "olver_coefficient",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "olver_coefficient_block",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "olver_coefficient_block",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "olver_error_control",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "olver_error_control",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "olver_turning_table",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "olver_turning_table",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "olver_zeta",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "olver_zeta",
+    "module": "olver_coefficients"
+  },
+  {
+    "old_root_name": "one_sided_limit",
+    "classification": "ROOT",
+    "canonical_name": "one_sided_limit",
+    "module": "path_limits"
+  },
+  {
+    "old_root_name": "optimally_truncated_airy_ai",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "optimally_truncated_airy_ai",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "parabolic_cylinder_turning_point",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "parabolic_cylinder_turning_point",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "path_limit",
+    "classification": "ROOT",
+    "canonical_name": "path_limit",
+    "module": "path_limits"
+  },
+  {
+    "old_root_name": "perturbation_hierarchy",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "perturbation_hierarchy",
+    "module": "perturbation"
+  },
+  {
+    "old_root_name": "polynomial_segment_variation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "polynomial_segment_variation",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "puiseux_series",
+    "classification": "ROOT",
+    "canonical_name": "puiseux_series",
+    "module": "puiseux"
+  },
+  {
+    "old_root_name": "regular_perturbation",
+    "classification": "ROOT",
+    "canonical_name": "regular_perturbation",
+    "module": "regular_perturbation"
+  },
+  {
+    "old_root_name": "rescaled_terminant",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "rescaled_terminant",
+    "module": "uniform_special_expansions"
+  },
+  {
+    "old_root_name": "select_asymptotic_regime",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "select_asymptotic_regime",
+    "module": "regime_selection"
+  },
+  {
+    "old_root_name": "select_stokes_regime",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "select_stokes_regime",
+    "module": "stokes_geometry"
+  },
+  {
+    "old_root_name": "series_reversion",
+    "classification": "ROOT",
+    "canonical_name": "series_reversion",
+    "module": "reversion"
+  },
+  {
+    "old_root_name": "stokes_transition",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "stokes_transition",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "stratified_expand",
+    "classification": "ROOT",
+    "canonical_name": "stratified_series",
+    "module": "stratified_expansion"
+  },
+  {
+    "old_root_name": "terminant",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "terminant",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "terminant_reexpand",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "terminant_reexpand",
+    "module": "hyperasymptotics"
+  },
+  {
+    "old_root_name": "transseries_from_expression",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "transseries_from_expression",
+    "module": "transseries"
+  },
+  {
+    "old_root_name": "turning_point_variation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "turning_point_variation",
+    "module": "variation_bounds"
+  },
+  {
+    "old_root_name": "uniform_atom_expansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "uniform_atom_expansion",
+    "module": "uniform_integration"
+  },
+  {
+    "old_root_name": "uniform_composite_expansion",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "uniform_composite_expansion",
+    "module": "uniform_integration"
+  },
+  {
+    "old_root_name": "uniform_limit_value",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "uniform_limit_value",
+    "module": "uniform_integration"
+  },
+  {
+    "old_root_name": "uniform_zero_approximation",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "uniform_zero_approximation",
+    "module": "uniform_zeros"
+  },
+  {
+    "old_root_name": "whittaker_m_large_kappa",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "whittaker_m_large_kappa",
+    "module": "turning_point_families"
+  },
+  {
+    "old_root_name": "whittaker_turning_point",
+    "classification": "SUBMODULE_PUBLIC",
+    "canonical_name": "whittaker_turning_point",
+    "module": "turning_point_families"
+  }
+]

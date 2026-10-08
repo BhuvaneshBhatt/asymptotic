@@ -1,20 +1,22 @@
 import pytest
 import sympy as sp
+from funcprops import entails
 
 from asymptotic import (
-    AsymptoticAlgebra,
     AsymptoticContext,
     RemainderKind,
-    asymptotic_element,
+    as_element,
     puiseux_series,
 )
 from asymptotic._symbolic_primitives import certification_primitive
-from asymptotic.function_properties.semantics import entails
-from asymptotic.nonlinear_ode import nonlinear_differential_transseries
+from asymptotic.algebra import (
+    AsymptoticAlgebra,
+)
+from asymptotic.nonlinear_ode import differential_transseries
 from asymptotic.parameter_auto import specialize_expression
 
 
-def test_certification_primitive_handles_exponential_derivative_without_general_integration():
+def test_certified_primitive_handles_exponential_derivative():
     h = sp.symbols("h", positive=True)
     expr = sp.exp(-2 / h) / h**2
     primitive = certification_primitive(expr, h)
@@ -27,7 +29,7 @@ def test_certification_primitive_refuses_special_function_search():
     assert certification_primitive(sp.exp(x) / x, x) is None
 
 
-def test_eventual_sign_rational_fast_path_at_zero_finite_point_and_infinity():
+def test_eventual_sign_rational_fast_and_infinity():
     h = sp.symbols("h", positive=True)
     assert AsymptoticContext(h, point=0).eventual_sign(-(h**2)) == -1
     assert AsymptoticContext(h, point=0).eventual_sign(1 / h) == 1
@@ -37,15 +39,17 @@ def test_eventual_sign_rational_fast_path_at_zero_finite_point_and_infinity():
     assert AsymptoticContext(x, point=sp.oo).eventual_sign(-1 / x**2) == -1
 
 
-def test_analytic_unit_phase_is_not_misclassified_as_beyond_all_orders():
+def test_analytic_unit_phase_is_all_orders():
     x = sp.symbols("x", positive=True)
     y = sp.Function("y")
     target = 1 / x + x
     forcing = sp.simplify(sp.diff(target, x) - target**2)
     equation = sp.diff(y(x), x) - y(x) ** 2 - forcing
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=0, terms=4)
-    exact = next(branch for branch in branches if sp.simplify(branch.series - target) == 0)
+    branches = differential_transseries(equation, y, x, point=0, terms=4)
+    exact = next(
+        branch for branch in branches if sp.simplify(branch.series - target) == 0
+    )
     assert exact.complete is True
     assert all(step.correction_kind != "exponential" for step in exact.steps)
 
@@ -65,7 +69,7 @@ def test_affine_parameter_specialization_does_not_need_general_solve():
     assert sp.simplify(specialized - (b**2 / 4 + b)) == 0
 
 
-def test_periodic_negative_power_crossing_zero_does_not_claim_finite_bounds():
+def test_periodic_negative_power_crossing_finite_bounds():
     from asymptotic.periodic import periodic_bounds
 
     x = sp.symbols("x", real=True)
@@ -84,7 +88,8 @@ def test_differential_balance_uses_numeric_valuation_order():
     # The active lower envelope must be chosen by rational valuation, not by
     # structural sorting of the values 10+2a, 2+a, and 3.
     assert any(
-        balance.valuation == min(term.valuation_at(balance.exponent) for term in balance.terms)
+        balance.valuation
+        == min(term.valuation_at(balance.exponent) for term in balance.terms)
         for balance in balances
     )
 
@@ -112,7 +117,7 @@ def test_native_dispatch_does_not_swallow_internal_type_error():
         def differentiate(self, order=1):
             raise TypeError("native implementation bug")
 
-    element = asymptotic_element(BrokenNative())
+    element = as_element(BrokenNative())
     with pytest.raises(TypeError, match="native implementation bug"):
         element.differentiate()
 
@@ -127,14 +132,14 @@ def test_unknown_native_without_remainder_contract_stays_unknown():
         def truncate(self):
             return 1 + 1 / x
 
-    element = asymptotic_element(PrefixOnly())
+    element = as_element(PrefixOnly())
     assert element.remainder.kind is RemainderKind.UNKNOWN
 
 
 def test_finite_puiseux_prefix_is_not_mistaken_for_exact_expression():
     x = sp.symbols("x", positive=True)
-    series = puiseux_series(sp.exp(x), x, point=0, terms=3)
-    element = series.asymptotic_element()
+    series = puiseux_series(sp.exp(x), x, point=0, terms=3, return_result=True)
+    element = series.as_element()
 
     assert element.remainder.kind is RemainderKind.UNKNOWN
     assert element.remainder.exact_expression != 0
@@ -142,7 +147,7 @@ def test_finite_puiseux_prefix_is_not_mistaken_for_exact_expression():
 
 def test_algebra_rebinds_existing_element_to_its_context():
     x = sp.symbols("x", positive=True)
-    original = asymptotic_element(1 + 1 / x, x)
+    original = as_element(1 + 1 / x, x)
     context = AsymptoticContext(x, sp.oo, zero_confidence="probable")
     algebra = AsymptoticAlgebra(x, sp.oo, context=context)
 
@@ -171,17 +176,17 @@ def test_algebra_rejects_mismatched_injected_context():
         AsymptoticAlgebra(x, sp.oo, context=wrong_point)
 
 
-def test_asymptotic_element_rebind_validates_context_and_coordinates():
+def test_as_element_rebind_validates_context_and_coordinates():
     x, y = sp.symbols("x y")
-    element = asymptotic_element(1 / x, x)
+    element = as_element(1 / x, x)
     probable = AsymptoticContext(x, sp.oo, zero_confidence="probable")
 
-    rebound = asymptotic_element(element, context=probable)
+    rebound = as_element(element, context=probable)
     assert rebound.context is probable
     with pytest.raises(ValueError, match="different coordinates"):
-        asymptotic_element(element, y)
+        as_element(element, y)
     with pytest.raises(ValueError, match="context uses different coordinates"):
-        asymptotic_element(element, context=AsymptoticContext(y, sp.oo))
+        as_element(element, context=AsymptoticContext(y, sp.oo))
 
 
 def test_native_dispatch_rejects_unadaptable_result():
@@ -198,16 +203,17 @@ def test_native_dispatch_rejects_unadaptable_result():
             return [order]
 
     with pytest.raises(TypeError, match="returned unsupported list"):
-        asymptotic_element(BrokenNative()).differentiate()
+        as_element(BrokenNative()).differentiate()
 
 
 def test_native_objects_reject_mismatched_injected_contexts():
-    from asymptotic import AsymptoticScale, Multiseries, NestedExpansion
+    from asymptotic import Multiseries, Scale
+    from asymptotic.nested import NestedExpansion
     from asymptotic.scale import ScaleElement
 
     x, y = sp.symbols("x y", positive=True)
     wrong = AsymptoticContext(y, sp.oo)
-    scale = AsymptoticScale(x, (ScaleElement(1 / x),), point=sp.oo)
+    scale = Scale(x, (ScaleElement(1 / x),), point=sp.oo)
 
     with pytest.raises(ValueError, match="different coordinates"):
         Multiseries(1 + 1 / x, scale, context=wrong)
@@ -216,14 +222,14 @@ def test_native_objects_reject_mismatched_injected_contexts():
 
 
 def test_series_reversion_rejects_context_for_wrong_endpoint():
-    from asymptotic import series_reversion
+    from asymptotic.reversion import series_reversion
 
     x, y = sp.symbols("x y")
     with pytest.raises(ValueError, match="different coordinates"):
         series_reversion(x + x**2, x, y, point=0, context=AsymptoticContext(x, sp.oo))
 
 
-def test_context_normalization_does_not_force_parameter_branch_identities():
+def test_context_normalization_does_not_branch_identities():
     x = sp.symbols("x", positive=True)
     a, b = sp.symbols("a b")
     expr = sp.sqrt(a) * sp.sqrt(b)
@@ -234,12 +240,12 @@ def test_context_normalization_does_not_force_parameter_branch_identities():
 
 
 def test_remainder_exact_error_preserves_principal_power_branches():
-    from asymptotic import AsymptoticRemainder
+    from asymptotic import Remainder
 
     x = sp.symbols("x", positive=True)
     a, b = sp.symbols("a b")
     branch_error = sp.sqrt(a) * sp.sqrt(b) - sp.sqrt(a * b)
-    remainder = AsymptoticRemainder.unknown(
+    remainder = Remainder.unknown(
         x,
         sp.oo,
         exact_expression=branch_error,
@@ -249,7 +255,7 @@ def test_remainder_exact_error_preserves_principal_power_branches():
     assert remainder.exact_expression == sp.powsimp(branch_error, force=False)
 
 
-def test_periodic_decomposition_does_not_power_expand_parameter_factors():
+def test_periodic_decomposition_does_not_parameter_factors():
     from asymptotic.periodic import periodic_decomposition
 
     x = sp.symbols("x", real=True)
@@ -260,7 +266,7 @@ def test_periodic_decomposition_does_not_power_expand_parameter_factors():
     assert dec.reconstruct() != sp.sqrt(a * b) * sp.sin(x)
 
 
-def test_ramification_mapping_only_expands_proved_positive_uniformizer():
+def test_ramification_mapping_only_expands_positive_uniformizer():
     from asymptotic.monomial import RamificationModel
 
     x = sp.symbols("x", positive=True)

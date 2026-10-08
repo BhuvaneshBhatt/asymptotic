@@ -34,7 +34,9 @@ class DifferentialBalanceTerm:
 
     def valuation_at(self, exponent: sp.Expr) -> sp.Expr:
         return sp.simplify(
-            self.coefficient_valuation + self.dependent_degree * exponent - self.derivative_weight
+            self.coefficient_valuation
+            + self.dependent_degree * exponent
+            - self.derivative_weight
         )
 
 
@@ -87,11 +89,11 @@ class NonlinearDifferentialTransseriesBranch:
     complete: bool
     limitation: str | None = None
 
-    def asymptotic_element(self):
+    def as_element(self):
         """View this ODE-generated branch through the common field protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self)
+        return as_element(self)
 
     @property
     def terms(self) -> tuple[sp.Expr, ...]:
@@ -102,7 +104,9 @@ class NonlinearDifferentialTransseriesBranch:
         return tuple(step.coefficient for step in self.steps)
 
 
-def _jet_symbols(function: sp.FunctionClass, x: sp.Symbol, order: int) -> tuple[sp.Symbol, ...]:
+def _jet_symbols(
+    function: sp.FunctionClass, x: sp.Symbol, order: int
+) -> tuple[sp.Symbol, ...]:
     return tuple(sp.Dummy(f"Y{k}") for k in range(order + 1))
 
 
@@ -129,13 +133,17 @@ def _local_balance_terms(
     try:
         poly = sp.Poly(algebraic, *jets)
     except sp.PolynomialError as exc:
-        raise NotImplementedError("equation must be polynomial in y and its derivatives") from exc
+        raise NotImplementedError(
+            "equation must be polynomial in y and its derivatives"
+        ) from exc
 
     result = []
     for powers, coeff in poly.terms():
         val = rational_valuation(coeff, variable)
         if val is None:
-            raise NotImplementedError(f"coefficient {coeff} has no finite rational valuation at 0")
+            raise NotImplementedError(
+                f"coefficient {coeff} has no finite rational valuation at 0"
+            )
         valuation, leading = val
         degree = sum(powers)
         weight = sum(k * power for k, power in enumerate(powers))
@@ -204,7 +212,9 @@ def _local_dominant_balances(
                     factor *= (c * _falling(alpha, k)) ** power
             characteristic += term.coefficient * factor
         characteristic = sp.factor(characteristic)
-        roots = tuple(root for root in (bounded_solve_one(characteristic, c) or ()) if root != 0)
+        roots = tuple(
+            root for root in (bounded_solve_one(characteristic, c) or ()) if root != 0
+        )
         if roots:
             out.append(
                 NonlinearDifferentialBalance(
@@ -244,7 +254,9 @@ def _change_independent_variable(
     # xreplace must replace derivatives before the bare x inside them.
     transformed = equation
     for k in range(order, 0, -1):
-        transformed = transformed.xreplace({sp.diff(yx, variable, k): transformed_derivatives[k]})
+        transformed = transformed.xreplace(
+            {sp.diff(yx, variable, k): transformed_derivatives[k]}
+        )
     transformed = transformed.xreplace({yx: vt, variable: variable_map})
     return sp.together(sp.expand(transformed)), v
 
@@ -297,20 +309,28 @@ def nonlinear_differential_dominant_balances(
 
     point = sp.sympify(point)
     if stratify_parameters:
-        local_equation, local_function, h, _ = _local_problem(equation, function, variable, point)
+        local_equation, local_function, h, _ = _local_problem(
+            equation, function, variable, point
+        )
         parameters = parameter_symbols(local_equation, (h,))
         if parameters:
             try:
                 balance_terms = _local_balance_terms(local_equation, local_function, h)
-                generic_local = _local_dominant_balances(local_equation, local_function, h)
+                generic_local = _local_dominant_balances(
+                    local_equation, local_function, h
+                )
                 structural = tuple(term.coefficient for term in balance_terms) + tuple(
                     root for balance in generic_local for root in balance.roots
                 )
             except NotImplementedError:
                 structural = ()
 
-            def evaluate(condition: sp.Expr) -> tuple[NonlinearDifferentialBalance, ...]:
-                specialized = specialize_expression(equation, condition, parameters=parameters)
+            def evaluate(
+                condition: sp.Expr,
+            ) -> tuple[NonlinearDifferentialBalance, ...]:
+                specialized = specialize_expression(
+                    equation, condition, parameters=parameters
+                )
                 result = nonlinear_differential_dominant_balances(
                     specialized,
                     function,
@@ -409,7 +429,9 @@ def _frechet_linearization(
 
     eps = sp.Dummy("eps")
     delta = correction_function(variable)
-    shifted = _substitute_dependent_expression(equation, function, variable, prefix + eps * delta)
+    shifted = _substitute_dependent_expression(
+        equation, function, variable, prefix + eps * delta
+    )
     return sp.powsimp(sp.expand(sp.diff(shifted, eps).subs(eps, 0)))
 
 
@@ -470,7 +492,9 @@ def _linear_operator_coefficients(
 ) -> tuple[sp.Expr, ...]:
     """Extract coefficients of a homogeneous scalar linearized ODE."""
 
-    extracted = linear_operator_coefficients(linearized, correction_function(variable), variable)
+    extracted = linear_operator_coefficients(
+        linearized, correction_function(variable), variable
+    )
     if extracted is None:
         raise NotImplementedError(
             "linearized equation is not a homogeneous scalar linear correction operator"
@@ -505,9 +529,13 @@ def _candidate_log_corrections(
         return ()
     residual_power, _ = residual_data
     correction_function = sp.Function("delta_log")
-    linearized = _frechet_linearization(equation, function, variable, prefix, correction_function)
+    linearized = _frechet_linearization(
+        equation, function, variable, prefix, correction_function
+    )
     try:
-        coefficients = _linear_operator_coefficients(linearized, correction_function, variable)
+        coefficients = _linear_operator_coefficients(
+            linearized, correction_function, variable
+        )
     except NotImplementedError:
         return ()
 
@@ -552,7 +580,9 @@ def _candidate_log_corrections(
                     continue
                 equations = [sp.Eq(coeff, 0) for coeff in poly.all_coeffs()]
                 solved_system = bounded_solve_system(equations, (c,)) or ()
-                roots = tuple(solution[c] for solution in solved_system if c in solution)
+                roots = tuple(
+                    solution[c] for solution in solved_system if c in solution
+                )
             for root in roots:
                 root = sp.simplify(root)
                 if root == 0 or root.has(c):
@@ -588,9 +618,13 @@ def _first_order_exponential_modes(
     """
 
     correction_function = sp.Function("delta_exp")
-    linearized = _frechet_linearization(equation, function, variable, prefix, correction_function)
+    linearized = _frechet_linearization(
+        equation, function, variable, prefix, correction_function
+    )
     try:
-        coefficients = _linear_operator_coefficients(linearized, correction_function, variable)
+        coefficients = _linear_operator_coefficients(
+            linearized, correction_function, variable
+        )
     except NotImplementedError:
         return ()
     if len(coefficients) != 2 or coefficients[1] == 0:
@@ -630,13 +664,15 @@ def _odeanalysis_exponential_modes(
 ) -> tuple[tuple[sp.Expr, sp.Expr], ...]:
     """Obtain formal exponential modes from the optional ``odeanalysis`` bridge.
 
-    This is intentionally imported lazily so the core package remains usable
+    This is imported lazily so the core package remains usable
     without its ``ode`` extra.  Only the stable ``FormalODEData`` interchange
     schema is consumed.
     """
 
     correction_function = sp.Function("delta_formal")
-    linearized = _frechet_linearization(equation, function, variable, prefix, correction_function)
+    linearized = _frechet_linearization(
+        equation, function, variable, prefix, correction_function
+    )
     if linearized == 0:
         return ()
     try:
@@ -708,7 +744,9 @@ def _lift_exponential_parameter_series(
         a = sp.Dummy(f"a{n}")
         candidate = mixed_powsimp(a * parameter**n, formal_powsimp(mode**n))
         trial = sp.expand(
-            _substitute_dependent_expression(equation, function, variable, current + candidate)
+            _substitute_dependent_expression(
+                equation, function, variable, current + candidate
+            )
         )
         try:
             trial_poly = sp.Poly(trial, parameter)
@@ -753,7 +791,9 @@ def _candidate_exponential_corrections(
 ) -> tuple[tuple[sp.Expr, sp.Expr, sp.Symbol, sp.Expr], ...]:
     """Find exponentially small free perturbations of a constructed branch."""
 
-    modes = _odeanalysis_exponential_modes(equation, function, variable, prefix, terms=terms)
+    modes = _odeanalysis_exponential_modes(
+        equation, function, variable, prefix, terms=terms
+    )
     if not modes:
         modes = _first_order_exponential_modes(equation, function, variable, prefix)
     out = []
@@ -802,7 +842,7 @@ def _local_problem(
     return sp.expand(numerator), local_function, h, sp.sympify(local_to_original)
 
 
-def nonlinear_differential_transseries(
+def differential_transseries(
     equation: sp.Expr,
     function: sp.FunctionClass,
     variable: sp.Symbol,
@@ -825,7 +865,7 @@ def nonlinear_differential_transseries(
     equation is rebuilt in a new correction function.  The process is then
     repeated with strictly increasing local exponents.
 
-    This is the differential analogue of recursive Newton--Puiseux lifting:
+    This is the differential analogue of recursive Newton–Puiseux lifting:
     repeated or singular leading balances are not linearized prematurely.
     Every accepted correction is checked by substitution into the *original*
     local differential equation, and residual valuations are recorded when
@@ -836,7 +876,7 @@ def nonlinear_differential_transseries(
     power-log ansätze ``c*h**alpha*log(h)**k``; exponentially small homogeneous
     modes are obtained from the stable ``odeanalysis`` formal-data interface
     when available, with an exact first-order fallback.  Exponential modes carry
-    an explicit free transseries parameter rather than silently fixing a Stokes
+    an explicit free transseries parameter rather than fixing a Stokes
     constant.
     """
 
@@ -846,23 +886,31 @@ def nonlinear_differential_transseries(
         raise ValueError("max_depth must be positive")
 
     point = sp.sympify(point)
-    local_equation, local_function, h, h_of_x = _local_problem(equation, function, variable, point)
+    local_equation, local_function, h, h_of_x = _local_problem(
+        equation, function, variable, point
+    )
 
     if stratify_parameters:
         parameters = parameter_symbols(local_equation, (h,))
         if parameters:
             try:
                 balance_terms = _local_balance_terms(local_equation, local_function, h)
-                generic_local = _local_dominant_balances(local_equation, local_function, h)
+                generic_local = _local_dominant_balances(
+                    local_equation, local_function, h
+                )
                 structural = tuple(term.coefficient for term in balance_terms) + tuple(
                     root for balance in generic_local for root in balance.roots
                 )
             except NotImplementedError:
                 structural = ()
 
-            def evaluate(condition: sp.Expr) -> tuple[NonlinearDifferentialTransseriesBranch, ...]:
-                specialized = specialize_expression(equation, condition, parameters=parameters)
-                result = nonlinear_differential_transseries(
+            def evaluate(
+                condition: sp.Expr,
+            ) -> tuple[NonlinearDifferentialTransseriesBranch, ...]:
+                specialized = specialize_expression(
+                    equation, condition, parameters=parameters
+                )
+                result = differential_transseries(
                     specialized,
                     function,
                     variable,
@@ -904,7 +952,9 @@ def nonlinear_differential_transseries(
         limitation: str | None,
     ) -> None:
         """Record a lifted branch after replaying its residual against the local equation."""
-        residual = _substitute_dependent_expression(local_equation, local_function, h, prefix)
+        residual = _substitute_dependent_expression(
+            local_equation, local_function, h, prefix
+        )
         prefix_expr = analytic_powsimp(sp.expand(prefix))
         ts = transseries_from_expression(prefix_expr, h, point=0, complete=complete)
         # A simple-root remainder theorem is valid automatically for the
@@ -913,9 +963,13 @@ def nonlinear_differential_transseries(
         if not complete:
             if not local_equation.atoms(sp.Derivative):
                 linearized = sp.simplify(
-                    sp.diff(local_equation, local_function(h)).subs(local_function(h), prefix_expr)
+                    sp.diff(local_equation, local_function(h)).subs(
+                        local_function(h), prefix_expr
+                    )
                 )
-                certificate = certify_nonlinear_lifting_remainder(residual, linearized, h, 0)
+                certificate = certify_nonlinear_lifting_remainder(
+                    residual, linearized, h, 0
+                )
             else:
                 delta_head = sp.Function("__asymptotic_delta")
                 linearized = _frechet_linearization(
@@ -1082,7 +1136,11 @@ def nonlinear_differential_transseries(
                 # improve the rational residual valuation when both valuations
                 # are decidable.  If valuation is undecidable, keep the exact
                 # balance certificate rather than guessing an improvement.
-                if before_val is not None and after_val is not None and after_val <= before_val:
+                if (
+                    before_val is not None
+                    and after_val is not None
+                    and after_val <= before_val
+                ):
                     continue
                 progressed = True
                 step = DifferentialTransseriesStep(
@@ -1109,7 +1167,13 @@ def nonlinear_differential_transseries(
                 prefix,
                 minimum_exponent=previous_exponent,
             )
-            for exponent, coefficient, log_power, local_term, residual_after in logarithmic:
+            for (
+                exponent,
+                coefficient,
+                log_power,
+                local_term,
+                residual_after,
+            ) in logarithmic:
                 progressed = True
                 after_data = _logarithmic_valuation(residual_after, h)
                 step = DifferentialTransseriesStep(
@@ -1119,7 +1183,9 @@ def nonlinear_differential_transseries(
                     term=original_expr(local_term),
                     balance=None,
                     residual_order_before=before_val,
-                    residual_order_after=(None if after_data is None else after_data[0]),
+                    residual_order_after=(
+                        None if after_data is None else after_data[0]
+                    ),
                     correction_kind="logarithmic",
                     logarithmic_power=log_power,
                 )

@@ -1,14 +1,17 @@
 import sympy as sp
 from sympy.stats import MultivariateNormal, Normal
 
-from asymptotic import asymptotic_expectation, asymptotic_probability
+from asymptotic import (
+    expectation,
+    probability,
+)
 
 
 def test_probability_accepts_symbol_binding():
     n = sp.symbols("n", positive=True)
     x = sp.symbols("x")
     X = Normal("X_probability_binding", 0, 1 / sp.sqrt(n))
-    result = asymptotic_probability(x > 0, parameter=n, bindings={x: X})
+    result = probability(x > 0, parameter=n, bindings={x: X}, return_result=True)
     assert result.expression == sp.Rational(1, 2)
     assert result.status == "EXACT"
 
@@ -17,10 +20,8 @@ def test_probability_accepts_raw_distribution_binding():
     n = sp.symbols("n", positive=True)
     x = sp.symbols("x")
     X = Normal("X_probability_distribution_binding", 0, 1 / sp.sqrt(n))
-    result = asymptotic_probability(
-        x > 0,
-        parameter=n,
-        bindings={x: X.pspace.distribution},
+    result = probability(
+        x > 0, parameter=n, bindings={x: X.pspace.distribution}, return_result=True
     )
     assert result.expression == sp.Rational(1, 2)
     assert result.status == "EXACT"
@@ -30,26 +31,25 @@ def test_probability_accepts_conditional_event():
     n = sp.symbols("n", positive=True)
     x = sp.symbols("x")
     X = Normal("X_probability_condition", 0, 1 / sp.sqrt(n))
-    result = asymptotic_probability(
+    result = probability(
         x > 1,
         parameter=n,
         bindings={x: X},
         condition=x > 0,
         method="exact",
+        return_result=True,
     )
     expected = sp.simplify(sp.erfc(sp.sqrt(n / 2)))
     assert sp.simplify(result.expression - expected) == 0
 
 
-def test_probability_tries_exact_joint_event_before_single_rv_fallback():
+def test_probability_tries_exact_joint_rv_fallback():
     n = sp.symbols("n", positive=True)
     x, y = sp.symbols("x y")
     X = Normal("X_joint_probability", 0, 1 / sp.sqrt(n))
     Y = Normal("Y_joint_probability", 0, 2 / sp.sqrt(n))
-    result = asymptotic_probability(
-        x + y > 0,
-        parameter=n,
-        bindings={x: X, y: Y},
+    result = probability(
+        x + y > 0, parameter=n, bindings={x: X, y: Y}, return_result=True
     )
     assert result.expression == sp.Rational(1, 2)
     assert result.method == "exact-probability"
@@ -63,10 +63,8 @@ def test_expectation_accepts_multivariate_joint_binding():
         [0, 0],
         [[1 / n, 0], [0, 4 / n]],
     )
-    result = asymptotic_expectation(
-        x**2 + y**2,
-        parameter=n,
-        bindings={(x, y): Z},
+    result = expectation(
+        x**2 + y**2, parameter=n, bindings={(x, y): Z}, return_result=True
     )
     assert result.expression == 5 / n
     assert result.status == "EXACT"
@@ -75,18 +73,20 @@ def test_expectation_accepts_multivariate_joint_binding():
 def test_probability_expectation_indicator_identity():
     n = sp.symbols("n", positive=True)
     X = Normal("X_probability_indicator", 0, 1 / sp.sqrt(n))
-    probability = asymptotic_probability(X > 0, parameter=n)
+    probability_result = probability(X > 0, parameter=n, return_result=True)
     indicator = sp.Piecewise((1, X > 0), (0, True))
-    expectation = asymptotic_expectation(indicator, parameter=n)
-    assert sp.simplify(probability.expression - expectation.expression) == 0
+    expectation_result = expectation(indicator, parameter=n, return_result=True)
+    assert (
+        sp.simplify(probability_result.expression - expectation_result.expression) == 0
+    )
 
 
-def test_binding_validation_is_shared_between_probability_and_expectation():
+def test_binding_validation_is_shared_and_expectation():
     n = sp.symbols("n", positive=True)
     x = sp.symbols("x")
     for function, expression in (
-        (asymptotic_probability, x > 0),
-        (asymptotic_expectation, x),
+        (probability, x > 0),
+        (expectation, x),
     ):
         try:
             function(expression, parameter=n, bindings={x: sp.Symbol("not_random")})
@@ -102,8 +102,10 @@ def test_continuous_probability_rejects_discrete_only_sum_methods():
 
     for method in ("zeilberger", "poisson", "oscillatory"):
         try:
-            asymptotic_probability(X > 0, parameter=n, method=method)
+            probability(X > 0, parameter=n, method=method, return_result=True)
         except TypeError as exc:
             assert "requires a discrete random variable" in str(exc)
         else:
-            raise AssertionError(f"{method} should be rejected for continuous variables")
+            raise AssertionError(
+                f"{method} should be rejected for continuous variables"
+            )

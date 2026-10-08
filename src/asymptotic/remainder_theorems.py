@@ -5,15 +5,15 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 import sympy as sp
+from funcprops import PropertyDecision, PropertyKnowledge, PropertyProvenance
 
 from ._linear_ode_operator import linear_operator_coefficients
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_limit, bounded_simplify
 from ._symbolic_primitives import certification_primitive
 from .context import AsymptoticContext
-from .function_properties import PropertyDecision, PropertyKnowledge, PropertyProvenance
 from .instrumentation import record_symbolic_event
-from .remainder import AsymptoticRemainder, RemainderKind, RemainderProvenance
+from .remainder import Remainder, RemainderKind, RemainderProvenance
 
 
 @dataclass(frozen=True)
@@ -22,7 +22,7 @@ class RemainderTheoremCertificate:
 
     theorem: str
     hypotheses: tuple[PropertyDecision, ...]
-    conclusion: AsymptoticRemainder
+    conclusion: Remainder
     note: str | None = None
 
     def __post_init__(self) -> None:
@@ -31,7 +31,10 @@ class RemainderTheoremCertificate:
 
     @property
     def certified(self) -> bool:
-        return all(h.verdict is True for h in self.hypotheses) and self.conclusion.is_certified
+        return (
+            all(h.verdict is True for h in self.hypotheses)
+            and self.conclusion.is_certified
+        )
 
     def replay(self) -> bool | None:
         """Replay theorem evidence without strengthening unresolved hypotheses."""
@@ -63,7 +66,7 @@ class ExponentialDichotomyCertificate:
 
     ``stable_modes`` decay at the requested end and ``unstable_modes`` grow
     there.  Center modes make the certificate unresolved; they are never
-    silently assigned to either side.
+    assigned to either side.
     """
 
     variable: sp.Symbol
@@ -81,7 +84,12 @@ class ExponentialDichotomyCertificate:
         lam = sp.Symbol("__lambda")
         modes = (*self.stable_modes, *self.unstable_modes)
         for mode in modes:
-            if sp.simplify(self.characteristic_poly.subs(lam, mode.characteristic_root)) != 0:
+            if (
+                sp.simplify(
+                    self.characteristic_poly.subs(lam, mode.characteristic_root)
+                )
+                != 0
+            ):
                 return False
             side = _root_half_plane(mode.characteristic_root, self.point)
             expected = "stable" if side == -1 else "unstable" if side == 1 else "center"
@@ -123,12 +131,15 @@ class GreenOperatorCertificate:
     def replay(self, variable: sp.Symbol | None = None) -> bool | None:
         if self.particular is None:
             return None
-        x = variable or (self.dichotomy.variable if self.dichotomy is not None else None)
+        x = variable or (
+            self.dichotomy.variable if self.dichotomy is not None else None
+        )
         if x is None:
             return self.defect == 0
         defect = sp.simplify(
             sum(
-                self.coefficients[k] * sp.diff(self.particular, x, k) for k in range(self.order + 1)
+                self.coefficients[k] * sp.diff(self.particular, x, k)
+                for k in range(self.order + 1)
             )
             + self.forcing
         )
@@ -148,7 +159,9 @@ class GreenOperatorCertificate:
             return self.replay(variable)
         if self.particular is None or self.coeff_perturbations is None:
             return None
-        x = variable or (self.dichotomy.variable if self.dichotomy is not None else None)
+        x = variable or (
+            self.dichotomy.variable if self.dichotomy is not None else None
+        )
         if x is None:
             return None
         point = self.dichotomy.point if self.dichotomy is not None else sp.oo
@@ -166,7 +179,9 @@ class GreenOperatorCertificate:
         return False if defect_ratio is not None else None
 
 
-def _decision(name: str, verdict: bool | None, *, reason: str, source: str) -> PropertyDecision:
+def _decision(
+    name: str, verdict: bool | None, *, reason: str, source: str
+) -> PropertyDecision:
     return PropertyDecision(
         sp.Symbol(name),
         verdict,
@@ -184,13 +199,13 @@ def _classify_exact_error(
     point: sp.Expr,
     *,
     source: str,
-) -> AsymptoticRemainder:
+) -> Remainder:
     exact_error = sp.simplify(exact_error)
     candidate_scale = sp.simplify(candidate_scale)
     if exact_error == 0:
-        return AsymptoticRemainder.exact_zero(variable, point, source=source)
+        return Remainder.exact_zero(variable, point, source=source)
     if candidate_scale == 0:
-        return AsymptoticRemainder.unknown(
+        return Remainder.unknown(
             variable, point, exact_expression=exact_error, source=source
         )
     ctx = AsymptoticContext(variable, point=point)
@@ -199,21 +214,34 @@ def _classify_exact_error(
     except SYMBOLIC_ERRORS:
         lim = None
     if lim == 0:
-        return AsymptoticRemainder.little_o(
-            candidate_scale, variable, point, exact_expression=exact_error, source=source
+        return Remainder.little_o(
+            candidate_scale,
+            variable,
+            point,
+            exact_expression=exact_error,
+            source=source,
         )
-    if lim not in (None, sp.oo, -sp.oo, sp.zoo) and getattr(lim, "is_finite", None) is True:
-        return AsymptoticRemainder.big_o(
-            candidate_scale, variable, point, exact_expression=exact_error, source=source
+    if (
+        lim not in (None, sp.oo, -sp.oo, sp.zoo)
+        and getattr(lim, "is_finite", None) is True
+    ):
+        return Remainder.big_o(
+            candidate_scale,
+            variable,
+            point,
+            exact_expression=exact_error,
+            source=source,
         )
-    return AsymptoticRemainder.unknown(variable, point, exact_expression=exact_error, source=source)
+    return Remainder.unknown(
+        variable, point, exact_expression=exact_error, source=source
+    )
 
 
 def _safe_sum_remainders(
-    remainders: Iterable[AsymptoticRemainder],
+    remainders: Iterable[Remainder],
     *,
     source: str,
-) -> AsymptoticRemainder:
+) -> Remainder:
     """Combine finitely many certified remainders without requiring scale comparability."""
 
     items = tuple(remainders)
@@ -228,7 +256,9 @@ def _safe_sum_remainders(
         if result.kind.name == "UNKNOWN" or item.kind.name == "UNKNOWN":
             result = combined
             continue
-        scales = [sp.Abs(sp.sympify(r.scale)) for r in (result, item) if r.scale is not None]
+        scales = [
+            sp.Abs(sp.sympify(r.scale)) for r in (result, item) if r.scale is not None
+        ]
         if not scales:
             result = combined
             continue
@@ -243,7 +273,7 @@ def _safe_sum_remainders(
             if result.kind is item.kind is RemainderKind.LITTLE_O
             else RemainderKind.BIG_O
         )
-        result = AsymptoticRemainder(
+        result = Remainder(
             result.variable,
             result.point,
             kind,
@@ -256,7 +286,7 @@ def _safe_sum_remainders(
 
 def certify_scaling_remainder(
     factor: sp.Expr,
-    remainder: AsymptoticRemainder,
+    remainder: Remainder,
 ) -> RemainderTheoremCertificate:
     """Certify multiplication of an approximation error by an exact factor."""
 
@@ -268,11 +298,13 @@ def certify_scaling_remainder(
         reason="the scaling factor is part of the exact finite prefix algebra",
         source="exact scaling remainder theorem",
     )
-    return RemainderTheoremCertificate("exact scaling remainder theorem", (hypothesis,), conclusion)
+    return RemainderTheoremCertificate(
+        "exact scaling remainder theorem", (hypothesis,), conclusion
+    )
 
 
 def certify_antiderivative_remainder(
-    remainder: AsymptoticRemainder,
+    remainder: Remainder,
 ) -> RemainderTheoremCertificate:
     """Certify a primitive error when a bounded exact primitive is available.
 
@@ -284,7 +316,7 @@ def certify_antiderivative_remainder(
 
     variable, point = remainder.variable, remainder.point
     if remainder.is_exact:
-        conclusion = AsymptoticRemainder.exact_zero(
+        conclusion = Remainder.exact_zero(
             variable, point, source="primitive of exact-zero remainder"
         )
         hypothesis = _decision(
@@ -297,8 +329,10 @@ def certify_antiderivative_remainder(
             "exact antiderivative remainder theorem", (hypothesis,), conclusion
         )
     if remainder.exact_expression is None or remainder.scale is None:
-        conclusion = AsymptoticRemainder.unknown(
-            variable, point, source="antiderivative requires an exact stored error and scale"
+        conclusion = Remainder.unknown(
+            variable,
+            point,
+            source="antiderivative requires an exact stored error and scale",
         )
         hypothesis = _decision(
             "antiderivative_exact_error_available",
@@ -312,7 +346,7 @@ def certify_antiderivative_remainder(
     exact_primitive = certification_primitive(remainder.exact_expression, variable)
     scale_primitive = certification_primitive(sp.sympify(remainder.scale), variable)
     if exact_primitive is None or scale_primitive is None or scale_primitive == 0:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             variable,
             point,
             source="bounded primitive oracle could not establish an integrated scale",
@@ -345,7 +379,7 @@ def certify_antiderivative_remainder(
 
 
 def certify_finite_sum_remainder(
-    remainders: Iterable[AsymptoticRemainder],
+    remainders: Iterable[Remainder],
 ) -> RemainderTheoremCertificate:
     """Certify the error in a finite sum of asymptotic approximations.
 
@@ -364,14 +398,16 @@ def certify_finite_sum_remainder(
         reason="all summands use compatible asymptotic variables/points and finite-sum bounds were combined",
         source="finite sum remainder theorem",
     )
-    return RemainderTheoremCertificate("finite sum remainder theorem", (hypothesis,), conclusion)
+    return RemainderTheoremCertificate(
+        "finite sum remainder theorem", (hypothesis,), conclusion
+    )
 
 
 def certify_product_remainder(
     left_prefix: sp.Expr,
     right_prefix: sp.Expr,
-    left_remainder: AsymptoticRemainder,
-    right_remainder: AsymptoticRemainder,
+    left_remainder: Remainder,
+    right_remainder: Remainder,
 ) -> RemainderTheoremCertificate:
     """Certify ``(a+R_a)(b+R_b)-ab`` from the exact product identity.
 
@@ -389,11 +425,14 @@ def certify_product_remainder(
         left_remainder.product(right_remainder),
     )
     conclusion = _safe_sum_remainders(pieces, source="finite product remainder theorem")
-    if left_remainder.exact_expression is not None and right_remainder.exact_expression is not None:
+    if (
+        left_remainder.exact_expression is not None
+        and right_remainder.exact_expression is not None
+    ):
         ra = left_remainder.exact_expression
         rb = right_remainder.exact_expression
         exact = bounded_simplify(b * ra + a * rb + ra * rb)
-        conclusion = AsymptoticRemainder(
+        conclusion = Remainder(
             conclusion.variable,
             conclusion.point,
             conclusion.kind,
@@ -414,14 +453,16 @@ def certify_product_remainder(
 
 def certify_finite_product_remainder(
     prefixes: Iterable[sp.Expr],
-    remainders: Iterable[AsymptoticRemainder],
+    remainders: Iterable[Remainder],
 ) -> RemainderTheoremCertificate:
     """Certify a finite product by repeated exact binary product identities."""
 
     prefix_items = tuple(map(sp.sympify, prefixes))
     remainder_items = tuple(remainders)
     if not prefix_items or len(prefix_items) != len(remainder_items):
-        raise ValueError("prefixes and remainders must be nonempty and have equal length")
+        raise ValueError(
+            "prefixes and remainders must be nonempty and have equal length"
+        )
     prefix = prefix_items[0]
     remainder = remainder_items[0]
     hypotheses = []
@@ -439,13 +480,13 @@ def certify_finite_product_remainder(
 
 def certify_reciprocal_remainder(
     prefix: sp.Expr,
-    remainder: AsymptoticRemainder,
+    remainder: Remainder,
 ) -> RemainderTheoremCertificate:
     """Certify a reciprocal under eventual nonvanishing and relative smallness.
 
     If ``A = a + R`` with ``a`` eventually nonzero and ``R/a -> 0``, then
     ``1/A - 1/a`` has the same O/o kind as ``R`` with scale ``scale(R)/a**2``.
-    The theorem deliberately requires the *declared scale* to be small relative
+    The theorem requires the *declared scale* to be small relative
     to ``a`` so an abstract big-O statement is sufficient by itself.
     """
 
@@ -456,11 +497,13 @@ def certify_reciprocal_remainder(
     nonzero = sign in (-1, 1)
     if remainder.is_exact:
         if nonzero:
-            conclusion = AsymptoticRemainder.exact_zero(
-                variable, point, source="reciprocal of exact eventually-nonzero approximation"
+            conclusion = Remainder.exact_zero(
+                variable,
+                point,
+                source="reciprocal of exact eventually-nonzero approximation",
             )
         else:
-            conclusion = AsymptoticRemainder.unknown(
+            conclusion = Remainder.unknown(
                 variable,
                 point,
                 source="exact reciprocal prefix is not certified eventually nonzero",
@@ -481,7 +524,7 @@ def certify_reciprocal_remainder(
         )
         return RemainderTheoremCertificate("exact reciprocal", hypotheses, conclusion)
     if remainder.scale is None or a == 0:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             variable, point, source="reciprocal prefix/scale unavailable"
         )
         h = _decision(
@@ -490,7 +533,9 @@ def certify_reciprocal_remainder(
             reason="a nonzero prefix and remainder scale are required",
             source="reciprocal remainder theorem",
         )
-        return RemainderTheoremCertificate("reciprocal stability theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "reciprocal stability theorem", (h,), conclusion
+        )
 
     relative_limit = ctx.limit(sp.Abs(sp.sympify(remainder.scale) / a))
     relative_small = relative_limit == 0
@@ -500,16 +545,17 @@ def certify_reciprocal_remainder(
         err = remainder.exact_expression
         exact = bounded_simplify(1 / (a + err) - 1 / a)
     if nonzero and relative_small:
-        conclusion = AsymptoticRemainder(
+        conclusion = Remainder(
             variable,
             point,
             remainder.kind,
             propagated_scale,
             exact,
-            remainder.provenance + (RemainderProvenance("reciprocal stability theorem"),),
+            remainder.provenance
+            + (RemainderProvenance("reciprocal stability theorem"),),
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             variable,
             point,
             exact_expression=exact,
@@ -529,14 +575,16 @@ def certify_reciprocal_remainder(
             source="reciprocal remainder theorem",
         ),
     )
-    return RemainderTheoremCertificate("reciprocal stability theorem", hypotheses, conclusion)
+    return RemainderTheoremCertificate(
+        "reciprocal stability theorem", hypotheses, conclusion
+    )
 
 
 def certify_quotient_remainder(
     numerator_prefix: sp.Expr,
     denominator_prefix: sp.Expr,
-    numerator_remainder: AsymptoticRemainder,
-    denominator_remainder: AsymptoticRemainder,
+    numerator_remainder: Remainder,
+    denominator_remainder: Remainder,
 ) -> RemainderTheoremCertificate:
     """Certify a quotient by reciprocal stability followed by product propagation."""
 
@@ -545,7 +593,7 @@ def certify_quotient_remainder(
         return RemainderTheoremCertificate(
             "quotient remainder theorem",
             reciprocal.hypotheses,
-            AsymptoticRemainder.unknown(
+            Remainder.unknown(
                 numerator_remainder.variable,
                 numerator_remainder.point,
                 source="denominator reciprocal could not be certified",
@@ -568,7 +616,7 @@ def certify_algebraic_substitution_remainder(
     outer: sp.Expr,
     argument: sp.Symbol,
     prefix: sp.Expr,
-    input_remainder: AsymptoticRemainder,
+    input_remainder: Remainder,
     *,
     output_variable: sp.Symbol,
     point: sp.Expr,
@@ -587,7 +635,7 @@ def certify_algebraic_substitution_remainder(
     except SYMBOLIC_ERRORS:
         rational = False
     if not rational:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             output_variable,
             point,
             source="outer expression is not rational in the substitution argument",
@@ -598,7 +646,9 @@ def certify_algebraic_substitution_remainder(
             reason="algebraic substitution theorem covers rational functions",
             source="algebraic substitution remainder theorem",
         )
-        return RemainderTheoremCertificate("algebraic substitution theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "algebraic substitution theorem", (h,), conclusion
+        )
 
     numerator, denominator = sp.fraction(sp.cancel(outer))
     delta = sp.Dummy("_delta")
@@ -618,7 +668,7 @@ def certify_algebraic_substitution_remainder(
                 power = power.product(input_remainder)
             pieces.append(power.scale_by(coefficient))
         if not pieces:
-            conclusion = AsymptoticRemainder.exact_zero(
+            conclusion = Remainder.exact_zero(
                 output_variable, point, source="constant algebraic substitution"
             )
         else:
@@ -631,13 +681,15 @@ def certify_algebraic_substitution_remainder(
             reason="expanded the exact finite polynomial perturbation identity",
             source="algebraic substitution remainder theorem",
         )
-        return RemainderTheoremCertificate("polynomial substitution theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "polynomial substitution theorem", (h,), conclusion
+        )
 
     try:
         sp.Poly(numerator, argument)
         sp.Poly(denominator, argument)
     except sp.PolynomialError:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             output_variable,
             point,
             source="rational numerator/denominator are not polynomial in argument",
@@ -648,7 +700,9 @@ def certify_algebraic_substitution_remainder(
             reason="could not represent rational function as polynomial numerator/denominator",
             source="algebraic substitution remainder theorem",
         )
-        return RemainderTheoremCertificate("algebraic substitution theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "algebraic substitution theorem", (h,), conclusion
+        )
 
     numerator_cert = polynomial_part(numerator)
     if denominator == 1:
@@ -672,7 +726,7 @@ def certify_algebraic_substitution_remainder(
 
 
 def certify_differentiation_remainder(
-    remainder: AsymptoticRemainder,
+    remainder: Remainder,
     order: int = 1,
 ) -> RemainderTheoremCertificate:
     """Certify differentiation only when its regularity hypothesis is provable.
@@ -685,8 +739,10 @@ def certify_differentiation_remainder(
     if order < 0:
         raise ValueError("order must be nonnegative")
     if remainder.is_exact:
-        conclusion = AsymptoticRemainder.exact_zero(
-            remainder.variable, remainder.point, source="differentiation of exact remainder"
+        conclusion = Remainder.exact_zero(
+            remainder.variable,
+            remainder.point,
+            source="differentiation of exact remainder",
         )
         hypothesis = _decision(
             "exact_remainder_differentiable",
@@ -694,10 +750,12 @@ def certify_differentiation_remainder(
             reason="the exact remainder is identically zero",
             source="differentiation remainder theorem",
         )
-        return RemainderTheoremCertificate("exact differentiation", (hypothesis,), conclusion)
+        return RemainderTheoremCertificate(
+            "exact differentiation", (hypothesis,), conclusion
+        )
 
     if remainder.exact_expression is None:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             remainder.variable,
             remainder.point,
             source="no proof of derivative control for an abstract O/o remainder",
@@ -740,7 +798,7 @@ def certify_unary_composition_remainder(
     outer: sp.Expr,
     argument: sp.Symbol,
     prefix: sp.Expr,
-    input_remainder: AsymptoticRemainder,
+    input_remainder: Remainder,
     *,
     output_variable: sp.Symbol,
     point: sp.Expr,
@@ -761,7 +819,7 @@ def certify_unary_composition_remainder(
 
     outer = sp.sympify(outer)
     if input_remainder.is_exact:
-        conclusion = AsymptoticRemainder.exact_zero(
+        conclusion = Remainder.exact_zero(
             output_variable, point, source="composition of exact input"
         )
         h = _decision(
@@ -788,9 +846,11 @@ def certify_unary_composition_remainder(
         if algebraic.conclusion.is_certified:
             return algebraic
 
-    scale = perturbation_scale if perturbation_scale is not None else input_remainder.scale
+    scale = (
+        perturbation_scale if perturbation_scale is not None else input_remainder.scale
+    )
     if scale is None:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             output_variable, point, source="input perturbation scale unavailable"
         )
         h = _decision(
@@ -799,13 +859,17 @@ def certify_unary_composition_remainder(
             reason="no input remainder scale",
             source="composition remainder theorem",
         )
-        return RemainderTheoremCertificate("local composition stability", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "local composition stability", (h,), conclusion
+        )
 
     max_order = max(1, int(taylor_order or 6))
     first_order: int | None = None
     first_derivative: sp.Expr | None = None
     for order in range(1, max_order + 1):
-        derivative = bounded_simplify(sp.diff(outer, argument, order).subs(argument, prefix))
+        derivative = bounded_simplify(
+            sp.diff(outer, argument, order).subs(argument, prefix)
+        )
         if derivative == 0 or derivative.is_zero is True:
             continue
         first_order = order
@@ -813,7 +877,7 @@ def certify_unary_composition_remainder(
         break
 
     if first_order is None or first_derivative is None:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             output_variable,
             point,
             source="no nonzero Taylor derivative found within the finite composition order",
@@ -824,10 +888,14 @@ def certify_unary_composition_remainder(
             reason=f"no nonzero derivative found through order {max_order}",
             source="composition remainder theorem",
         )
-        return RemainderTheoremCertificate("finite-order composition stability", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "finite-order composition stability", (h,), conclusion
+        )
 
     coefficient = bounded_simplify(first_derivative / sp.factorial(first_order))
-    propagated_scale = bounded_simplify(sp.Abs(coefficient) * sp.sympify(scale) ** first_order)
+    propagated_scale = bounded_simplify(
+        sp.Abs(coefficient) * sp.sympify(scale) ** first_order
+    )
     ctx = AsymptoticContext(output_variable, point=point)
     next_derivative = bounded_simplify(
         sp.diff(outer, argument, first_order + 1).subs(argument, prefix)
@@ -837,7 +905,9 @@ def certify_unary_composition_remainder(
         stable_limit = sp.S.Zero
     else:
         stable_limit = ctx.limit(
-            sp.Abs(bounded_simplify(next_derivative * sp.sympify(scale) / first_derivative))
+            sp.Abs(
+                bounded_simplify(next_derivative * sp.sympify(scale) / first_derivative)
+            )
         )
         stable = stable_limit == 0
 
@@ -857,17 +927,21 @@ def certify_unary_composition_remainder(
         if conclusion.is_certified:
             stable = True
     elif stable is True:
-        conclusion = AsymptoticRemainder(
+        conclusion = Remainder(
             output_variable,
             point,
             input_remainder.kind,
             propagated_scale,
             None,
             input_remainder.provenance
-            + (RemainderProvenance(f"order-{first_order} local composition stability theorem"),),
+            + (
+                RemainderProvenance(
+                    f"order-{first_order} local composition stability theorem"
+                ),
+            ),
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             output_variable,
             point,
             source="composition Taylor stability unresolved",
@@ -914,7 +988,7 @@ def certify_inverse_remainder(
     if (sp.count_ops(function) + sp.count_ops(inverse_prefix) > 80) or (
         function.has(sp.exp) and inverse_prefix.has(sp.log)
     ):
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             inverse_variable,
             target_point,
             source="inverse residual replay exceeds the conservative complexity boundary",
@@ -925,11 +999,13 @@ def certify_inverse_remainder(
             reason="residual composition was not certified within the finite complexity policy",
             source="inverse remainder theorem",
         )
-        return RemainderTheoremCertificate("inverse mean-value/Newton theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "inverse mean-value/Newton theorem", (h,), conclusion
+        )
 
     residual = sp.simplify(function.subs(variable, inverse_prefix) - inverse_variable)
     if residual == 0:
-        conclusion = AsymptoticRemainder.exact_zero(
+        conclusion = Remainder.exact_zero(
             inverse_variable, target_point, source="exact inverse residual"
         )
         h = _decision(
@@ -942,16 +1018,21 @@ def certify_inverse_remainder(
 
     fp = sp.simplify(sp.diff(function, variable).subs(variable, inverse_prefix))
     if fp == 0:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             inverse_variable,
             target_point,
             exact_expression=None,
             source="inverse derivative vanishes",
         )
         h = _decision(
-            "inverse_nondegenerate", False, reason="f'(g)=0", source="inverse remainder theorem"
+            "inverse_nondegenerate",
+            False,
+            reason="f'(g)=0",
+            source="inverse remainder theorem",
         )
-        return RemainderTheoremCertificate("inverse mean-value theorem", (h,), conclusion)
+        return RemainderTheoremCertificate(
+            "inverse mean-value theorem", (h,), conclusion
+        )
 
     ctx = AsymptoticContext(inverse_variable, point=target_point)
     sign = ctx.eventual_sign(fp)
@@ -965,14 +1046,14 @@ def certify_inverse_remainder(
         stable = None
     nondeg = sign in (-1, 1)
     if nondeg and stable is True:
-        conclusion = AsymptoticRemainder.big_o(
+        conclusion = Remainder.big_o(
             q,
             inverse_variable,
             target_point,
             source="inverse mean-value/Newton remainder theorem",
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             inverse_variable,
             target_point,
             source="inverse nondegeneracy or derivative stability unresolved",
@@ -991,7 +1072,9 @@ def certify_inverse_remainder(
             source="inverse remainder theorem",
         ),
     )
-    return RemainderTheoremCertificate("inverse mean-value/Newton theorem", hypotheses, conclusion)
+    return RemainderTheoremCertificate(
+        "inverse mean-value/Newton theorem", hypotheses, conclusion
+    )
 
 
 def certify_nonlinear_lifting_remainder(
@@ -1002,7 +1085,7 @@ def certify_nonlinear_lifting_remainder(
 ) -> RemainderTheoremCertificate:
     """Simple-root implicit/Newton theorem for a lifted nonlinear branch.
 
-    This theorem is intentionally restricted to a certified scalar local
+    This theorem is restricted to a certified scalar local
     correction operator: when the leading Fréchet coefficient is eventually
     nonzero, a residual R gives a next correction O(R/L).  More general
     differential inverse-operator estimates remain UNKNOWN.
@@ -1010,7 +1093,7 @@ def certify_nonlinear_lifting_remainder(
 
     residual = sp.simplify(residual)
     if residual == 0:
-        conclusion = AsymptoticRemainder.exact_zero(
+        conclusion = Remainder.exact_zero(
             variable, point, source="zero nonlinear residual"
         )
         h = _decision(
@@ -1025,15 +1108,17 @@ def certify_nonlinear_lifting_remainder(
     sign = None if coeff == 0 else ctx.eventual_sign(coeff)
     nondeg = sign in (-1, 1)
     if nondeg:
-        conclusion = AsymptoticRemainder.big_o(
+        conclusion = Remainder.big_o(
             sp.simplify(residual / coeff),
             variable,
             point,
             source="simple-root nonlinear residual theorem",
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
-            variable, point, source="linearized correction coefficient not certified invertible"
+        conclusion = Remainder.unknown(
+            variable,
+            point,
+            source="linearized correction coefficient not certified invertible",
         )
     h = _decision(
         "nonlinear_linearization_nondegenerate",
@@ -1041,7 +1126,9 @@ def certify_nonlinear_lifting_remainder(
         reason=f"eventual sign of leading linearized coefficient: {sign}",
         source="nonlinear lifting remainder theorem",
     )
-    return RemainderTheoremCertificate("simple-root nonlinear lifting", (h,), conclusion)
+    return RemainderTheoremCertificate(
+        "simple-root nonlinear lifting", (h,), conclusion
+    )
 
 
 def _linear_operator_coefficients(
@@ -1058,7 +1145,9 @@ def _characteristic_root_data(
 ) -> tuple[sp.Expr, tuple[tuple[sp.Expr, int], ...]]:
     """Cached exact characteristic polynomial and root multiplicities."""
     lam = sp.Symbol("__lambda")
-    charpoly = sp.expand(sum(coefficients[k] * lam**k for k in range(len(coefficients))))
+    charpoly = sp.expand(
+        sum(coefficients[k] * lam**k for k in range(len(coefficients)))
+    )
     roots = sp.roots(charpoly, lam)
     ordered = tuple(
         sorted(
@@ -1127,9 +1216,9 @@ def _constant_coefficient_green_candidate(
                 source="Green/exponential-dichotomy theorem",
             )
         )
-        return GreenOperatorCertificate(order, coeffs, residual, None, None, None, "none"), tuple(
-            hypotheses
-        )
+        return GreenOperatorCertificate(
+            order, coeffs, residual, None, None, None, "none"
+        ), tuple(hypotheses)
     if any(c.has(variable) for c in coeffs):
         hypotheses.append(
             _decision(
@@ -1139,9 +1228,9 @@ def _constant_coefficient_green_candidate(
                 source="Green/exponential-dichotomy theorem",
             )
         )
-        return GreenOperatorCertificate(order, coeffs, residual, None, None, None, "none"), tuple(
-            hypotheses
-        )
+        return GreenOperatorCertificate(
+            order, coeffs, residual, None, None, None, "none"
+        ), tuple(hypotheses)
     if sum(multiplicity for _root, multiplicity in root_data) != order:
         hypotheses.append(
             _decision(
@@ -1151,9 +1240,9 @@ def _constant_coefficient_green_candidate(
                 source="Green/exponential-dichotomy theorem",
             )
         )
-        return GreenOperatorCertificate(order, coeffs, residual, None, None, None, "none"), tuple(
-            hypotheses
-        )
+        return GreenOperatorCertificate(
+            order, coeffs, residual, None, None, None, "none"
+        ), tuple(hypotheses)
 
     stable = []
     unstable = []
@@ -1166,7 +1255,10 @@ def _constant_coefficient_green_candidate(
         for j in range(multiplicity):
             mode = sp.simplify(variable**j * sp.exp(root * variable))
             gm = GreenMode(
-                root, j, mode, "stable" if side == -1 else "unstable" if side == 1 else "center"
+                root,
+                j,
+                mode,
+                "stable" if side == -1 else "unstable" if side == 1 else "center",
             )
             if side == -1:
                 stable.append(gm)
@@ -1201,7 +1293,8 @@ def _constant_coefficient_green_candidate(
     defect = None
     if q is not None:
         defect = sp.simplify(
-            sum(coeffs[k] * sp.diff(q, variable, k) for k in range(order + 1)) + residual
+            sum(coeffs[k] * sp.diff(q, variable, k) for k in range(order + 1))
+            + residual
         )
     hypotheses.append(
         _decision(
@@ -1255,9 +1348,9 @@ def _asymptotically_constant_green_candidate(
                 source="asymptotically-constant Green theorem",
             )
         )
-        return GreenOperatorCertificate(order, coeffs, residual, None, None, None, "none"), tuple(
-            hypotheses
-        )
+        return GreenOperatorCertificate(
+            order, coeffs, residual, None, None, None, "none"
+        ), tuple(hypotheses)
 
     ctx = AsymptoticContext(variable, point=point)
     lead = bounded_simplify(coeffs[-1])
@@ -1272,12 +1365,13 @@ def _asymptotically_constant_green_candidate(
         )
     )
     if not lead_ok:
-        return GreenOperatorCertificate(order, coeffs, residual, None, None, None, "none"), tuple(
-            hypotheses
-        )
+        return GreenOperatorCertificate(
+            order, coeffs, residual, None, None, None, "none"
+        ), tuple(hypotheses)
 
     normalized = tuple(
-        sp.S.One if k == order else bounded_simplify(coeffs[k] / lead) for k in range(order + 1)
+        sp.S.One if k == order else bounded_simplify(coeffs[k] / lead)
+        for k in range(order + 1)
     )
     limits = []
     perturbations = []
@@ -1364,7 +1458,9 @@ def _asymptotically_constant_green_candidate(
                 source="asymptotically-constant Green theorem",
             )
         )
-    dichotomy_ok = limiting_green.dichotomy is not None and limiting_green.dichotomy.certified
+    dichotomy_ok = (
+        limiting_green.dichotomy is not None and limiting_green.dichotomy.certified
+    )
     hypotheses.append(
         _decision(
             "green_dichotomy_roughness",
@@ -1382,7 +1478,8 @@ def _asymptotically_constant_green_candidate(
     defect = None
     if q is not None:
         defect = bounded_simplify(
-            sum(coeffs[k] * sp.diff(q, variable, k) for k in range(order + 1)) + residual
+            sum(coeffs[k] * sp.diff(q, variable, k) for k in range(order + 1))
+            + residual
         )
     cert = GreenOperatorCertificate(
         order,
@@ -1433,8 +1530,12 @@ def _green_mode_control(
                 )
             else:
                 statuses.append(None)
-                notes.append(f"mode {mode.expression} is not certified negligible/excluded")
-        return (all(value is True for value in statuses) if statuses else True), "; ".join(notes)
+                notes.append(
+                    f"mode {mode.expression} is not certified negligible/excluded"
+                )
+        return (
+            all(value is True for value in statuses) if statuses else True
+        ), "; ".join(notes)
 
     # For L=L0+E, individual perturbed modes need not be asymptotic to the
     # exact L0 exponentials when E=o(1).  A strict exponential-rate gap is the
@@ -1466,13 +1567,17 @@ def _green_mode_control(
             )
         elif mode.dichotomy_side == "unstable" and q_small:
             statuses.append(True)
-            notes.append("unstable mode excluded by the asymptotically-small-tail condition")
+            notes.append(
+                "unstable mode excluded by the asymptotically-small-tail condition"
+            )
         else:
             statuses.append(None)
             notes.append(
                 "unstable-mode exclusion requires an asymptotically small selected correction"
             )
-    return (all(value is True for value in statuses) if statuses else True), "; ".join(notes)
+    return (all(value is True for value in statuses) if statuses else True), "; ".join(
+        notes
+    )
 
 
 def certify_green_inverse_operator_remainder(
@@ -1494,14 +1599,18 @@ def certify_green_inverse_operator_remainder(
     """
     residual = sp.simplify(residual)
     if residual == 0:
-        conclusion = AsymptoticRemainder.exact_zero(variable, point, source="zero Fréchet residual")
+        conclusion = Remainder.exact_zero(
+            variable, point, source="zero Fréchet residual"
+        )
         h = _decision(
             "green_residual_zero",
             True,
             reason="residual is zero",
             source="Green/exponential-dichotomy theorem",
         )
-        return RemainderTheoremCertificate("exact Green inverse", (h,), conclusion), None
+        return RemainderTheoremCertificate(
+            "exact Green inverse", (h,), conclusion
+        ), None
     delta = (
         correction_function(variable)
         if isinstance(correction_function, sp.FunctionClass)
@@ -1518,15 +1627,19 @@ def certify_green_inverse_operator_remainder(
         return RemainderTheoremCertificate(
             "Green inverse operator",
             (h,),
-            AsymptoticRemainder.unknown(
+            Remainder.unknown(
                 variable, point, source="nonlinear or unparsed Fréchet operator"
             ),
         ), None
     coeffs, order = parsed
     if any(coefficient.has(variable) for coefficient in coeffs):
-        green, hyps = _asymptotically_constant_green_candidate(residual, coeffs, variable, point)
+        green, hyps = _asymptotically_constant_green_candidate(
+            residual, coeffs, variable, point
+        )
     else:
-        green, hyps = _constant_coefficient_green_candidate(residual, coeffs, variable, point)
+        green, hyps = _constant_coefficient_green_candidate(
+            residual, coeffs, variable, point
+        )
     if order < 2:
         # Let the dedicated first-order theorem supply its sharper result.
         h = _decision(
@@ -1538,7 +1651,7 @@ def certify_green_inverse_operator_remainder(
         return RemainderTheoremCertificate(
             "Green inverse operator",
             (h,),
-            AsymptoticRemainder.unknown(
+            Remainder.unknown(
                 variable, point, source="use first-order Fréchet inverse theorem"
             ),
         ), green
@@ -1550,7 +1663,9 @@ def certify_green_inverse_operator_remainder(
         if green.asymptotically_constant:
             normalized_residual = bounded_simplify(residual / coeffs[-1])
             normalized_defect = (
-                bounded_simplify(green.defect / coeffs[-1]) if green.defect is not None else None
+                bounded_simplify(green.defect / coeffs[-1])
+                if green.defect is not None
+                else None
             )
             if normalized_defect is not None and normalized_residual != 0:
                 defect_ratio = bounded_limit(
@@ -1584,11 +1699,14 @@ def certify_green_inverse_operator_remainder(
     )
     all_hyps = hyps + (defect_h, mode_h)
     if all(h.verdict is True for h in all_hyps) and q is not None:
-        conclusion = AsymptoticRemainder.big_o(
-            q, variable, point, source="certified higher-order Green/exponential-dichotomy estimate"
+        conclusion = Remainder.big_o(
+            q,
+            variable,
+            point,
+            source="certified higher-order Green/exponential-dichotomy estimate",
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             variable, point, source="higher-order Green/dichotomy hypotheses unresolved"
         )
     return RemainderTheoremCertificate(
@@ -1632,7 +1750,7 @@ def certify_frechet_inverse_operator_remainder(
         return RemainderTheoremCertificate(
             "exact Fréchet inverse",
             (h,),
-            AsymptoticRemainder.exact_zero(variable, point, source="zero Fréchet residual"),
+            Remainder.exact_zero(variable, point, source="zero Fréchet residual"),
         )
     delta = (
         correction_function(variable)
@@ -1650,7 +1768,7 @@ def certify_frechet_inverse_operator_remainder(
         return RemainderTheoremCertificate(
             "Fréchet inverse operator",
             (h,),
-            AsymptoticRemainder.unknown(variable, point, source="nonlinear correction operator"),
+            Remainder.unknown(variable, point, source="nonlinear correction operator"),
         )
     coeffs, order = parsed
     if order >= 2:
@@ -1668,7 +1786,7 @@ def certify_frechet_inverse_operator_remainder(
         return RemainderTheoremCertificate(
             "Fréchet inverse operator",
             (h,),
-            AsymptoticRemainder.unknown(
+            Remainder.unknown(
                 variable, point, source="not a differential inverse problem"
             ),
         )
@@ -1684,7 +1802,9 @@ def certify_frechet_inverse_operator_remainder(
         if mu_exp is not None:
             mu = sp.exp(mu_exp)
             homogeneous = sp.simplify(1 / mu)
-            primitive = certification_primitive(sp.simplify(mu * residual / a1), variable)
+            primitive = certification_primitive(
+                sp.simplify(mu * residual / a1), variable
+            )
             if primitive is not None:
                 q = sp.simplify(-primitive / mu)
         # A leading algebraic inverse is often enough for an asymptotic
@@ -1713,11 +1833,14 @@ def certify_frechet_inverse_operator_remainder(
             except SYMBOLIC_ERRORS:
                 hom_small = None
     if nondeg and inverse_ok is True and hom_small is True and q is not None:
-        conclusion = AsymptoticRemainder.big_o(
-            q, variable, point, source="certified first-order Fréchet inverse-operator estimate"
+        conclusion = Remainder.big_o(
+            q,
+            variable,
+            point,
+            source="certified first-order Fréchet inverse-operator estimate",
         )
     else:
-        conclusion = AsymptoticRemainder.unknown(
+        conclusion = Remainder.unknown(
             variable, point, source="Fréchet inverse hypotheses unresolved"
         )
     hypotheses = (

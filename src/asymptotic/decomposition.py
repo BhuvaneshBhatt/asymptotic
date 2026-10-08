@@ -61,10 +61,12 @@ def _shared_inner(expr: sp.Expr, x: sp.Symbol) -> sp.Expr | None:
     return None
 
 
-def maximal_univariate_decomposition(expr: sp.Expr, x: sp.Symbol) -> tuple[CompositionLayer, ...]:
+def maximal_univariate_decomposition(
+    expr: sp.Expr, x: sp.Symbol
+) -> tuple[CompositionLayer, ...]:
     """Peel the maximal exact chain of one-variable outer compositions.
 
-    The implementation deliberately uses only exact substitution identities.
+    The implementation uses only exact substitution identities.
     At a node with exactly one x-dependent child, that child is replaced by a
     fresh symbol to create an outer map and the walk continues inward.  This
     covers function composition as well as affine/rational wrappers such as

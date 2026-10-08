@@ -1,21 +1,27 @@
 import sympy as sp
 
 from asymptotic import (
-    AsymptoticAlgebra,
-    GrowthComparison,
-    implicit_asymptotic,
+    implicit,
     multiseries,
-    nested_expansion,
-    transseries_from_expression,
+    nested_series,
+)
+from asymptotic.algebra import (
+    AsymptoticAlgebra,
+)
+from asymptotic.context import (
+    AsymptoticGrowthComparison,
 )
 from asymptotic.remainder import RemainderKind
+from asymptotic.transseries import (
+    transseries_from_expression,
+)
 
 
 def test_coordinate_algebra_coerces_heterogeneous_representations_once():
     x = sp.symbols("x", positive=True)
     algebra = AsymptoticAlgebra(x, sp.oo, terms=4)
-    multi = multiseries(sp.exp(1 / x), x, terms=6)
-    nested = nested_expansion(1 + 1 / x, x, depth=1)
+    multi = multiseries(sp.exp(1 / x), x, terms=6, return_result=True)
+    nested = nested_series(1 + 1 / x, x, depth=1, return_result=True)
 
     product = algebra.multiply(multi, nested)
     assert product.variable == x
@@ -24,10 +30,10 @@ def test_coordinate_algebra_coerces_heterogeneous_representations_once():
     assert product.remainder.check() is True
 
 
-def test_algebra_routes_all_core_operations_through_one_coordinate_boundary():
+def test_algebra_routes_all_core_coordinate_boundary():
     x, z = sp.symbols("x z", positive=True)
     algebra = AsymptoticAlgebra(x, sp.oo, terms=4)
-    value = multiseries(1 + 1 / x, x, terms=5)
+    value = multiseries(1 + 1 / x, x, terms=5, return_result=True)
 
     derivative = algebra.differentiate(value)
     assert sp.simplify(derivative.as_expr() + 1 / x**2) == 0
@@ -39,15 +45,15 @@ def test_algebra_routes_all_core_operations_through_one_coordinate_boundary():
     assert sp.simplify(composed.truncate() - (1 / x - 1 / (2 * x**2))) == 0
 
     small = transseries_from_expression(1 / x, x, point=sp.oo, complete=True)
-    assert algebra.compare(value, small) is GrowthComparison.LARGER
+    assert algebra.compare(value, small) is AsymptoticGrowthComparison.LARGER
 
 
-def test_puiseux_and_implicit_branches_join_the_same_algebra_without_false_exactness():
+def test_branches_share_algebra_without_false_exactness():
     x, y = sp.symbols("x y", positive=True)
-    branches = implicit_asymptotic(y**2 - x - x**2, y, x, terms=2)
+    branches = implicit(y**2 - x - x**2, y, x, terms=2, return_result=True)
     branch = branches[0]
 
-    element = branch.asymptotic_element()
+    element = branch.as_element()
     assert element.native is branch
     assert element.truncate() == branch.series.truncate()
     # This particular finite algebraic branch is not complete at two terms.
@@ -65,4 +71,4 @@ def test_algebra_rejects_cross_coordinate_binary_operations():
     except ValueError as exc:
         assert "coordinates" in str(exc)
     else:
-        raise AssertionError("coordinate mismatch was silently coerced")
+        raise AssertionError("coordinate mismatch was coerced")

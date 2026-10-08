@@ -1,174 +1,156 @@
 """Primary public API for symbolic asymptotic analysis.
 
-The root namespace intentionally contains only common workflow entry points.
-Specialized theorem, property, statistics, and representation APIs live in their
-own submodules; see ``docs/api-classification.md``.
+The root namespace contains common mathematical workflows and principal result
+types. Specialist theorem, geometry, coefficient, and certificate APIs remain
+public from their defining submodules.
 """
 
 from __future__ import annotations
 
-__version__ = "0.53.2"
-
-from .algebra import (
-    AsymptoticAlgebra,
-    AsymptoticElement,
-    asymptotic_element,
+from .algebra import as_element
+from .analytic_limits import SquareWave, analytic_limit
+from .calculus import truncate
+from .cluster_limits import Circle, ExactClusterResult, cluster_set
+from .complex_limits import complex_limit
+from .context import AsymptoticContext
+from .discrete_limits import discrete_limit
+from .dsolve import DSolveResult
+from .evidence import (
+    Evidence,
+    EvidenceStatus,
 )
-from .calculus import (
+from .fixed_ray_branch_germs import DirectionalInfinity
+from .limits import limit
+from .mathematical_api import (
+    compose,
     differentiate,
+    dsolve,
+    expectation,
+    hyperasymptotic_series,
+    implicit,
     integrate,
-)
-from .context import (
-    AsymptoticContext,
-    GrowthComparison,
-)
-from .dominant import (
-    dominant_balance_candidates,
-)
-from .dsolve import (
-    AsymptoticDSolveResult,
-    asymptotic_dsolve,
-)
-from .general_ops import (
-    asymptotic_integrate,
-    compose_transseries,
-)
-from .implicit import (
-    implicit_asymptotic,
-)
-from .mrv import (
-    mrv_decomposition,
-)
-from .multiseries import (
-    Multiseries,
+    inverse,
+    leading_term,
+    lindstedt_poincare,
+    local_series,
+    maximize,
+    mellin,
+    minimize,
     multiseries,
-)
-from .multivariate import (
-    multivariate_dominant_balance_candidates,
-)
-from .multivariate_implicit import (
-    multivariate_implicit_asymptotics,
-)
-from .nested import (
-    NestedExpansion,
-    nested_expansion,
-)
-from .optimization import (
-    AsymptoticOptimizationResult,
-    asymptotic_argmax,
-    asymptotic_argmin,
-    asymptotic_maximize,
-    asymptotic_minimize,
-)
-from .probability import (
-    StatisticalAsymptoticResult,
-    airy_uniform_saddle_asymptotic,
-    asymptotic_expectation,
-    asymptotic_probability,
-    coalescing_saddle_asymptotic,
-    laplace_asymptotic_integral,
-)
-from .puiseux import (
+    nested_series,
+    probability,
+    product,
     puiseux_series,
+    regular_perturbation,
+    relation,
+    root,
+    rsolve,
+    series,
+    solve,
+    sum,
 )
-from .relations import (
-    AsymptoticRelationResult,
-    asymptotic_big_o,
-    asymptotic_equivalent,
-    asymptotic_little_o,
-    asymptotic_relation,
+from .multiseries import Multiseries
+from .optimization import OptimizationResult, argmax, argmin
+from .path_limits import (
+    complex_ray_limit,
+    one_sided_limit,
+    path_limit,
 )
+from .probability import StatisticalResult
+from .products import ProductResult
+from .public_result import (
+    PublicResult,
+    explain,
+)
+from .relations import big_o, equivalent, little_o
 from .remainder import (
-    AsymptoticRemainder,
-    AsymptoticTruncation,
+    Remainder,
     RemainderKind,
+    Truncation,
 )
-from .reversion import (
-    inverse_asymptotic,
-    series_reversion,
-)
-from .roots import (
-    asymptotic_root,
-)
-from .rsolve import (
-    AsymptoticRSolveResult,
-    asymptotic_rsolve,
-)
+from .rsolve import RSolveResult
 from .scale import (
-    AsymptoticScale,
+    Scale,
     discover_scale,
 )
-from .solve import (
-    AsymptoticSolveResult,
-    asymptotic_solve,
-)
-from .sums import (
-    AsymptoticSumResult,
-    asymptotic_sum,
-)
-from .transseries import (
-    TransseriesExpansion,
-    transseries_from_expression,
-)
+from .solve import SolveResult
+from .stratified_expansion import stratified_expand as stratified_series
+from .sums import SumResult
+from .transseries import TransseriesExpansion
+
+__version__ = "0.2.0"
+
 
 __all__ = [
-    "AsymptoticAlgebra",
     "AsymptoticContext",
-    "AsymptoticDSolveResult",
-    "AsymptoticElement",
-    "AsymptoticOptimizationResult",
-    "AsymptoticRSolveResult",
-    "AsymptoticRelationResult",
-    "AsymptoticRemainder",
-    "AsymptoticScale",
-    "AsymptoticSolveResult",
-    "AsymptoticSumResult",
-    "AsymptoticTruncation",
-    "GrowthComparison",
+    "DSolveResult",
+    "DirectionalInfinity",
+    "Evidence",
+    "EvidenceStatus",
     "Multiseries",
-    "NestedExpansion",
+    "OptimizationResult",
+    "ProductResult",
+    "PublicResult",
+    "RSolveResult",
+    "Remainder",
     "RemainderKind",
-    "StatisticalAsymptoticResult",
+    "Scale",
+    "SolveResult",
+    "SquareWave",
+    "StatisticalResult",
+    "SumResult",
     "TransseriesExpansion",
+    "Truncation",
     "__version__",
-    "airy_uniform_saddle_asymptotic",
-    "asymptotic_argmax",
-    "asymptotic_argmin",
-    "asymptotic_big_o",
-    "asymptotic_dsolve",
-    "asymptotic_element",
-    "asymptotic_equivalent",
-    "asymptotic_expectation",
-    "asymptotic_integrate",
-    "asymptotic_little_o",
-    "asymptotic_maximize",
-    "asymptotic_minimize",
-    "asymptotic_probability",
-    "asymptotic_relation",
-    "asymptotic_root",
-    "asymptotic_rsolve",
-    "asymptotic_solve",
-    "asymptotic_sum",
-    "coalescing_saddle_asymptotic",
-    "compose_transseries",
+    "analytic_limit",
+    "argmax",
+    "argmin",
+    "as_element",
+    "big_o",
+    "complex_limit",
+    "complex_ray_limit",
+    "cluster_set",
+    "Circle",
+    "ExactClusterResult",
+    "compose",
     "differentiate",
     "discover_scale",
-    "dominant_balance_candidates",
-    "implicit_asymptotic",
+    "discrete_limit",
+    "dsolve",
+    "equivalent",
+    "expectation",
+    "explain",
+    "hyperasymptotic_series",
+    "implicit",
     "integrate",
-    "inverse_asymptotic",
-    "laplace_asymptotic_integral",
-    "mrv_decomposition",
+    "inverse",
+    "leading_term",
+    "limit",
+    "lindstedt_poincare",
+    "little_o",
+    "local_series",
+    "maximize",
+    "mellin",
+    "minimize",
     "multiseries",
-    "multivariate_dominant_balance_candidates",
-    "multivariate_implicit_asymptotics",
-    "nested_expansion",
+    "nested_series",
+    "one_sided_limit",
+    "path_limit",
+    "probability",
+    "product",
     "puiseux_series",
-    "series_reversion",
-    "transseries_from_expression",
+    "regular_perturbation",
+    "relation",
+    "root",
+    "rsolve",
+    "series",
+    "solve",
+    "stratified_series",
+    "sum",
+    "truncate",
 ]
 
 
 def __dir__() -> list[str]:
-    """Expose the intentionally small primary namespace to interactive discovery."""
+    """Expose only the primary namespace to interactive discovery."""
     return sorted(set(__all__) | {"__all__", "__doc__", "__name__", "__package__"})

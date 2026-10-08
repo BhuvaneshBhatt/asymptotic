@@ -1,24 +1,26 @@
 import pytest
 import sympy as sp
-
-from asymptotic import (
-    asymptotic_integrate,
-    compose_transseries,
-    transseries_from_expression,
-)
-from asymptotic.function_properties import (
+from funcprops import (
+    PropertyEnforcementError,
     PropertyKnowledge,
     PropertyProvenance,
-    analytic_at_decision,
-    domain_contains_decision,
+    domain,
 )
-from asymptotic.function_properties.semantics import PropertyEnforcementError
+
+from asymptotic import integrate
+from asymptotic._property_support import analytic_at_decision
+from asymptotic.general_ops import (
+    compose_transseries,
+)
 from asymptotic.stratification import (
     AsymptoticStratification,
     ParameterStratum,
     evaluate_parameter_strata,
     stratify_parameter_cases,
     zero_nonzero_stratification,
+)
+from asymptotic.transseries import (
+    transseries_from_expression,
 )
 
 
@@ -48,7 +50,7 @@ def test_zero_nonzero_driver_evaluates_parameter_regimes():
     assert any(s.condition.has(sp.Eq(a, 0)) for s in strat.strata)
 
 
-def test_analyticity_decision_carries_provenance_and_enforces_branch_point():
+def test_analyticity_decision_carries_provenance_branch_point():
     z = sp.symbols("z")
     at_zero = analytic_at_decision(sp.log(z), z, 0)
     assert at_zero.verdict is False
@@ -59,13 +61,14 @@ def test_analyticity_decision_carries_provenance_and_enforces_branch_point():
     assert at_one.verdict is True
 
 
-def test_domain_decision_is_tri_state_and_provenance_carrying():
+def test_domain_decision_comes_from_shared_funcprops_backend():
     z = sp.symbols("z", real=True)
-    assert domain_contains_decision(sp.log(z), z, 2, real=True).verdict is True
-    assert domain_contains_decision(sp.log(z), z, -2, real=True).verdict is False
+    natural_domain = domain(sp.log(z), z)
+    assert sp.simplify(natural_domain.subs(z, 2)) is sp.S.true
+    assert sp.simplify(natural_domain.subs(z, -2)) is sp.S.false
 
 
-def test_composition_rejects_unknown_unregistered_outer_property_by_default():
+def test_composition_rejects_unknown_unregistered_by_default():
     x, z = sp.symbols("x z", positive=True)
     F = sp.Function("F")
     inner = transseries_from_expression(1 + 1 / x, x, point=sp.oo)
@@ -87,13 +90,12 @@ def test_symbolic_integration_resonance_requires_stratification():
     a = sp.symbols("a", real=True)
     source = transseries_from_expression(x**a, x, point=sp.oo)
     with pytest.raises(PropertyEnforcementError):
-        asymptotic_integrate(source, assumptions=sp.S.true)
+        integrate(source, assumptions=sp.S.true, return_result=True)
 
     strat = evaluate_parameter_strata(
         (sp.Eq(a, -1), sp.Ne(a, -1)),
-        lambda assumptions: asymptotic_integrate(
-            source,
-            assumptions=assumptions,
+        lambda assumptions: integrate(
+            source, assumptions=assumptions, return_result=True
         ).truncate(),
         require_exhaustive=True,
     )
@@ -107,3 +109,39 @@ def test_manual_stratum_preserves_user_provenance():
     prov = PropertyProvenance("test", reference="case split")
     s = ParameterStratum(sp.Eq(a, 0), 1, provenance=(prov,))
     assert s.provenance == (prov,)
+
+
+def test_empty_parameter_family():
+    family = AsymptoticStratification(
+        (),
+        (ParameterStratum(sp.S.true, sp.Integer(42)),),
+        assumptions=sp.S.false,
+        exhaustive=True,
+    )
+    assert family.select() is None
+    assert family.mathematical_value is None
+
+
+def test_empty_selection_assumptions():
+    a = sp.Symbol("a", real=True)
+    family = AsymptoticStratification(
+        (a,),
+        (ParameterStratum(sp.S.true, sp.Integer(42)),),
+        assumptions=a > 0,
+    )
+    assert family.select(sp.S.false) is None
+    assert family.select(sp.Not(a > 0)) is None
+    assert family.select().result == 42
+
+
+def test_value_projection_protocol():
+    from types import SimpleNamespace
+
+    from asymptotic.conditional import mathematical_result
+
+    family = SimpleNamespace(
+        parameters=(),
+        strata=(ParameterStratum(sp.S.true, sp.Integer(7)),),
+        exhaustive=True,
+    )
+    assert mathematical_result(family) == 7

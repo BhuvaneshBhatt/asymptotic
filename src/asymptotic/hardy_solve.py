@@ -1,7 +1,7 @@
-"""Newton--MRV polynomial solving over computable Hardy/log-exp coefficients.
+"""Newton–MRV polynomial solving over computable Hardy/log-exp coefficients.
 
-This module is an expert backend for :func:`asymptotic.solve.asymptotic_solve`.
-It deliberately avoids constructing exact algebraic roots of the original
+This module is an expert backend for :func:`asymptotic.solve.solve`.
+It avoids constructing exact algebraic roots of the original
 parameter-dependent polynomial.  Instead it values each coefficient in the
 package's transseries/Hardy monomial group, constructs lower Newton balances,
 and recursively lifts smaller corrections.  For real output a separate
@@ -19,11 +19,12 @@ import sympy as sp
 from ._power_simplify import analytic_powsimp, mixed_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_ask
-from .context import AsymptoticContext, GrowthComparison, context_for
+from .context import AsymptoticContext, AsymptoticGrowthComparison, context_for
 from .dominant import (
     TransseriesBalanceCandidate,
     transseries_dominant_balance_candidates,
 )
+from .mrv_profile import record_mrv_recursion, timed_mrv_stage
 from .stratification import AsymptoticStratification
 
 
@@ -53,7 +54,9 @@ class MRVNewtonStep:
         ]
         if len(balance_symbols) != 1:
             return None
-        residual = sp.simplify(self.coefficient_equation.subs(balance_symbols[0], self.coefficient))
+        residual = sp.simplify(
+            self.coefficient_equation.subs(balance_symbols[0], self.coefficient)
+        )
         if residual == 0 or residual.is_zero is True:
             return True
         if residual.is_zero is False:
@@ -107,7 +110,7 @@ class AsymptoticSturmCertificate:
 
 @dataclass(frozen=True)
 class MRVHardySolveResult:
-    """Expert result for one polynomial solved by Newton--MRV lifting."""
+    """Expert result for one polynomial solved by Newton–MRV lifting."""
 
     branches: tuple[MRVHardyBranch, ...]
     degree: int
@@ -142,7 +145,8 @@ def _char_multiplicity(
     multiplicity = 0
     derivative = polynomial
     for _ in range(degree + 1):
-        value = sp.simplify(derivative.subs(symbol, coefficient))
+        with timed_mrv_stage("simplification"):
+            value = sp.simplify(derivative.subs(symbol, coefficient))
         if value != 0 and value.is_zero is not True:
             break
         multiplicity += 1
@@ -161,7 +165,9 @@ def _newton_step(
         coefficient=coefficient,
         coefficient_equation=candidate.coefficient_equation,
         common_monomial=candidate.common_monomial,
-        dominant_powers=tuple(term.dependent_power for term in candidate.dominant_terms),
+        dominant_powers=tuple(
+            term.dependent_power for term in candidate.dominant_terms
+        ),
         char_multiplicity=_char_multiplicity(candidate, coefficient),
     )
 
@@ -192,8 +198,11 @@ def _deduplicate_branches(
     for branch in branches:
         duplicate = False
         for prior in unique:
-            difference = analytic_powsimp(branch.expression - prior.expression)
-            if context.is_zero(difference) is True:
+            with timed_mrv_stage("simplification"):
+                difference = analytic_powsimp(branch.expression - prior.expression)
+            with timed_mrv_stage("zerotest"):
+                duplicate_zero = context.is_zero(difference)
+            if duplicate_zero is True:
                 duplicate = True
                 break
         if not duplicate:
@@ -211,17 +220,18 @@ def _candidate_tuple(
     smaller_than: sp.Expr | None,
     assumptions: sp.Expr,
 ) -> tuple[TransseriesBalanceCandidate, ...]:
-    candidates = transseries_dominant_balance_candidates(
-        equation,
-        dependent,
-        parameter,
-        context=context,
-        point=point,
-        smaller_than=smaller_than,
-        corrections_must_vanish=False,
-        assumptions=assumptions,
-        stratify_parameters=False,
-    )
+    with timed_mrv_stage("series_and_balance"):
+        candidates = transseries_dominant_balance_candidates(
+            equation,
+            dependent,
+            parameter,
+            context=context,
+            point=point,
+            smaller_than=smaller_than,
+            corrections_must_vanish=False,
+            assumptions=assumptions,
+            stratify_parameters=False,
+        )
     if isinstance(candidates, AsymptoticStratification):
         return ()
     return candidates
@@ -248,8 +258,15 @@ def _lift_mrv_hardy_branches(
         depth: int,
     ) -> None:
         """Lift one Hardy branch until solved, truncated, or unsupported."""
-        residual = analytic_powsimp(sp.expand(polynomial.subs(dependent, prefix)))
-        if context.is_zero(residual) is True:
+        record_mrv_recursion(depth)
+        with (
+            timed_mrv_stage("recursive_root_construction"),
+            timed_mrv_stage("simplification"),
+        ):
+            residual = analytic_powsimp(sp.expand(polynomial.subs(dependent, prefix)))
+        with timed_mrv_stage("zerotest"):
+            residual_is_zero = context.is_zero(residual)
+        if residual_is_zero is True:
             multiplicity = steps[-1].char_multiplicity if steps else 1
             output.append(MRVHardyBranch(prefix, steps, multiplicity, True))
             return
@@ -258,7 +275,13 @@ def _lift_mrv_hardy_branches(
             output.append(MRVHardyBranch(prefix, steps, multiplicity, False))
             return
 
-        translated = analytic_powsimp(sp.expand(polynomial.subs(dependent, prefix + correction)))
+        with (
+            timed_mrv_stage("recursive_root_construction"),
+            timed_mrv_stage("simplification"),
+        ):
+            translated = analytic_powsimp(
+                sp.expand(polynomial.subs(dependent, prefix + correction))
+            )
         candidates = _candidate_tuple(
             translated,
             correction,
@@ -277,13 +300,20 @@ def _lift_mrv_hardy_branches(
         advanced = False
         for candidate in candidates:
             if previous_monomial is not None:
-                relation, _ = context.compare_growth(candidate.monomial, previous_monomial)
-                if relation is not GrowthComparison.SMALLER:
+                with timed_mrv_stage("assumptions_and_growth"):
+                    relation, _ = context.compare_growth(
+                        candidate.monomial, previous_monomial
+                    )
+                if relation is not AsymptoticGrowthComparison.SMALLER:
                     continue
             for coefficient in candidate.coefficients:
-                step = _newton_step(prefix, candidate, coefficient)
-                next_prefix = analytic_powsimp(prefix + step.correction)
-                if context.is_zero(next_prefix - prefix) is True:
+                with timed_mrv_stage("recursive_root_construction"):
+                    step = _newton_step(prefix, candidate, coefficient)
+                with timed_mrv_stage("simplification"):
+                    next_prefix = analytic_powsimp(prefix + step.correction)
+                with timed_mrv_stage("zerotest"):
+                    prefix_unchanged = context.is_zero(step.correction)
+                if prefix_unchanged is True:
                     continue
                 advanced = True
                 recurse(
@@ -377,7 +407,9 @@ def _asymptotic_sturm_sequence(
     first = _asymptotic_reduce_polynomial(polynomial, dependent, context)
     if first == 0:
         return ()
-    second = _asymptotic_reduce_polynomial(sp.diff(first, dependent), dependent, context)
+    second = _asymptotic_reduce_polynomial(
+        sp.diff(first, dependent), dependent, context
+    )
     sequence = [first]
     if second == 0:
         return tuple(sequence)
@@ -392,7 +424,7 @@ def _asymptotic_sturm_sequence(
     return tuple(sequence)
 
 
-def asymptotic_sturm_certificate(
+def sturm_certificate(
     polynomial: sp.Expr,
     dependent: sp.Symbol,
     parameter: sp.Symbol,
@@ -412,10 +444,24 @@ def asymptotic_sturm_certificate(
     polynomial = sp.expand(sp.sympify(polynomial))
     ctx = context_for(parameter, point, context)
     sequence = _asymptotic_sturm_sequence(polynomial, dependent, ctx)
-    signs = _sturm_infinity_signs(sequence, dependent, ctx, assumptions) if sequence else None
+    signs = (
+        _sturm_infinity_signs(sequence, dependent, ctx, assumptions)
+        if sequence
+        else None
+    )
     if signs is None:
         return AsymptoticSturmCertificate(
-            polynomial, dependent, parameter, point, sequence, (), (), None, None, None, False
+            polynomial,
+            dependent,
+            parameter,
+            point,
+            sequence,
+            (),
+            (),
+            None,
+            None,
+            None,
+            False,
         )
     minus, plus = signs
     left = _sign_variations(minus)
@@ -453,7 +499,7 @@ def mrv_hardy_polynomial_solve(
     means that branch counting is independently certified: polynomial degree
     counting is used over the complexes, while real output requires a certified
     asymptotic Sturm count.  An incomplete result is still useful to expert
-    callers, but :func:`asymptotic_solve` only prefers it automatically when
+    callers, but :func:`solve` only prefers it automatically when
     completeness has been established.
     """
 
@@ -510,7 +556,7 @@ def mrv_hardy_polynomial_solve(
             for branch in branches
             if _branch_real_decision(branch.expression, assumptions) is True
         )
-        sturm = asymptotic_sturm_certificate(
+        sturm = sturm_certificate(
             polynomial,
             dependent,
             parameter,

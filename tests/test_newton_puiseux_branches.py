@@ -9,7 +9,7 @@ from asymptotic.puiseux import (
 
 def test_puiseux_explicit_ramification():
     x = sp.symbols("x", positive=True)
-    s = puiseux_series(sp.sqrt(x) * (1 + x), x, terms=4)
+    s = puiseux_series(sp.sqrt(x) * (1 + x), x, terms=4, return_result=True)
     assert s.ramification_index == 2
     assert s.leading_term.exponent == sp.Rational(1, 2)
     assert s.leading_term.coefficient == 1
@@ -42,7 +42,9 @@ def test_newton_puiseux_lifts_quintic_without_radical_formula():
     # Generic Bring-type quintic: SymPy does not need an explicit radical root
     # for the branch through y=0 to be expanded.
     branches = algebraic_branches(y**5 + y - x, y, x, terms=3)
-    analytic = [b for b in branches if b.newton_exponent == 1 and b.newton_coefficient == 1]
+    analytic = [
+        b for b in branches if b.newton_exponent == 1 and b.newton_coefficient == 1
+    ]
     assert len(analytic) == 1
     assert sp.expand(analytic[0].series.truncate() - (x - x**5 + 5 * x**9)) == 0
     assert analytic[0].exact_root is None

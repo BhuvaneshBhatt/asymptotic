@@ -1,0 +1,9 @@
+include LICENSE README.md pyproject.toml pytest.ini
+recursive-include src *.py py.typed
+recursive-include tests *.py *.json
+recursive-include tools *.py *.json
+recursive-include docs *.md *.json
+recursive-include examples *.py *.md
+recursive-include benchmarks *.py *.json
+recursive-include .github/workflows *.yml
+global-exclude *.py[cod] .DS_Store

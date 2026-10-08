@@ -6,18 +6,22 @@ from collections.abc import Callable, Iterable
 from typing import TypeVar
 
 import sympy as sp
+from funcprops import PropertyProvenance, entails, normalize_assumptions
 
 from ._symbolic_policy import bounded_solve_one
 from .canonical import canonical_key
-from .function_properties.semantics import PropertyProvenance, entails
 from .stratification import AsymptoticStratification, evaluate_parameter_strata
 
 T = TypeVar("T")
 
 
-def parameter_symbols(expr: sp.Expr, excluded: Iterable[sp.Symbol] = ()) -> tuple[sp.Symbol, ...]:
+def parameter_symbols(
+    expr: sp.Expr, excluded: Iterable[sp.Symbol] = ()
+) -> tuple[sp.Symbol, ...]:
     excluded_set = set(excluded)
-    return tuple(sorted(sp.sympify(expr).free_symbols - excluded_set, key=sp.default_sort_key))
+    return tuple(
+        sorted(sp.sympify(expr).free_symbols - excluded_set, key=sp.default_sort_key)
+    )
 
 
 def _nonconstant_parameter_factors(
@@ -51,7 +55,7 @@ def critical_parameter_expressions(
     """Return unresolved parameter factors whose vanishing changes structure."""
 
     params = set(parameters)
-    base = sp.sympify(assumptions)
+    base = normalize_assumptions(assumptions)
     found = []
     found_keys = set()
     for expression in expressions:
@@ -81,7 +85,7 @@ def _equality_substitutions(
 ) -> dict[sp.Symbol, sp.Expr]:
     params = tuple(parameters)
     substitutions = {}
-    for clause in sp.And.make_args(sp.sympify(assumptions)):
+    for clause in sp.And.make_args(normalize_assumptions(assumptions)):
         if not isinstance(clause, sp.Equality):
             continue
         lhs = sp.sympify(clause.lhs).subs(substitutions)
@@ -93,7 +97,9 @@ def _equality_substitutions(
             substitutions[rhs] = lhs
             continue
         equation = sp.expand(lhs - rhs)
-        candidates = [p for p in params if p in equation.free_symbols and p not in substitutions]
+        candidates = [
+            p for p in params if p in equation.free_symbols and p not in substitutions
+        ]
         for parameter in candidates:
             # Most generated strata are affine equalities.  Solve those
             # directly instead of invoking SymPy's general equation solver.
@@ -111,7 +117,10 @@ def _equality_substitutions(
             if sp.count_ops(equation) > 20:
                 continue
             solutions = bounded_solve_one(equation, parameter) or ()
-            if len(solutions) == 1 and parameter not in sp.sympify(solutions[0]).free_symbols:
+            if (
+                len(solutions) == 1
+                and parameter not in sp.sympify(solutions[0]).free_symbols
+            ):
                 substitutions[parameter] = sp.sympify(solutions[0]).subs(substitutions)
                 break
     return substitutions
@@ -134,7 +143,9 @@ def specialize_expression(
     substitutions = _equality_substitutions(assumptions, params)
     specialized = expr.subs(substitutions, simultaneous=False)
     try:
-        specialized = sp.refine(specialized, sp.sympify(assumptions).subs(substitutions))
+        specialized = sp.refine(
+            specialized, normalize_assumptions(assumptions).subs(substitutions)
+        )
     except (TypeError, ValueError):
         pass
     return sp.factor(sp.simplify(specialized))

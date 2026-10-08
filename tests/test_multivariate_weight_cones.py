@@ -48,5 +48,7 @@ def test_weight_cone_discovery_automatically_stratifies_deleted_faces():
     zero = result.select(sp.Eq(a, 0))
     nonzero = result.select(sp.Ne(a, 0))
     assert zero is not None and nonzero is not None
-    assert all(-a * x not in {t.expression for t in r.active_terms} for r in zero.result)
+    assert all(
+        -a * x not in {t.expression for t in r.active_terms} for r in zero.result
+    )
     assert any(any(t.coefficient == -a for t in r.active_terms) for r in nonzero.result)

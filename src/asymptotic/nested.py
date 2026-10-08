@@ -4,6 +4,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
@@ -56,26 +57,36 @@ class NestedForm:
     constant: sp.Expr | None
     outer_sign: int
     levels: tuple[NestedLevel, ...]
-    structural: StructuralDecomposition | None = field(default=None, compare=False, repr=False)
+    structural: StructuralDecomposition | None = field(
+        default=None, compare=False, repr=False
+    )
     mrv: MRVDecomposition | None = field(default=None, compare=False, repr=False)
 
     @property
     def terminal_remainder(self) -> sp.Expr:
         if not self.levels:
-            return self.exact_expr - self.constant if self.constant is not None else self.exact_expr
+            return (
+                self.exact_expr - self.constant
+                if self.constant is not None
+                else self.exact_expr
+            )
         return self.levels[-1].remainder
 
     def reconstruct(self) -> sp.Expr:
         if self.constant is not None:
             if not self.levels:
                 return self.constant
-            return self.constant + self.outer_sign * self.levels[0].reconstruct(self.variable)
+            return self.constant + self.outer_sign * self.levels[0].reconstruct(
+                self.variable
+            )
         if not self.levels:
             return self.exact_expr
         return self.outer_sign * self.levels[0].reconstruct(self.variable)
 
     def as_expansion(self, *, point: sp.Expr = sp.oo) -> NestedExpansion:
-        return NestedExpansion(self.exact_expr, self.variable, point=point, seed=(self,))
+        return NestedExpansion(
+            self.exact_expr, self.variable, point=point, seed=(self,)
+        )
 
     def __add__(self, other):
         return self.as_expansion() + other
@@ -113,7 +124,9 @@ class NestedExpansion:
         self._forms: list[NestedForm] = list(seed)
         self._current = self._forms[-1].terminal_remainder if self._forms else self.expr
         self.exhausted = False
-        if self.context.is_zero(self._current) is True or not self._current.has(variable):
+        if self.context.is_zero(self._current) is True or not self._current.has(
+            variable
+        ):
             self.exhausted = True
 
     @property
@@ -128,7 +141,11 @@ class NestedExpansion:
         if self.exhausted:
             return None
         form = nested_form(
-            self._current, self.variable, point=self.point, max_levels=1, context=self.context
+            self._current,
+            self.variable,
+            point=self.point,
+            max_levels=1,
+            context=self.context,
         )
         self._forms.append(form)
         remainder = analytic_powsimp(sp.simplify(form.terminal_remainder))
@@ -151,9 +168,13 @@ class NestedExpansion:
             return other.exact_expr
         return sp.sympify(other)
 
-    def _binary(self, other, op: Callable[[sp.Expr, sp.Expr], sp.Expr]) -> NestedExpansion:
+    def _binary(
+        self, other, op: Callable[[sp.Expr, sp.Expr], sp.Expr]
+    ) -> NestedExpansion:
         expr = analytic_powsimp(sp.simplify(op(self.expr, self._coerce_expr(other))))
-        return NestedExpansion(expr, self.variable, point=self.point, context=self.context)
+        return NestedExpansion(
+            expr, self.variable, point=self.point, context=self.context
+        )
 
     def __add__(self, other):
         return self._binary(other, lambda a, b: a + b)
@@ -183,7 +204,10 @@ class NestedExpansion:
 
     def __pow__(self, power):
         return NestedExpansion(
-            self.expr ** sp.sympify(power), self.variable, point=self.point, context=self.context
+            self.expr ** sp.sympify(power),
+            self.variable,
+            point=self.point,
+            context=self.context,
         )
 
     def exp(self) -> NestedExpansion:
@@ -196,11 +220,11 @@ class NestedExpansion:
             sp.log(self.expr), self.variable, point=self.point, context=self.context
         )
 
-    def asymptotic_element(self):
+    def as_element(self):
         """View this nested expansion through the common asymptotic-field protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self)
+        return as_element(self)
 
     def differentiate(self, order: int = 1) -> NestedExpansion:
         if order < 0:
@@ -212,7 +236,9 @@ class NestedExpansion:
             context=self.context,
         )
 
-    def integrate(self, *, constant: sp.Expr = 0, terms: int | None = None) -> NestedExpansion:
+    def integrate(
+        self, *, constant: sp.Expr = 0, terms: int | None = None
+    ) -> NestedExpansion:
         primitive = sp.integrate(self.expr, self.variable)
         if primitive.has(sp.Integral):
             raise NotImplementedError(f"Could not integrate {self.expr}")
@@ -223,7 +249,7 @@ class NestedExpansion:
             context=self.context,
         )
 
-    def inverse_asymptotic(
+    def inverse(
         self,
         inverse_variable: sp.Symbol | None = None,
         *,
@@ -231,9 +257,9 @@ class NestedExpansion:
         branch: int | None = 0,
     ):
         """Asymptotically invert the exact expression represented here."""
-        from .reversion import inverse_asymptotic
+        from .reversion import inverse
 
-        return inverse_asymptotic(
+        return inverse(
             self.expr,
             self.variable,
             inverse_variable,
@@ -365,7 +391,7 @@ def nested_form(
     return NestedForm(variable, expr, constant, sign, tuple(levels), structural, mrv)
 
 
-def nested_expansion(
+def nested_series(
     expr: sp.Expr,
     variable: sp.Symbol,
     *,
@@ -373,8 +399,11 @@ def nested_expansion(
     point: sp.Expr = sp.oo,
     max_exp_depth: int | None = None,
     max_log_depth: int | None = None,
+    assumptions: sp.Expr = sp.S.true,
 ) -> NestedExpansion:
     """Build a resumable nested expansion, eagerly refining up to *depth* levels."""
+    assumptions = normalize_assumptions(assumptions)
+    expr = sp.refine(sp.sympify(expr), assumptions)
     expansion = NestedExpansion(expr, variable, point=point)
     # ``depth`` controls only eager initial refinement; the returned expansion
     # remains resumable and can be refined further.
@@ -390,8 +419,8 @@ def nested_expansion(
         )
         expansion._forms.append(form)
         expansion._current = analytic_powsimp(sp.simplify(form.terminal_remainder))
-        if expansion.context.is_zero(expansion._current) is True or not expansion._current.has(
-            variable
-        ):
+        if expansion.context.is_zero(
+            expansion._current
+        ) is True or not expansion._current.has(variable):
             expansion.exhausted = True
     return expansion

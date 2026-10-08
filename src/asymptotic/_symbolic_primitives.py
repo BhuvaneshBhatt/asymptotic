@@ -1,6 +1,6 @@
 """Small deterministic symbolic primitives used by certification paths.
 
-The helpers in this module intentionally avoid open-ended symbolic algorithms.
+The helpers in this module avoid open-ended symbolic algorithms.
 Certification code should return an unresolved result when these recognizers do
 not apply rather than delegating to a potentially unbounded general integrator.
 """
@@ -13,7 +13,7 @@ import sympy as sp
 def exact_elementary_primitive(expr: sp.Expr, variable: sp.Symbol) -> sp.Expr | None:
     """Return a verified primitive for common asymptotic elementary terms.
 
-    Supported forms are deliberately conservative: finite sums of supported
+    Supported forms are conservative: finite sums of supported
     terms, constant multiples of powers/logarithms, and exact exponential
     derivatives ``c*q'(x)*exp(q(x))``.  Every candidate is replayed by
     differentiation before it is returned.
@@ -30,7 +30,9 @@ def exact_elementary_primitive(expr: sp.Expr, variable: sp.Symbol) -> sp.Expr | 
                 return None
             pieces.append(primitive)
         candidate = sp.Add(*pieces)
-        return candidate if sp.simplify(sp.diff(candidate, variable) - expr) == 0 else None
+        return (
+            candidate if sp.simplify(sp.diff(candidate, variable) - expr) == 0 else None
+        )
 
     powers = expr.as_powers_dict()
     exponent = sp.sympify(powers.get(variable, 0))
@@ -43,10 +45,15 @@ def exact_elementary_primitive(expr: sp.Expr, variable: sp.Symbol) -> sp.Expr | 
             candidate = coefficient * variable ** (exponent + 1) / (exponent + 1)
         else:
             candidate = None
-        if candidate is not None and sp.simplify(sp.diff(candidate, variable) - expr) == 0:
+        if (
+            candidate is not None
+            and sp.simplify(sp.diff(candidate, variable) - expr) == 0
+        ):
             return sp.simplify(candidate)
 
-    exponential_factors = [factor for factor in sp.Mul.make_args(expr) if factor.func is sp.exp]
+    exponential_factors = [
+        factor for factor in sp.Mul.make_args(expr) if factor.func is sp.exp
+    ]
     if len(exponential_factors) == 1:
         exponential = exponential_factors[0]
         phase = exponential.args[0]
@@ -63,7 +70,7 @@ def exact_elementary_primitive(expr: sp.Expr, variable: sp.Symbol) -> sp.Expr | 
 def certification_primitive(expr: sp.Expr, variable: sp.Symbol) -> sp.Expr | None:
     """Return a bounded exact primitive suitable for theorem certification.
 
-    No call to :func:`sympy.integrate` is made.  A miss is intentionally
+    No call to :func:`sympy.integrate` is made.  A miss is
     represented by ``None`` so callers can report an UNKNOWN hypothesis.
     """
 

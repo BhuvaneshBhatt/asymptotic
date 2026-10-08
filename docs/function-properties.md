@@ -1,6 +1,6 @@
 # Function properties and branch knowledge
 
-The property registry is intentionally reviewed and conservative. It has explicit entries for `exp`, `sin`, `cos`, `sinh`, `cosh`, `tanh`, `log`, principal `sqrt`, `asin`, `acos`, `atan`, `gamma`, `erf`, `erfc`, `erfi`, `airyai`, and `airybi`. Unknown heads remain tri-state rather than borrowing unverified assumptions from generic simplification.
+The property registry is reviewed and proof-bounded. It has explicit entries for `exp`, `sin`, `cos`, `sinh`, `cosh`, `tanh`, `log`, principal `sqrt`, `asin`, `acos`, `atan`, `gamma`, `erf`, `erfc`, `erfi`, `airyai`, and `airybi`. Unknown heads remain tri-state instead of borrowing unverified assumptions from generic simplification.
 
 ## Highest-return coverage additions
 
@@ -14,7 +14,7 @@ The property registry is intentionally reviewed and conservative. It has explici
 
 The next model revision should distinguish **function head** from **branch instance**. A branch-aware property record should carry a branch/sheet identifier, branch-point loci, cut loci, jump or monodromy data when known, and parameter conditions under which those facts apply. Rational `Pow` should be normalized into this same branch model instead of treating only exponent `1/2` as a special `sqrt` head.
 
-Properties should also become compositional. For `F(g(x))`, the branch engine should pull each singular/cut locus of `F` back through `g`, then combine that with the property decisions for `g`. The existing nested branch-safety walk is a good starting point, but it should return the pulled-back locus and the path/side information rather than only a Boolean decision.
+Properties should also become compositional. For `F(g(x))`, the branch engine should pull each singular/cut locus of `F` back through `g`, then combine that with the property decisions for `g`. The existing nested branch-safety walk is a good starting point, but it should return the pulled-back locus and the path/side information instead of only a Boolean decision.
 
 For real asymptotics, add reviewed endpoint records: one-sided limits, monotonicity intervals, sign intervals, zeros/poles, and local invertibility. These facts can discharge nonvanishing and derivative-stability hypotheses without asking generic assumptions/limit engines.
 
@@ -22,4 +22,4 @@ For real asymptotics, add reviewed endpoint records: one-sided limits, monotonic
 
 Every registry entry should have table-driven tests for real/complex domain membership, ordinary analytic points, every registered pole/branch point, points on each branch cut, points immediately off each side of a cut when the distinction matters, parameter-degenerate cases, and at least one nested pullback through a nontrivial inner function. Branch-family entries such as Lambert W and Bessel functions should test multiple branch/order parameters explicitly.
 
-The registry should remain conservative: incomplete knowledge is represented by `None`/`UNKNOWN`, not by an optimistic default.
+The registry should remain proof-bounded: incomplete knowledge is represented by `None`/`UNKNOWN`, not by an optimistic default.

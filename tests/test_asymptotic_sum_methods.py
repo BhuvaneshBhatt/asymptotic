@@ -1,6 +1,6 @@
 import sympy as sp
 
-from asymptotic import asymptotic_sum
+from asymptotic import sum
 from asymptotic.instrumentation import symbolic_metrics
 
 
@@ -9,7 +9,7 @@ def test_termwise_parameter_series_sums_coefficients():
     k = sp.symbols("k", integer=True)
     m = sp.symbols("m", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-x * k),
         k,
         1,
@@ -18,6 +18,7 @@ def test_termwise_parameter_series_sums_coefficients():
         point=0,
         terms=3,
         method="series",
+        return_result=True,
     )
 
     expected = m - x * m * (m + 1) / 2 + x**2 * m * (m + 1) * (2 * m + 1) / 12
@@ -32,7 +33,7 @@ def test_summation_by_parts_builds_exponential_tail_prefix():
     k = sp.symbols("k", integer=True)
     q = sp.exp(-1)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-k) / k,
         k,
         n,
@@ -40,10 +41,13 @@ def test_summation_by_parts_builds_exponential_tail_prefix():
         parameter=n,
         terms=3,
         method="summation-by-parts",
+        return_result=True,
     )
 
     expected = sp.exp(-n) * (
-        1 / ((1 - q) * n) - q / ((1 - q) ** 2 * n**2) + q * (1 + q) / ((1 - q) ** 3 * n**3)
+        1 / ((1 - q) * n)
+        - q / ((1 - q) ** 2 * n**2)
+        + q * (1 + q) / ((1 - q) ** 3 * n**3)
     )
     scaled = sp.cancel(sp.exp(n) * (result.expression - expected))
     assert result.method == "summation-by-parts"
@@ -55,7 +59,7 @@ def test_riemann_route_recovers_leading_scaled_integral():
     n = sp.symbols("n", positive=True, integer=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         (k / n) ** 2,
         k,
         1,
@@ -63,6 +67,7 @@ def test_riemann_route_recovers_leading_scaled_integral():
         parameter=n,
         terms=2,
         method="riemann",
+        return_result=True,
     )
 
     assert result.method == "riemann-sum"
@@ -75,7 +80,7 @@ def test_mellin_route_handles_bessel_k_lattice_sum():
     s = sp.symbols("s", positive=True)
     k = sp.symbols("k", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.besselk(0, s * k),
         k,
         1,
@@ -84,6 +89,7 @@ def test_mellin_route_handles_bessel_k_lattice_sum():
         point=0,
         terms=3,
         method="mellin",
+        return_result=True,
     )
 
     assert result.method == "mellin-poles"
@@ -94,12 +100,12 @@ def test_mellin_route_handles_bessel_k_lattice_sum():
     assert sp.simplify(sp.limit(remainder / sp.log(s), s, 0) - sp.Rational(1, 2)) == 0
 
 
-def test_new_sum_routes_do_not_enter_general_solve_or_rsolve():
+def test_sum_routes_avoid_general_solving():
     n = sp.symbols("n", positive=True, integer=True)
     k = sp.symbols("k", integer=True)
 
     with symbolic_metrics() as metrics:
-        result = asymptotic_sum(
+        result = sum(
             (k / n) ** 2,
             k,
             1,
@@ -107,6 +113,7 @@ def test_new_sum_routes_do_not_enter_general_solve_or_rsolve():
             parameter=n,
             terms=2,
             method="riemann",
+            return_result=True,
         )
 
     assert result.status == "FORMAL"

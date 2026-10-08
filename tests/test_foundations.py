@@ -2,18 +2,20 @@ import sympy as sp
 
 from asymptotic import (
     AsymptoticContext,
-    mrv_decomposition,
-    nested_expansion,
+    nested_series,
 )
 from asymptotic.decomposition import (
     maximal_univariate_decomposition,
     rational_decomposition,
 )
+from asymptotic.mrv import (
+    mrv_decomposition,
+)
 from asymptotic.scale import ScaleDiscovery
 from asymptotic.sparse import LazySparseSeries
 
 
-def test_lazy_stream_crosses_large_exact_cancellation_without_oversampling():
+def test_lazy_stream_crosses_large_without_oversampling():
     z = sp.symbols("z")
     cutoff = 36
     polynomial = sum(z**k / sp.factorial(k) for k in range(cutoff + 1))
@@ -40,7 +42,8 @@ def test_maximal_univariate_decomposition_reconstructs_chain():
     for layer in layers:
         assert (
             sp.simplify(
-                layer.apply(layer.inner) - layer.outer.xreplace({layer.symbol: layer.inner})
+                layer.apply(layer.inner)
+                - layer.outer.xreplace({layer.symbol: layer.inner})
             )
             == 0
         )
@@ -53,7 +56,9 @@ def test_rational_decomposition_uses_exact_trig_reconstruction():
     rationalized, substitutions = rational_decomposition(expr, x)
     assert substitutions
     t, back = substitutions[0]
-    expected = (2 * t / (1 + t**2)) + ((1 - t**2) / (1 + t**2)) / (1 + 2 * t / (1 - t**2))
+    expected = (2 * t / (1 + t**2)) + ((1 - t**2) / (1 + t**2)) / (
+        1 + 2 * t / (1 - t**2)
+    )
     assert sp.cancel(rationalized - expected) == 0
     assert back == sp.tan(x / 2)
 
@@ -78,8 +83,8 @@ def test_scale_discovery_exposes_structural_and_mrv_preprocessing():
 
 def test_nested_expansion_is_resumable_and_arithmetic_is_exact():
     x = sp.symbols("x", positive=True)
-    left = nested_expansion(x + 1 / x, x, depth=1)
-    right = nested_expansion(-x + 1 / x**2, x, depth=1)
+    left = nested_series(x + 1 / x, x, depth=1, return_result=True)
+    right = nested_series(-x + 1 / x**2, x, depth=1, return_result=True)
     combined = left + right
     assert sp.simplify(combined.expr - (1 / x + 1 / x**2)) == 0
     combined.refine(2)
@@ -89,7 +94,7 @@ def test_nested_expansion_is_resumable_and_arithmetic_is_exact():
     product = left * right
     power = left**2
     expn = left.exp()
-    logn = nested_expansion(1 + 1 / x, x, depth=1).log()
+    logn = nested_series(1 + 1 / x, x, depth=1, return_result=True).log()
     for obj in (product, power, expn, logn):
         obj.refine(1)
         assert obj.forms
@@ -98,7 +103,7 @@ def test_nested_expansion_is_resumable_and_arithmetic_is_exact():
 
 def test_structural_decomposition_is_attached_to_nested_forms():
     x = sp.symbols("x", positive=True)
-    ne = nested_expansion(sp.exp(x) * (1 + 1 / x), x, depth=1)
+    ne = nested_series(sp.exp(x) * (1 + 1 / x), x, depth=1, return_result=True)
     form = ne.forms[0]
     assert form.structural is not None
     assert form.mrv is not None
@@ -133,7 +138,7 @@ def test_rational_decomposition_groups_exact_exponential_powers():
     assert sp.simplify(rationalized.xreplace(dict(substitutions)) - expr) == 0
 
 
-def test_rational_decomposition_groups_fractional_argument_coefficients_safely():
+def test_rational_decomposition_groups_fractional_coefficients_safely():
     x = sp.symbols("x", real=True)
     expr = sp.exp(x / 2) + sp.exp(3 * x / 2)
     rationalized, substitutions = rational_decomposition(expr, x)

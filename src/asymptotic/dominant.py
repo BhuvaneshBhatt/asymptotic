@@ -9,7 +9,7 @@ from ._power_simplify import analytic_powsimp, formal_powsimp, mixed_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_solve_one
 from .canonical import canonical_equal
-from .context import AsymptoticContext, GrowthComparison, context_for
+from .context import AsymptoticContext, AsymptoticGrowthComparison, context_for
 from .parameter_auto import (
     automatic_parameter_stratification,
     parameter_symbols,
@@ -87,7 +87,9 @@ class DominantBalanceBranch:
     monomials: tuple[sp.Expr, ...] = ()
 
 
-def rational_valuation(expr: sp.Expr, variable: sp.Symbol) -> tuple[sp.Rational, sp.Expr] | None:
+def rational_valuation(
+    expr: sp.Expr, variable: sp.Symbol
+) -> tuple[sp.Rational, sp.Expr] | None:
     """Return the exact rational valuation and leading coefficient at ``variable -> 0``."""
 
     expr = sp.sympify(expr)
@@ -196,7 +198,8 @@ def _candidate_from_terms(
             if left.dependent_power == right.dependent_power:
                 continue
             r = sp.simplify(
-                (right.valuation - left.valuation) / (left.dependent_power - right.dependent_power)
+                (right.valuation - left.valuation)
+                / (left.dependent_power - right.dependent_power)
             )
             if not r.is_Rational:
                 continue
@@ -207,7 +210,9 @@ def _candidate_from_terms(
             if not all(v.is_Rational for v in weighted):
                 continue
             minimum = min(sp.Rational(v) for v in weighted)
-            dominant = tuple(t for t, v in zip(terms, weighted) if sp.Rational(v) == minimum)
+            dominant = tuple(
+                t for t, v in zip(terms, weighted) if sp.Rational(v) == minimum
+            )
             if len(dominant) < 2:
                 continue
             coeff_eq = sp.expand(
@@ -220,7 +225,9 @@ def _candidate_from_terms(
                 duplicate = any(canonical_equal(root, prior) for prior in unique)
                 if not duplicate:
                     unique.append(root)
-            active = tuple(i for i, value in enumerate(weighted) if sp.Rational(value) == minimum)
+            active = tuple(
+                i for i, value in enumerate(weighted) if sp.Rational(value) == minimum
+            )
             certificate = DominantBalanceCertificate(
                 exponent=r,
                 terms=terms,
@@ -273,7 +280,9 @@ def dominant_balance_candidates(
     except SYMBOLIC_ERRORS:
         polynomial = False
     if polynomial:
-        terms = polynomial_balance_terms(equation, dependent, variable, valuation=valuation)
+        terms = polynomial_balance_terms(
+            equation, dependent, variable, valuation=valuation
+        )
     else:
         terms = dependent_taylor_balance_terms(
             equation,
@@ -309,7 +318,9 @@ def dominant_balance_candidates(
             )
 
             def evaluate(condition: sp.Expr) -> tuple[DominantBalanceCandidate, ...]:
-                specialized = specialize_expression(equation, condition, parameters=parameters)
+                specialized = specialize_expression(
+                    equation, condition, parameters=parameters
+                )
                 result = dominant_balance_candidates(
                     specialized,
                     dependent,
@@ -366,7 +377,7 @@ def lift_dominant_balance_branches(
 ) -> tuple[DominantBalanceBranch, ...]:
     """Recursively translate and re-run dominant balance until branches split.
 
-    This is the shared Newton--Puiseux/implicit lifting engine.  Repeated roots
+    This is the shared Newton–Puiseux/implicit lifting engine.  Repeated roots
     on one Newton edge are *not* forced through a linear coefficient solve.
     Instead the selected leading term is translated out, a new residual
     equation in a correction variable is formed, and a new dominant balance is
@@ -447,7 +458,9 @@ def lift_dominant_balance_branches(
     # Deduplicate branches by certified symbolic equality when possible.
     unique = []
     for branch in output:
-        duplicate = any(sp.simplify(branch.series - prior.series) == 0 for prior in unique)
+        duplicate = any(
+            sp.simplify(branch.series - prior.series) == 0 for prior in unique
+        )
         if not duplicate:
             unique.append(branch)
     return tuple(unique)
@@ -499,7 +512,7 @@ def transseries_balance_terms(
 
     Polynomial dependence is exact.  Otherwise a local Taylor jet in the
     dependent correction variable is used, exactly as in the Puiseux engine,
-    but coefficient valuations may now be powers, logs, exponentials, or mixed
+    while coefficient valuations may be powers, logs, exponentials, or mixed
     exp-log monomials.
     """
 
@@ -530,8 +543,6 @@ def transseries_balance_terms(
 
     out = []
     for power, coeff in raw:
-        if ctx.is_zero(coeff) is True:
-            continue
         val = transseries_valuation(coeff, variable, point=point, context=ctx)
         if val is None:
             continue
@@ -547,7 +558,7 @@ def _same_monomial_class(
     if sp.simplify(left - right) == 0:
         return True
     relation, _ = context.compare_growth(left, right)
-    return relation is GrowthComparison.SAME_ORDER
+    return relation is AsymptoticGrowthComparison.SAME_ORDER
 
 
 def _transseries_candidate(
@@ -559,7 +570,8 @@ def _transseries_candidate(
 ) -> TransseriesBalanceCandidate | None:
     """Build transseries balance candidates from valued coefficient terms and characteristic roots."""
     weighted = [
-        formal_powsimp(term.valuation.monomial * monomial**term.dependent_power) for term in terms
+        formal_powsimp(term.valuation.monomial * monomial**term.dependent_power)
+        for term in terms
     ]
     if not weighted:
         return None
@@ -569,26 +581,30 @@ def _transseries_candidate(
     common = weighted[0]
     for value in weighted[1:]:
         relation, _ = context.compare_growth(value, common)
-        if relation is GrowthComparison.LARGER:
+        if relation is AsymptoticGrowthComparison.LARGER:
             common = value
-        elif relation is GrowthComparison.UNKNOWN:
+        elif relation is AsymptoticGrowthComparison.UNKNOWN:
             return None
 
     dominant_indices = []
     ratios = {}
     for index, value in enumerate(weighted):
         relation, ratio = context.compare_growth(value, common)
-        if relation is GrowthComparison.LARGER:
+        if relation is AsymptoticGrowthComparison.LARGER:
             return None
-        if relation is GrowthComparison.UNKNOWN:
+        if relation is AsymptoticGrowthComparison.UNKNOWN:
             return None
-        if relation is GrowthComparison.SAME_ORDER:
+        if relation is AsymptoticGrowthComparison.SAME_ORDER:
             if ratio is None:
                 try:
                     ratio = context.limit(value / common)
                 except SYMBOLIC_ERRORS:
                     return None
-            if ratio is None or ratio.is_finite is not True or ratio.is_zero is not False:
+            if (
+                ratio is None
+                or ratio.is_finite is not True
+                or ratio.is_zero is not False
+            ):
                 return None
             dominant_indices.append(index)
             ratios[index] = sp.simplify(ratio)
@@ -600,7 +616,9 @@ def _transseries_candidate(
     dominant = tuple(terms[i] for i in dominant_indices)
     coeff_eq = sp.expand(
         sum(
-            terms[i].valuation.leading_coefficient * ratios[i] * c ** terms[i].dependent_power
+            terms[i].valuation.leading_coefficient
+            * ratios[i]
+            * c ** terms[i].dependent_power
             for i in dominant_indices
         )
     )
@@ -664,7 +682,7 @@ def transseries_dominant_balance_candidates(
     ``m_i`` and ``m_j``, the candidate correction monomial is obtained from
     ``m_i*M**i ~ m_j*M**j``.  Every candidate is then checked against *all*
     terms using the same exact growth-comparison service used by scale
-    discovery.  Newton--Puiseux balance is therefore the special case in which
+    discovery.  Newton–Puiseux balance is therefore the special case in which
     every ``M`` is a rational power of the local variable.
     """
 
@@ -683,7 +701,9 @@ def transseries_dominant_balance_candidates(
             structural = tuple(term.valuation.leading_coefficient for term in terms)
 
             def evaluate(condition: sp.Expr) -> tuple[TransseriesBalanceCandidate, ...]:
-                specialized = specialize_expression(equation, condition, parameters=parameters)
+                specialized = specialize_expression(
+                    equation, condition, parameters=parameters
+                )
                 result = transseries_dominant_balance_candidates(
                     specialized,
                     dependent,
@@ -729,14 +749,15 @@ def transseries_dominant_balance_candidates(
                     continue
             if smaller_than is not None:
                 relation, _ = ctx.compare_growth(monomial, smaller_than)
-                if relation is not GrowthComparison.SMALLER:
+                if relation is not AsymptoticGrowthComparison.SMALLER:
                     continue
 
             candidate = _transseries_candidate(terms, monomial, variable, context=ctx)
             if candidate is None:
                 continue
             duplicate = any(
-                _same_monomial_class(candidate.monomial, old.monomial, ctx) for old in found
+                _same_monomial_class(candidate.monomial, old.monomial, ctx)
+                for old in found
             )
             if not duplicate:
                 found.append(candidate)
@@ -825,6 +846,8 @@ def lift_transseries_balance_branches(
 
     unique = []
     for branch in output:
-        if not any(ctx.is_zero(branch.series - prior.series) is True for prior in unique):
+        if not any(
+            ctx.is_zero(branch.series - prior.series) is True for prior in unique
+        ):
             unique.append(branch)
     return tuple(unique)

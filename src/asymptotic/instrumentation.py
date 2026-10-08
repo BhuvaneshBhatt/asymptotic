@@ -1,6 +1,6 @@
 """Lightweight counters for symbolic-policy decisions and fallbacks.
 
-The instrumentation is intentionally opt-in and uses :mod:`contextvars`, so
+The instrumentation is opt-in and uses :mod:`contextvars`, so
 normal package execution pays only a single inactive-context check per
 instrumented symbolic-policy operation.  Benchmarks and regression tests can
 inspect how often expensive general SymPy fallbacks were actually entered
@@ -19,6 +19,14 @@ from dataclasses import asdict, dataclass
 class SymbolicMetrics:
     """Counters collected while :func:`symbolic_metrics` is active."""
 
+    growth_comparisons: int = 0
+    recurrence_calls: int = 0
+    full_limit_calls: int = 0
+    univariate_calls: int = 0
+    radial_reduction_calls: int = 0
+    path_conflict_calls: int = 0
+    undefined_limit_skips: int = 0
+
     simplify_calls: int = 0
     general_simplify_calls: int = 0
     limit_calls: int = 0
@@ -29,6 +37,7 @@ class SymbolicMetrics:
     rsolve_calls: int = 0
     general_rsolve_calls: int = 0
     primitive_calls: int = 0
+    integrate_calls: int = 0
     general_integrate_calls: int = 0
     assumption_sign_calls: int = 0
     assumption_entails_calls: int = 0
@@ -51,13 +60,13 @@ class SymbolicMetrics:
     stat_coalescing_saddles: int = 0
     stat_stirling_routes: int = 0
     binomial_tail_routes: int = 0
-    asymptotic_sum_exact: int = 0
-    asymptotic_sum_series: int = 0
-    asymptotic_sum_parts: int = 0
+    sum_exact: int = 0
+    sum_series: int = 0
+    sum_parts: int = 0
     euler_maclaurin_routes: int = 0
-    asymptotic_sum_mellin: int = 0
-    asymptotic_sum_riemann: int = 0
-    asymptotic_sum_saddles: int = 0
+    sum_mellin: int = 0
+    sum_riemann: int = 0
+    sum_saddles: int = 0
     sum_zeilberger: int = 0
     loggamma_normalizations: int = 0
     factorial_normalizations: int = 0

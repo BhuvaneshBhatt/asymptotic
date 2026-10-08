@@ -45,10 +45,14 @@ class ExponentialScaleObligation(AsymptoticObligation):
     divergent_part: sp.Expr = sp.S.Zero
     argument: sp.Expr = sp.S.Zero
 
-    def __init__(self, node: sp.Expr, argument: sp.Expr, divergent_part: sp.Expr) -> None:
+    def __init__(
+        self, node: sp.Expr, argument: sp.Expr, divergent_part: sp.Expr
+    ) -> None:
         object.__setattr__(self, "kind", ObligationKind.EXPONENTIAL_SCALE)
         object.__setattr__(self, "node", sp.sympify(node))
-        object.__setattr__(self, "reason", "exponential argument has negative active-scale powers")
+        object.__setattr__(
+            self, "reason", "exponential argument has negative active-scale powers"
+        )
         object.__setattr__(self, "recoverable", True)
         object.__setattr__(self, "argument", sp.sympify(argument))
         object.__setattr__(self, "divergent_part", sp.sympify(divergent_part))
@@ -66,7 +70,9 @@ class LogarithmicScaleObligation(AsymptoticObligation):
         object.__setattr__(self, "kind", ObligationKind.LOGARITHMIC_SCALE)
         object.__setattr__(self, "node", sp.sympify(node))
         object.__setattr__(
-            self, "reason", "logarithm of active-scale monomial requires a lower logarithmic scale"
+            self,
+            "reason",
+            "logarithm of active-scale monomial requires a lower logarithmic scale",
         )
         object.__setattr__(self, "recoverable", True)
         object.__setattr__(self, "lead_exponent", sp.sympify(lead_exponent))
@@ -81,7 +87,10 @@ class ZeroTestObligation(AsymptoticObligation):
     expression: sp.Expr = sp.S.Zero
 
     def __init__(
-        self, node: sp.Expr, expression: sp.Expr, reason: str = "zero equivalence is required"
+        self,
+        node: sp.Expr,
+        expression: sp.Expr,
+        reason: str = "zero equivalence is required",
     ) -> None:
         object.__setattr__(self, "kind", ObligationKind.ZERO_TEST)
         object.__setattr__(self, "node", sp.sympify(node))
@@ -133,7 +142,9 @@ class CoefficientExpansionObligation(AsymptoticObligation):
     ) -> None:
         object.__setattr__(self, "kind", ObligationKind.COEFFICIENT_EXPANSION)
         object.__setattr__(self, "node", sp.sympify(node))
-        object.__setattr__(self, "reason", "a coefficient must be expanded in lower scale levels")
+        object.__setattr__(
+            self, "reason", "a coefficient must be expanded in lower scale levels"
+        )
         object.__setattr__(self, "recoverable", True)
         object.__setattr__(self, "expression", sp.sympify(expression))
         object.__setattr__(self, "lower_level", int(lower_level))
@@ -149,11 +160,15 @@ class ComparabilityFactorObligation(AsymptoticObligation):
     expression: sp.Expr = sp.S.Zero
     candidates: tuple[sp.Expr, ...] = ()
 
-    def __init__(self, node: sp.Expr, expression: sp.Expr, candidates: tuple[sp.Expr, ...]) -> None:
+    def __init__(
+        self, node: sp.Expr, expression: sp.Expr, candidates: tuple[sp.Expr, ...]
+    ) -> None:
         object.__setattr__(self, "kind", ObligationKind.COMPARABILITY_FACTOR)
         object.__setattr__(self, "node", sp.sympify(node))
         object.__setattr__(
-            self, "reason", "factorization against an existing comparability class is required"
+            self,
+            "reason",
+            "factorization against an existing comparability class is required",
         )
         object.__setattr__(self, "recoverable", True)
         object.__setattr__(self, "expression", sp.sympify(expression))
@@ -161,7 +176,11 @@ class ComparabilityFactorObligation(AsymptoticObligation):
 
     @property
     def key(self) -> tuple[Any, ...]:
-        return (self.kind, sp.srepr(self.expression), tuple(sp.srepr(c) for c in self.candidates))
+        return (
+            self.kind,
+            sp.srepr(self.expression),
+            tuple(sp.srepr(c) for c in self.candidates),
+        )
 
 
 @dataclass(frozen=True)
@@ -169,7 +188,9 @@ class UnsupportedNodeObligation(AsymptoticObligation):
     def __init__(self, node: sp.Expr) -> None:
         object.__setattr__(self, "kind", ObligationKind.UNSUPPORTED_NODE)
         object.__setattr__(self, "node", sp.sympify(node))
-        object.__setattr__(self, "reason", f"unsupported sparse expression node: {node.func}")
+        object.__setattr__(
+            self, "reason", f"unsupported sparse expression node: {node.func}"
+        )
         object.__setattr__(self, "recoverable", False)
 
 
@@ -195,7 +216,7 @@ class DepthLimitObligation(AsymptoticObligation):
 class AsymptoticKnowledge:
     """Resolved obligation facts shared across sparse retries.
 
-    Values are intentionally opaque to this class.  Individual obligation
+    Values are opaque to this class.  Individual obligation
     handlers define their answer type: bool for zero tests, growth tuples for
     comparisons, expressions for coefficient expansions, and so on.
     """

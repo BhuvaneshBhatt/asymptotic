@@ -1,9 +1,9 @@
 """Sector and branch metadata for complex asymptotic germs.
 
-The objects here are deliberately descriptive rather than analytic proofs: they
+The objects here are descriptive rather than analytic proofs: they
 record the sector on which an expansion is intended and the branch choices used
 to construct it.  Certification code can therefore reject incompatible
-continuations instead of silently treating a ray expansion as globally valid.
+continuations instead of treating a ray expansion as globally valid.
 """
 
 from __future__ import annotations
@@ -33,7 +33,9 @@ class ComplexSector:
         opening = sp.sympify(self.opening)
         object.__setattr__(self, "center_angle", center)
         object.__setattr__(self, "opening", opening)
-        object.__setattr__(self, "excluded_rays", tuple(sp.sympify(r) for r in self.excluded_rays))
+        object.__setattr__(
+            self, "excluded_rays", tuple(sp.sympify(r) for r in self.excluded_rays)
+        )
         if opening.is_positive is not True:
             raise ValueError("sector opening must be provably positive")
         if sp.simplify(opening - 2 * sp.pi).is_positive is True:
@@ -52,6 +54,13 @@ class ComplexSector:
 
         angle = sp.sympify(angle)
         delta = sp.arg(sp.exp(sp.I * (angle - self.center_angle)))
+        for ray in self.excluded_rays:
+            ray_delta = sp.simplify(sp.arg(sp.exp(sp.I * (angle - ray))))
+            if ray_delta.is_zero is True:
+                return False
+            coincident = sp.simplify(sp.exp(sp.I * (angle - ray)) - 1)
+            if ray_delta.is_zero is None and coincident.is_zero is True:
+                return False
         test = sp.simplify(sp.Abs(delta) - self.opening / 2)
         if test.is_negative is True:
             return True
@@ -72,10 +81,16 @@ class ComplexBranchMetadata:
     principal: bool = True
 
     def __post_init__(self) -> None:
-        if not isinstance(self.logarithm_branch, int) or not isinstance(self.power_branch, int):
+        if not isinstance(self.logarithm_branch, int) or not isinstance(
+            self.power_branch, int
+        ):
             raise TypeError("branch indices must be integers")
-        object.__setattr__(self, "branch_cuts", tuple(sp.sympify(r) for r in self.branch_cuts))
-        object.__setattr__(self, "stokes_rays", tuple(sp.sympify(r) for r in self.stokes_rays))
+        object.__setattr__(
+            self, "branch_cuts", tuple(sp.sympify(r) for r in self.branch_cuts)
+        )
+        object.__setattr__(
+            self, "stokes_rays", tuple(sp.sympify(r) for r in self.stokes_rays)
+        )
 
 
 def complex_germ_metadata(

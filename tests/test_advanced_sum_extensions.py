@@ -1,6 +1,6 @@
 import sympy as sp
 
-from asymptotic import asymptotic_sum
+from asymptotic import sum
 from asymptotic.sum_advanced import CreativeTelescopingCertificate
 
 
@@ -8,7 +8,7 @@ def test_zeilberger_generates_replayable_recurrence_and_solves_sum():
     n = sp.symbols("n", nonnegative=True, integer=True)
     k = sp.symbols("k", nonnegative=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.binomial(n, k),
         k,
         0,
@@ -17,6 +17,7 @@ def test_zeilberger_generates_replayable_recurrence_and_solves_sum():
         point=sp.oo,
         terms=3,
         method="zeilberger",
+        return_result=True,
     )
 
     assert result.method == "creative-telescoping"
@@ -26,11 +27,11 @@ def test_zeilberger_generates_replayable_recurrence_and_solves_sum():
     assert result.certificate.replay()
 
 
-def test_partial_sum_recurrence_feeds_asymptotic_rsolve():
+def test_partial_sum_recurrence_feeds_rsolve():
     n = sp.symbols("n", nonnegative=True, integer=True)
     k = sp.symbols("k", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         1 / k,
         k,
         1,
@@ -39,6 +40,7 @@ def test_partial_sum_recurrence_feeds_asymptotic_rsolve():
         point=sp.oo,
         terms=3,
         method="zeilberger",
+        return_result=True,
     )
 
     assert result.method == "creative-telescoping"
@@ -50,7 +52,7 @@ def test_mellin_shift_is_certified_when_vertical_decay_is_proved():
     x = sp.symbols("x", positive=True)
     k = sp.symbols("k", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.besselk(0, x * k),
         k,
         1,
@@ -59,6 +61,7 @@ def test_mellin_shift_is_certified_when_vertical_decay_is_proved():
         point=0,
         terms=3,
         method="mellin",
+        return_result=True,
     )
 
     assert result.status == "CERTIFIED"
@@ -74,7 +77,7 @@ def test_poisson_gaussian_sum_has_exponentially_small_certified_tail():
     x = sp.symbols("x", positive=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-x * k**2),
         k,
         -sp.oo,
@@ -83,6 +86,7 @@ def test_poisson_gaussian_sum_has_exponentially_small_certified_tail():
         point=0,
         terms=2,
         method="poisson",
+        return_result=True,
     )
 
     assert result.status == "CERTIFIED"
@@ -96,7 +100,7 @@ def test_finite_oscillatory_exponential_sum_is_exact():
     x = sp.symbols("x", real=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(sp.I * x * k),
         k,
         0,
@@ -105,6 +109,7 @@ def test_finite_oscillatory_exponential_sum_is_exact():
         point=0,
         terms=3,
         method="oscillatory",
+        return_result=True,
     )
 
     assert result.status == "EXACT"
@@ -115,11 +120,11 @@ def test_finite_oscillatory_exponential_sum_is_exact():
     assert prefix.coeff(x, 1) == 55 * sp.I
 
 
-def test_multidimensional_separable_sum_factors_without_nested_generic_sum():
+def test_multidimensional_separable_sum_factors_generic_sum():
     x = sp.symbols("x")
     i, j = sp.symbols("i j", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         (1 + x * i) * (1 + x * j),
         (i, j),
         (0, 0),
@@ -128,17 +133,18 @@ def test_multidimensional_separable_sum_factors_without_nested_generic_sum():
         point=0,
         terms=3,
         method="series",
+        return_result=True,
     )
 
     assert result.method == "multidimensional-separable"
     assert sp.expand(result.expression - (3 + 3 * x) * (4 + 6 * x)) == 0
 
 
-def test_termwise_infinite_series_requires_and_replays_uniform_majorant():
+def test_termwise_infinite_series_requires_uniform_majorant():
     x = sp.symbols("x", positive=True)
     k = sp.symbols("k", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         1 / (k**2 * (1 + x / k)),
         k,
         1,
@@ -147,6 +153,7 @@ def test_termwise_infinite_series_requires_and_replays_uniform_majorant():
         point=0,
         terms=3,
         method="series",
+        return_result=True,
     )
 
     assert result.status == "CERTIFIED"
@@ -159,7 +166,7 @@ def test_poisson_refuses_phase_outside_principal_dual_cell():
     x = sp.symbols("x", positive=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-x * k**2 + sp.Rational(3, 2) * sp.pi * sp.I * k),
         k,
         -sp.oo,
@@ -168,6 +175,7 @@ def test_poisson_refuses_phase_outside_principal_dual_cell():
         point=0,
         terms=2,
         method="poisson",
+        return_result=True,
     )
 
     assert result.status == "UNKNOWN"
@@ -177,7 +185,7 @@ def test_poisson_requires_positive_small_parameter_for_certification():
     x = sp.symbols("x", real=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-x * k**2),
         k,
         -sp.oo,
@@ -186,6 +194,7 @@ def test_poisson_requires_positive_small_parameter_for_certification():
         point=0,
         terms=2,
         method="poisson",
+        return_result=True,
     )
 
     assert result.status == "UNKNOWN"

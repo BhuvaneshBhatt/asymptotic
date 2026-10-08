@@ -5,15 +5,37 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
+from ._polynomial_bounds import bounded_degree
 from ._symbolic_errors import SYMBOLIC_ERRORS
-from ._symbolic_policy import bounded_assumption_sign, bounded_limit
+from ._symbolic_policy import (
+    bounded_assumption_entails,
+    bounded_assumption_sign,
+    bounded_limit,
+)
 from .complex_domain import ComplexBranchMetadata, ComplexSector
 from .instrumentation import record_symbolic_event
 
 
-class GrowthComparison(Enum):
-    """Relative asymptotic growth of two expressions at a fixed germ."""
+def _rational_polynomial_zero(expression, variable):
+    """Decide a small rational-polynomial identity without assumption search."""
+    if (
+        expression.free_symbols - {variable}
+        or expression.has(sp.Float)
+        or sp.count_ops(expression) > 160
+        or bounded_degree(expression, (variable,), 64) is None
+    ):
+        return None
+    try:
+        polynomial = sp.Poly(expression, variable, domain=sp.QQ)
+    except (sp.PolynomialError, sp.CoercionFailed):
+        return None
+    return polynomial.is_zero
+
+
+class AsymptoticGrowthComparison(Enum):
+    """Relative growth of two expressions near an asymptotic point."""
 
     SMALLER = auto()
     SAME_ORDER = auto()
@@ -25,10 +47,10 @@ class GrowthComparison(Enum):
 class AsymptoticContext:
     """Shared exact-asymptotic services.
 
-    The implementation deliberately keeps zero tests and limit/growth queries
+    The implementation keeps zero tests and limit/growth queries
     centralized because they are the expensive operations in Shackell-style
     algorithms.  The optional ``exprtest`` zero oracle is preferred for nontrivial identity
-    tests, with conservative SymPy fallbacks for limits, signs, and growth.
+    tests, with bounded SymPy fallbacks for limits, signs, and growth.
     """
 
     variable: sp.Symbol
@@ -40,11 +62,24 @@ class AsymptoticContext:
     zero_oracle: Callable[..., bool | None] | None = field(default=None, repr=False)
     sector: ComplexSector | None = None
     branch: ComplexBranchMetadata | None = None
+    assumptions: sp.Expr = sp.S.true
+    _normalize_cache: dict[sp.Expr, sp.Expr] = field(default_factory=dict, init=False)
+    _entailment_cache: dict[sp.Expr, bool | None] = field(
+        default_factory=dict, init=False
+    )
+    _applicability_cache: dict[object, bool | None] = field(
+        default_factory=dict, init=False
+    )
+    _cache_hits: dict[str, int] = field(default_factory=dict, init=False)
+    _cache_misses: dict[str, int] = field(default_factory=dict, init=False)
     _limit_cache: dict[sp.Expr, sp.Expr] = field(default_factory=dict, init=False)
     _zero_cache: dict[sp.Expr, bool | None] = field(default_factory=dict, init=False)
     _sign_cache: dict[sp.Expr, int | None] = field(default_factory=dict, init=False)
-    _growth_cache: dict[tuple[sp.Expr, sp.Expr], tuple[GrowthComparison, sp.Expr | None]] = field(
-        default_factory=dict, init=False
+    _growth_cache: dict[
+        tuple[sp.Expr, sp.Expr], tuple[AsymptoticGrowthComparison, sp.Expr | None]
+    ] = field(default_factory=dict, init=False)
+    _analysis_cache: dict[tuple[str, object], object] = field(
+        default_factory=dict, init=False, repr=False
     )
 
     def __post_init__(self) -> None:
@@ -53,12 +88,39 @@ class AsymptoticContext:
         self.point = sp.sympify(self.point)
         if self.direction not in {"+", "-"}:
             raise ValueError("direction must be '+' or '-'")
+        self.assumptions = normalize_assumptions(self.assumptions)
         if self.zero_confidence not in {"certified", "probable"}:
             raise ValueError("zero_confidence must be 'certified' or 'probable'")
 
+    def _cache_event(self, name: str, hit: bool) -> None:
+        target = self._cache_hits if hit else self._cache_misses
+        target[name] = target.get(name, 0) + 1
+
+    def cache_metrics(self) -> dict[str, dict[str, int]]:
+        return {"hits": dict(self._cache_hits), "misses": dict(self._cache_misses)}
+
+    def cached_analysis(
+        self, namespace: str, key: object, compute: Callable[[], object]
+    ):
+        """Memoize a context-local structural analysis result."""
+        cache_key = (namespace, key)
+        if cache_key in self._analysis_cache:
+            self._cache_event(namespace, True)
+            return self._analysis_cache[cache_key]
+        self._cache_event(namespace, False)
+        value = compute()
+        self._analysis_cache[cache_key] = value
+        return value
+
     def normalize(self, expr: sp.Expr) -> sp.Expr:
         expr = sp.sympify(expr)
+        original = expr
+        if original in self._normalize_cache:
+            self._cache_event("normalize", True)
+            return self._normalize_cache[original]
+        self._cache_event("normalize", False)
         if not self.simplify_results:
+            self._normalize_cache[expr] = expr
             return expr
         # ``cancel`` is excellent for rational functions but can become very
         # expensive when applied to nested exp/log expressions.  Keep the
@@ -68,14 +130,41 @@ class AsymptoticContext:
                 expr = sp.cancel(expr)
         except SYMBOLIC_ERRORS:
             pass
-        return sp.powsimp(expr, force=False)
+        result = sp.powsimp(expr, force=False)
+        self._normalize_cache[original] = result
+        return result
+
+    def entails(self, condition: sp.Expr) -> bool | None:
+        condition = sp.sympify(condition)
+        if condition in self._entailment_cache:
+            self._cache_event("entails", True)
+            return self._entailment_cache[condition]
+        self._cache_event("entails", False)
+        value = bounded_assumption_entails(condition, self.assumptions)
+        self._entailment_cache[condition] = value
+        return value
+
+    def cached_applicability(
+        self, key: object, compute: Callable[[], bool | None]
+    ) -> bool | None:
+        if key in self._applicability_cache:
+            self._cache_event("applicability", True)
+            return self._applicability_cache[key]
+        self._cache_event("applicability", False)
+        value = compute()
+        self._applicability_cache[key] = value
+        return value
 
     def limit(self, expr: sp.Expr) -> sp.Expr:
         expr = self.normalize(expr)
         if expr in self._limit_cache:
             return self._limit_cache[expr]
         value = bounded_limit(
-            expr, self.variable, self.point, direction=self.direction, allow_general=True
+            expr,
+            self.variable,
+            self.point,
+            direction=self.direction,
+            allow_general=True,
         )
         if value is None:
             value = sp.Limit(expr, self.variable, self.point, dir=self.direction)
@@ -85,10 +174,11 @@ class AsymptoticContext:
     def is_zero(self, expr: sp.Expr) -> bool | None:
         """Return whether *expr* is identically zero.
 
-        ``exprtest.zerotest`` is the primary nontrivial oracle.  The default
+        Bounded rational-polynomial identities use exact coefficient arithmetic.
+        ``exprtest.zerotest`` handles the remaining identities. The default
         confidence policy is ``"certified"`` because asymptotic cancellation
         must not discard a term merely because it is probably nonzero.  A
-        conservative SymPy ``equals(0)`` fallback remains available for cases
+        bounded SymPy ``equals(0)`` fallback remains available for cases
         outside exprtest's current bounded oracle.
         """
 
@@ -99,6 +189,13 @@ class AsymptoticContext:
             result: bool | None = True
         elif expr.is_zero is False:
             result = False
+        elif (
+            self.zero_oracle is None
+            and self.assumptions is sp.S.true
+            and (polynomial_zero := _rational_polynomial_zero(expr, self.variable))
+            is not None
+        ):
+            result = polynomial_zero
         else:
             oracle = self.zero_oracle
             if oracle is None:
@@ -110,13 +207,22 @@ class AsymptoticContext:
                     oracle = exprtest.zerotest
             if oracle is not None:
                 record_symbolic_event("zero_oracle_calls")
-                # The context already memoizes zero decisions; using the
-                # backend cache would retain the same symbolic graphs twice.
-                result = oracle(
-                    expr,
-                    use_cache=False,
-                    confidence=self.zero_confidence,
-                )
+                # The context cache handles repeated questions within one
+                # asymptotic computation.  Exprtest's bounded proof-only cache
+                # additionally shares certified classifications across nested
+                # contexts created by localization and scale discovery.
+                try:
+                    result = oracle(
+                        expr,
+                        assumptions=self.assumptions,
+                        use_cache=True,
+                        confidence=self.zero_confidence,
+                    )
+                except (AssertionError, *SYMBOLIC_ERRORS):
+                    # Third-party exact oracles may delegate to SymPy assumption
+                    # solvers that reject otherwise valid symbolic expressions.
+                    # An oracle failure is UNKNOWN, never a proof of zero/nonzero.
+                    result = None
                 if result not in (True, False, None):
                     raise TypeError("zero oracle must return True, False, or None")
 
@@ -172,7 +278,9 @@ class AsymptoticContext:
                     # ordinary limit is zero or indeterminate.
                     try:
                         lead = expr.as_leading_term(self.variable)
-                        result = 1 if lead.is_positive else -1 if lead.is_negative else None
+                        result = (
+                            1 if lead.is_positive else -1 if lead.is_negative else None
+                        )
                     except SYMBOLIC_ERRORS:
                         result = None
         self._sign_cache[expr] = result
@@ -185,17 +293,23 @@ class AsymptoticContext:
             if self.point == 0 and self.direction == "-":
                 local = sp.Dummy("_h", positive=True)
                 shifted = sp.cancel(expr.subs(x, -local))
-                return AsymptoticContext(local, point=0)._eventual_sign_rational(shifted)
+                return AsymptoticContext(local, point=0)._eventual_sign_rational(
+                    shifted
+                )
             if self.point not in (0, sp.oo, -sp.oo):
                 local = sp.Dummy("_h", positive=True)
                 side = -1 if self.direction == "-" else 1
                 shifted = sp.cancel(expr.subs(x, self.point + side * local))
-                return AsymptoticContext(local, point=0)._eventual_sign_rational(shifted)
+                return AsymptoticContext(local, point=0)._eventual_sign_rational(
+                    shifted
+                )
             if self.point in (sp.oo, -sp.oo):
                 local = sp.Dummy("_h", positive=True)
                 sign = 1 if self.point is sp.oo else -1
                 transformed = sp.cancel(expr.subs(x, sign / local))
-                return AsymptoticContext(local, point=0)._eventual_sign_rational(transformed)
+                return AsymptoticContext(local, point=0)._eventual_sign_rational(
+                    transformed
+                )
             num, den = sp.fraction(sp.cancel(expr))
             pnum = sp.Poly(num, x)
             pden = sp.Poly(den, x)
@@ -220,20 +334,25 @@ class AsymptoticContext:
             pass
         return None
 
-    def compare_growth(self, f: sp.Expr, g: sp.Expr) -> tuple[GrowthComparison, sp.Expr | None]:
+    def compare_growth(
+        self, f: sp.Expr, g: sp.Expr
+    ) -> tuple[AsymptoticGrowthComparison, sp.Expr | None]:
         """Compare |f| and |g| by the limit of f/g.
 
         SAME_ORDER additionally returns the finite nonzero ratio when SymPy can
         determine it.  For scale *comparability classes*, use compare_log_growth.
         """
 
+        from .instrumentation import record_symbolic_event
+
+        record_symbolic_event("growth_comparisons")
         f = self.normalize(f)
         g = self.normalize(g)
         key = (f, g)
         if key in self._growth_cache:
             return self._growth_cache[key]
         if self.is_zero(g) is True:
-            result = (GrowthComparison.UNKNOWN, None)
+            result = (AsymptoticGrowthComparison.UNKNOWN, None)
         else:
             raw_ratio = f / g
             if raw_ratio.has(sp.gamma, sp.factorial):
@@ -243,17 +362,19 @@ class AsymptoticContext:
                     pass
             ratio = self.limit(sp.Abs(raw_ratio))
             if ratio == 0:
-                result = (GrowthComparison.SMALLER, sp.S.Zero)
+                result = (AsymptoticGrowthComparison.SMALLER, sp.S.Zero)
             elif ratio is sp.oo:
-                result = (GrowthComparison.LARGER, sp.oo)
+                result = (AsymptoticGrowthComparison.LARGER, sp.oo)
             elif ratio.is_finite is True and ratio.is_zero is False:
-                result = (GrowthComparison.SAME_ORDER, ratio)
+                result = (AsymptoticGrowthComparison.SAME_ORDER, ratio)
             else:
-                result = (GrowthComparison.UNKNOWN, None)
+                result = (AsymptoticGrowthComparison.UNKNOWN, None)
         self._growth_cache[key] = result
         return result
 
-    def compare_log_growth(self, f: sp.Expr, g: sp.Expr) -> tuple[GrowthComparison, sp.Expr | None]:
+    def compare_log_growth(
+        self, f: sp.Expr, g: sp.Expr
+    ) -> tuple[AsymptoticGrowthComparison, sp.Expr | None]:
         """Compare comparability classes of positive functions tending to 0/∞.
 
         For vanishing scale elements this uses |log(f)| / |log(g)|.  A finite
@@ -265,14 +386,14 @@ class AsymptoticContext:
         try:
             ratio = self.limit(sp.Abs(sp.log(sp.Abs(f))) / sp.Abs(sp.log(sp.Abs(g))))
         except SYMBOLIC_ERRORS:
-            return (GrowthComparison.UNKNOWN, None)
+            return (AsymptoticGrowthComparison.UNKNOWN, None)
         if ratio == 0:
-            return (GrowthComparison.SMALLER, sp.S.Zero)
+            return (AsymptoticGrowthComparison.SMALLER, sp.S.Zero)
         if ratio is sp.oo:
-            return (GrowthComparison.LARGER, sp.oo)
+            return (AsymptoticGrowthComparison.LARGER, sp.oo)
         if ratio.is_finite is True and ratio.is_zero is False:
-            return (GrowthComparison.SAME_ORDER, ratio)
-        return (GrowthComparison.UNKNOWN, None)
+            return (AsymptoticGrowthComparison.SAME_ORDER, ratio)
+        return (AsymptoticGrowthComparison.UNKNOWN, None)
 
 
 def context_for(

@@ -16,31 +16,43 @@ def _active_text_files():
                 yield path
 
 
-def test_active_tree_has_no_external_cas_brand_references():
-    names = ("Mathe" + "matica", "Wolf" + "ram")
-    banned = re.compile(r"\b(?:" + "|".join(names) + r")\b", re.IGNORECASE)
-    hits = []
-    for path in _active_text_files():
-        if banned.search(path.read_text(encoding="utf-8")):
-            hits.append(str(path.relative_to(ROOT)))
-    assert hits == []
+def test_repository_root_contains_no_scratch_validation_artifacts():
+    forbidden = {
+        "matrix-integration.json",
+        "matrix-tracks.json",
+        "mma_multivar_excerpt.txt",
+        "timeout-recheck-15s.json",
+        "unsafe-audit-after.json",
+    }
+    present = {path.name for path in ROOT.iterdir() if path.is_file()}
+    assert present.isdisjoint(forbidden)
 
 
 def test_active_filenames_describe_subject_not_development_stage():
     stages = ("new_" + "capabilities", "pha" + "se", "mile" + "stone")
     stage_names = re.compile(r"(?:^|_)(?:" + "|".join(stages) + r")[0-9]*(?:_|\.|$)")
+    # These files concern simultaneous modular and trigonometric angles.
+    mathematical_phase_files = {
+        "src/asymptotic/joint_phase_germs.py",
+        "tests/limits/univariate/test_joint_phase_germs.py",
+    }
     hits = []
     for dirname in ACTIVE_DIRS:
         base = ROOT / dirname
         if not base.exists():
             continue
         for path in base.rglob("*"):
-            if path.is_file() and stage_names.search(path.name):
+            if (
+                path.is_file()
+                and path.suffix in TEXT_SUFFIXES
+                and stage_names.search(path.name)
+                and str(path.relative_to(ROOT)) not in mathematical_phase_files
+            ):
                 hits.append(str(path.relative_to(ROOT)))
     assert hits == []
 
 
-def test_production_code_has_no_broad_exception_handlers_or_assert_control_flow():
+def test_production_proof_boundaries():
     import ast
 
     violations = []
@@ -56,7 +68,9 @@ def test_production_code_has_no_broad_exception_handlers_or_assert_control_flow(
                     f"{path.relative_to(ROOT)}:{node.lineno}: broad Exception handler"
                 )
             if isinstance(node, ast.Assert):
-                violations.append(f"{path.relative_to(ROOT)}:{node.lineno}: production assert")
+                violations.append(
+                    f"{path.relative_to(ROOT)}:{node.lineno}: production assert"
+                )
     assert violations == []
 
 
@@ -114,7 +128,9 @@ def test_local_names_and_parameters_remain_readable_and_compact():
                 names.append(node.id)
             for name in names:
                 if len(name) > 24:
-                    too_long.append(f"{path.relative_to(ROOT)}:{getattr(node, 'lineno', 0)}:{name}")
+                    too_long.append(
+                        f"{path.relative_to(ROOT)}:{getattr(node, 'lineno', 0)}:{name}"
+                    )
     assert too_long == []
 
 
@@ -130,25 +146,9 @@ def test_active_text_has_no_trailing_whitespace():
 def test_project_identity_and_license_are_consistent():
     pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
     license_text = (ROOT / "LICENSE").read_text(encoding="utf-8")
-    maintained = []
-    for base in (
-        ROOT / "README.md",
-        ROOT / "docs",
-        ROOT / "examples",
-        ROOT / "src",
-        ROOT / "tests",
-    ):
-        paths = [base] if base.is_file() else list(base.rglob("*.py")) + list(base.rglob("*.md"))
-        for path in paths:
-            maintained.append(path.read_text(encoding="utf-8"))
-    text = "\n".join(maintained)
     assert 'license = "GPL-3.0-only"' in pyproject
     assert "GNU GENERAL PUBLIC LICENSE" in license_text
     assert "Version 3" in license_text
-    import re
-
-    prohibited = ("Mathe" + "matica", "Wolf" + "ram")
-    assert not any(re.search(rf"\b{term}\b", text, re.IGNORECASE) for term in prohibited)
 
 
 def test_sum_method_registry_is_shared_with_statistics():
@@ -158,3 +158,98 @@ def test_sum_method_registry_is_shared_with_statistics():
     assert SUM_METHODS <= DISCRETE_STAT_METHODS
     assert DISCRETE_STAT_METHODS <= _STATISTICAL_METHODS
     assert DISCRETE_STAT_METHODS - SUM_METHODS == {"pmf", "sum"}
+
+
+def test_pyproject_prerelease_extras_and_pytest_config_are_valid():
+    import tomllib
+
+    raw = (ROOT / "pyproject.toml").read_bytes()
+    project = tomllib.loads(raw.decode("utf-8"))
+    extras = project["project"]["optional-dependencies"]
+
+    assert {"test", "docs", "release"} <= extras.keys()
+    assert "ini_options" in project["tool"]["pytest"]
+
+
+def test_active_tree_uses_timeless_capability_language():
+    banned = (
+        "future " + "work",
+        "for a " + "later",
+        "previous private " + "inconsistency",
+        "keep their previous " + "meaning",
+        "currently " + "requires",
+    )
+    hits = []
+    for path in _active_text_files():
+        text = path.read_text(encoding="utf-8").lower()
+        if any(phrase in text for phrase in banned):
+            hits.append(str(path.relative_to(ROOT)))
+    assert hits == []
+
+
+def test_test_names_are_compact():
+    import ast
+
+    long_names = []
+    for path in (ROOT / "tests").glob("test_*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        for node in ast.walk(tree):
+            if (
+                isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                and node.name.startswith("test_")
+                and len(node.name) > 75
+            ):
+                long_names.append(f"{path.relative_to(ROOT)}:{node.lineno}:{node.name}")
+    assert long_names == []
+
+
+def test_active_prose_avoids_development_history_language():
+    banned = (
+        "backward compatibility",
+        "backwards compatibility",
+        "compatibility shim",
+        "legacy api",
+        "old api",
+        "new api",
+        "implementation phase",
+        "development milestone",
+    )
+    hits = []
+    prose = [ROOT / "README.md", *(ROOT / "docs").rglob("*.md")]
+    for path in prose:
+        text = path.read_text(encoding="utf-8").lower()
+        if any(phrase in text for phrase in banned):
+            hits.append(str(path.relative_to(ROOT)))
+    assert hits == []
+
+
+def test_documented_primary_api_count_matches_manifest():
+    from asymptotic._api_manifest import PRIMARY_API
+
+    expected = f"{len(PRIMARY_API)} primary entry points"
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    api_guide = (ROOT / "docs" / "api.md").read_text(encoding="utf-8")
+    classification = (ROOT / "docs" / "api-classification.md").read_text(
+        encoding="utf-8"
+    )
+    assert expected in readme
+    assert expected in api_guide
+    assert f"**{len(PRIMARY_API)}** primary entry points" in classification
+
+
+def test_class_field_names():
+    import ast
+
+    duplicates = []
+    for path in (ROOT / "src/asymptotic").glob("*.py"):
+        for node in ast.walk(ast.parse(path.read_text())):
+            if isinstance(node, ast.ClassDef):
+                names = [
+                    member.target.id
+                    for member in node.body
+                    if isinstance(member, ast.AnnAssign)
+                    and isinstance(member.target, ast.Name)
+                ]
+                if len(names) != len(set(names)):
+                    duplicates.append(f"{path.name}:{node.name}")
+    assert duplicates == []

@@ -106,7 +106,7 @@ def _known_period_and_bounds(template: sp.Expr, t: sp.Symbol):
                 return p, min(vals), max(vals), allq
 
     # SymPy's exact periodicity detector is useful for algebraic combinations
-    # such as sin(t)+cos(2*t).  Bounds are intentionally left unknown unless
+    # such as sin(t)+cos(2*t).  Bounds are left unknown unless
     # they are established structurally above.
     try:
         period = sp.calculus.util.periodicity(template, t)
@@ -122,7 +122,9 @@ def _candidate_factor(node: sp.Expr, x: sp.Symbol) -> OscillatoryFactor | None:
 
     # A valid common phase leaves a template independent of x after replacement
     # by a dummy symbol. Candidate subexpressions are tested against that invariant.
-    candidates = [sub for sub in sp.preorder_traversal(node) if sub != node and sub.has(x)]
+    candidates = [
+        sub for sub in sp.preorder_traversal(node) if sub != node and sub.has(x)
+    ]
     # Prefer larger phases; direct arguments such as log(x) are usually found
     # before their internal x.
     candidates.sort(key=sp.count_ops, reverse=True)
@@ -167,7 +169,7 @@ def periodic_decomposition(
 ) -> PeriodicDecomposition:
     """Extract multiplicative periodic/oscillatory factors conservatively.
 
-    The routine deliberately does *not* declare periodic functions to belong to
+    The routine does *not* declare periodic functions to belong to
     an ordered asymptotic scale.  Instead they remain exact coefficient-like
     factors while ``envelope`` is passed to growth-scale discovery.
     """

@@ -4,10 +4,11 @@ from dataclasses import dataclass
 from functools import cmp_to_key
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
-from .context import AsymptoticContext, GrowthComparison, context_for
+from .context import AsymptoticContext, AsymptoticGrowthComparison, context_for
 from .decomposition import decompose_expression
 from .mrv import mrv_decomposition
 from .obligations import AsymptoticKnowledge, GrowthComparisonObligation
@@ -26,15 +27,15 @@ class ScaleElement:
     def __str__(self) -> str:
         return self.name or str(self.expr)
 
-    def asymptotic_element(self, variable: sp.Symbol, *, point: sp.Expr = sp.oo):
+    def as_element(self, variable: sp.Symbol, *, point: sp.Expr = sp.oo):
         """View this scale representative through the common field protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self, variable, point=point)
+        return as_element(self, variable, point=point)
 
 
 @dataclass(frozen=True)
-class AsymptoticScale:
+class Scale:
     """A Shackell-style scale ordered from slowest to fastest vanishing."""
 
     variable: sp.Symbol
@@ -47,7 +48,7 @@ class AsymptoticScale:
         variable: sp.Symbol,
         exprs: list[sp.Expr] | tuple[sp.Expr, ...],
         point: sp.Expr = sp.oo,
-    ) -> AsymptoticScale:
+    ) -> Scale:
         return cls(variable, tuple(ScaleElement(sp.sympify(e)) for e in exprs), point)
 
     def __len__(self) -> int:
@@ -59,32 +60,36 @@ class AsymptoticScale:
 
     def element(self, index: int):
         """Return one scale representative as a common asymptotic element."""
-        return self.elements[index].asymptotic_element(self.variable, point=self.point)
+        return self.elements[index].as_element(self.variable, point=self.point)
 
     def validate(self, ctx: AsymptoticContext | None = None) -> None:
         ctx = context_for(self.variable, self.point, ctx)
         for item in self.elements:
             lim = ctx.limit(item.expr)
             if lim != 0:
-                raise ValueError(f"Scale element {item.expr} does not tend to zero; limit={lim}")
+                raise ValueError(
+                    f"Scale element {item.expr} does not tend to zero; limit={lim}"
+                )
         for left, right in zip(self.elements, self.elements[1:]):
             cmp, _ = ctx.compare_log_growth(left.expr, right.expr)
-            if cmp is not GrowthComparison.SMALLER:
+            if cmp is not AsymptoticGrowthComparison.SMALLER:
                 raise ValueError(
                     f"Scale is not strictly ordered by comparability class: {left.expr}, {right.expr} ({cmp})"
                 )
 
     def symbols(self) -> tuple[sp.Symbol, ...]:
-        return tuple(sp.Dummy(f"t{i + 1}", positive=True) for i in range(len(self.elements)))
+        return tuple(
+            sp.Dummy(f"t{i + 1}", positive=True) for i in range(len(self.elements))
+        )
 
     def with_element(
         self,
         expr: sp.Expr,
         ctx: AsymptoticContext | None = None,
-    ) -> tuple[AsymptoticScale, bool]:
+    ) -> tuple[Scale, bool]:
         """Insert a vanishing scale representative in comparability order.
 
-        The method is intentionally conservative.  A candidate that is in an
+        The method is conservative.  A candidate that is in an
         existing comparability class is treated as an alias and does not grow
         the scale.  Otherwise it is inserted according to ``compare_log_growth``.
         Unknown pairwise comparisons fall back to deterministic SymPy ordering;
@@ -94,11 +99,13 @@ class AsymptoticScale:
         ctx = context_for(self.variable, self.point, ctx)
         candidate = analytic_powsimp(sp.simplify(sp.sympify(expr)))
         if ctx.limit(candidate) != 0:
-            raise ValueError(f"Dynamic scale candidate {candidate} does not tend to zero")
+            raise ValueError(
+                f"Dynamic scale candidate {candidate} does not tend to zero"
+            )
 
         for old in self.elements:
             relation, _ = ctx.compare_log_growth(candidate, old.expr)
-            if relation is GrowthComparison.SAME_ORDER:
+            if relation is AsymptoticGrowthComparison.SAME_ORDER:
                 return self, False
             if sp.simplify(candidate - old.expr) == 0:
                 return self, False
@@ -107,16 +114,16 @@ class AsymptoticScale:
 
         def cmp(a: sp.Expr, b: sp.Expr) -> int:
             relation, _ = ctx.compare_log_growth(a, b)
-            if relation is GrowthComparison.SMALLER:
+            if relation is AsymptoticGrowthComparison.SMALLER:
                 return -1
-            if relation is GrowthComparison.LARGER:
+            if relation is AsymptoticGrowthComparison.LARGER:
                 return 1
             return (sp.default_sort_key(a) > sp.default_sort_key(b)) - (
                 sp.default_sort_key(a) < sp.default_sort_key(b)
             )
 
         exprs.sort(key=cmp_to_key(cmp))
-        return AsymptoticScale.from_exprs(self.variable, exprs, self.point), True
+        return Scale.from_exprs(self.variable, exprs, self.point), True
 
     def _factor_exponential_aliases(
         self,
@@ -161,7 +168,7 @@ class AsymptoticScale:
                 # otherwise the limit comparison was not useful enough.
                 if residual != 0:
                     rel, _ = ctx.compare_growth(residual, b)
-                    if rel is not GrowthComparison.SMALLER:
+                    if rel is not AsymptoticGrowthComparison.SMALLER:
                         continue
                 score = sp.count_ops(residual)
                 if best is None or score < best[0]:
@@ -190,7 +197,9 @@ class AsymptoticScale:
 
         mapping = {}
         pairs = sorted(
-            zip(self.elements, syms), key=lambda p: sp.count_ops(p[0].expr), reverse=True
+            zip(self.elements, syms),
+            key=lambda p: sp.count_ops(p[0].expr),
+            reverse=True,
         )
         for elem, sym in pairs:
             e = analytic_powsimp(elem.expr)
@@ -228,8 +237,16 @@ class ScaleDiscovery:
         self.context = context_for(self.variable, self.point, self.context)
         self.knowledge = self.knowledge or AsymptoticKnowledge()
         self.decomposition = decompose_expression(self.expr, self.variable)
-        self.periodic = periodic_decomposition(
-            self.decomposition.canonical, self.variable, point=self.point, context=self.context
+        periodic_key = (self.decomposition.canonical, self.variable, self.point)
+        self.periodic = self.context.cached_analysis(
+            "periodic_decomposition",
+            periodic_key,
+            lambda: periodic_decomposition(
+                self.decomposition.canonical,
+                self.variable,
+                point=self.point,
+                context=self.context,
+            ),
         )
         self._mrv = None
         # Periodic factors are coefficient-like objects, not ordered growth
@@ -252,7 +269,9 @@ class ScaleDiscovery:
             )
         return self._mrv
 
-    def _compare(self, left: sp.Expr, right: sp.Expr) -> tuple[GrowthComparison, sp.Expr | None]:
+    def _compare(
+        self, left: sp.Expr, right: sp.Expr
+    ) -> tuple[AsymptoticGrowthComparison, sp.Expr | None]:
         obligation = GrowthComparisonObligation(
             node=sp.Tuple(left, right),
             left=left,
@@ -265,7 +284,7 @@ class ScaleDiscovery:
             return cached
         self.obligation_history.append(obligation)
         result = self.context.compare_log_growth(left, right)
-        if result[0] is not GrowthComparison.UNKNOWN:
+        if result[0] is not AsymptoticGrowthComparison.UNKNOWN:
             self.knowledge.set(obligation, result)
         return result
 
@@ -312,13 +331,13 @@ class ScaleDiscovery:
                 unique.append(candidate)
         return unique
 
-    def discover(self) -> AsymptoticScale:
+    def discover(self) -> Scale:
         reps = []
         for candidate in self.candidates():
             equivalent = False
             for old in reps:
                 relation, _ = self._compare(candidate, old)
-                if relation is GrowthComparison.SAME_ORDER:
+                if relation is AsymptoticGrowthComparison.SAME_ORDER:
                     equivalent = True
                     break
             if not equivalent:
@@ -326,9 +345,9 @@ class ScaleDiscovery:
 
         def cmp(a: sp.Expr, b: sp.Expr) -> int:
             relation, _ = self._compare(a, b)
-            if relation is GrowthComparison.SMALLER:
+            if relation is AsymptoticGrowthComparison.SMALLER:
                 return -1
-            if relation is GrowthComparison.LARGER:
+            if relation is AsymptoticGrowthComparison.LARGER:
                 return 1
             # UNKNOWN is not promoted to a mathematical claim. Deterministic
             # ordering is used only to make the returned container stable; the
@@ -338,14 +357,21 @@ class ScaleDiscovery:
             )
 
         reps.sort(key=cmp_to_key(cmp))
-        return AsymptoticScale.from_exprs(self.variable, reps, self.point)
+        return Scale.from_exprs(self.variable, reps, self.point)
 
 
-def discover_scale(expr: sp.Expr, x: sp.Symbol, point: sp.Expr = sp.oo) -> AsymptoticScale:
+def discover_scale(
+    expr: sp.Expr,
+    x: sp.Symbol,
+    point: sp.Expr = sp.oo,
+    *,
+    assumptions: sp.Expr = sp.S.true,
+) -> Scale:
     """Discover a dependency-driven exp-log scale.
 
     For callers that need the comparison obligations and cached knowledge,
     instantiate :class:`ScaleDiscovery` directly and call ``discover()``.
     """
 
-    return ScaleDiscovery(sp.sympify(expr), x, point).discover()
+    assumptions = normalize_assumptions(assumptions)
+    return ScaleDiscovery(sp.refine(sp.sympify(expr), assumptions), x, point).discover()

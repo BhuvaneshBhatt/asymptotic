@@ -13,21 +13,21 @@ from ._power_simplify import analytic_powsimp
 from ._symbolic_policy import bounded_ask, bounded_limit, bounded_solve_one
 from .context import AsymptoticContext
 from .probability import (
-    StatisticalAsymptoticResult,
+    StatisticalResult,
     _restrict_piecewise_to_support,
     _support,
     _support_assumptions,
-    asymptotic_expectation,
-    asymptotic_probability,
+    expectation,
+    probability,
 )
-from .remainder import AsymptoticRemainder
-from .roots import asymptotic_root
+from .remainder import Remainder
+from .roots import root
 from .stirling import (
     normalize_positive_pmf,
     stirling_local_mass_expansion,
     stirling_sqrt_local_mass_expansion,
 )
-from .sums import asymptotic_sum
+from .sums import sum
 from .transseries import transseries_from_expression
 
 
@@ -40,7 +40,7 @@ class StatisticalTransformResult:
     status: str
     sources: tuple[object, ...] = ()
     conditions: tuple[sp.Expr, ...] = ()
-    remainder: AsymptoticRemainder | None = None
+    remainder: Remainder | None = None
 
     @property
     def certified(self) -> bool:
@@ -60,7 +60,7 @@ class LogProbabilityResult:
     parameter: sp.Symbol
     point: sp.Expr
     status: str
-    probability: StatisticalAsymptoticResult
+    probability: StatisticalResult
 
     @property
     def certified(self) -> bool:
@@ -68,7 +68,7 @@ class LogProbabilityResult:
 
 
 @dataclass(frozen=True)
-class AsymptoticModeResult:
+class ModeResult:
     """Continuous saddle and lattice-corrected mode information."""
 
     expression: sp.Expr
@@ -86,7 +86,7 @@ class AsymptoticModeResult:
         return self.status in {"EXACT", "CERTIFIED"}
 
 
-def _expr(result: StatisticalAsymptoticResult) -> sp.Expr:
+def _expr(result: StatisticalResult) -> sp.Expr:
     # Exact special functions must not be run through an inappropriate
     # Poincare truncation merely because the threshold remains symbolic.
     return result.expression if result.status == "EXACT" else result.truncate()
@@ -123,7 +123,9 @@ def _truncate_composite(
         return expression
 
 
-def _support_subset_condition(source: sp.Set, target: sp.Set) -> tuple[bool | None, sp.Expr]:
+def _support_subset_condition(
+    source: sp.Set, target: sp.Set
+) -> tuple[bool | None, sp.Expr]:
     """Decide support containment and return its exact set-theoretic obligation."""
     decision = source.is_subset(target)
     if decision in (True, False):
@@ -133,7 +135,7 @@ def _support_subset_condition(source: sp.Set, target: sp.Set) -> tuple[bool | No
     return None, condition
 
 
-def asymptotic_moment(
+def moment(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -148,11 +150,11 @@ def asymptotic_moment(
         raise ValueError("order must be a nonnegative integer")
     if central:
         work_terms = _guard_terms(terms)
-        mean = asymptotic_expectation(
+        mean = expectation(
             expr, random_symbol, parameter=parameter, point=point, terms=work_terms
         )
         centered = (sp.sympify(expr) - _expr(mean)) ** order
-        moment = asymptotic_expectation(
+        moment = expectation(
             centered, random_symbol, parameter=parameter, point=point, terms=work_terms
         )
         value = (
@@ -161,17 +163,26 @@ def asymptotic_moment(
             else _truncate_composite(_expr(moment), parameter, point, terms)
         )
         return StatisticalTransformResult(
-            value, parameter, point, "central-moment", _status(mean, moment), (mean, moment)
+            value,
+            parameter,
+            point,
+            "central-moment",
+            _status(mean, moment),
+            (mean, moment),
         )
-    moment = asymptotic_expectation(
-        sp.sympify(expr) ** order, random_symbol, parameter=parameter, point=point, terms=terms
+    moment = expectation(
+        sp.sympify(expr) ** order,
+        random_symbol,
+        parameter=parameter,
+        point=point,
+        terms=terms,
     )
     return StatisticalTransformResult(
         _expr(moment), parameter, point, "raw-moment", moment.status, (moment,)
     )
 
 
-def asymptotic_variance(
+def variance(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -185,11 +196,11 @@ def asymptotic_variance(
     when large raw moments cancel. Exact centered results are never truncated.
     """
     work_terms = _guard_terms(terms)
-    mean = asymptotic_expectation(
+    mean = expectation(
         expr, random_symbol, parameter=parameter, point=point, terms=work_terms
     )
     centered = (sp.sympify(expr) - _expr(mean)) ** 2
-    variance = asymptotic_expectation(
+    variance = expectation(
         centered, random_symbol, parameter=parameter, point=point, terms=work_terms
     )
     out = (
@@ -207,8 +218,13 @@ def asymptotic_variance(
     )
 
 
-def asymptotic_covariance(
-    left: sp.Expr, right: sp.Expr, *, parameter: sp.Symbol, point: sp.Expr = sp.oo, terms: int = 4
+def covariance(
+    left: sp.Expr,
+    right: sp.Expr,
+    *,
+    parameter: sp.Symbol,
+    point: sp.Expr = sp.oo,
+    terms: int = 4,
 ) -> StatisticalTransformResult:
     """Compute covariance through guarded centered expectations.
 
@@ -216,10 +232,10 @@ def asymptotic_covariance(
     before the final truncation, avoiding subtraction of large raw moments.
     """
     work_terms = _guard_terms(terms)
-    ml = asymptotic_expectation(left, parameter=parameter, point=point, terms=work_terms)
-    mr = asymptotic_expectation(right, parameter=parameter, point=point, terms=work_terms)
+    ml = expectation(left, parameter=parameter, point=point, terms=work_terms)
+    mr = expectation(right, parameter=parameter, point=point, terms=work_terms)
     centered = (sp.sympify(left) - _expr(ml)) * (sp.sympify(right) - _expr(mr))
-    covariance = asymptotic_expectation(
+    covariance = expectation(
         centered, parameter=parameter, point=point, terms=work_terms
     )
     out = (
@@ -237,7 +253,7 @@ def asymptotic_covariance(
     )
 
 
-def asymptotic_mgf(
+def mgf(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -247,7 +263,7 @@ def asymptotic_mgf(
     terms: int = 4,
 ) -> StatisticalTransformResult:
     """Compute the asymptotic moment-generating function by expectation reduction."""
-    r = asymptotic_expectation(
+    r = expectation(
         sp.exp(transform_variable * sp.sympify(expr)),
         random_symbol,
         parameter=parameter,
@@ -257,7 +273,7 @@ def asymptotic_mgf(
     return StatisticalTransformResult(_expr(r), parameter, point, "mgf", r.status, (r,))
 
 
-def asymptotic_characteristic_function(
+def characteristic_function(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -267,7 +283,7 @@ def asymptotic_characteristic_function(
     terms: int = 4,
 ) -> StatisticalTransformResult:
     """Compute the asymptotic characteristic function through complex expectation."""
-    r = asymptotic_expectation(
+    r = expectation(
         sp.exp(sp.I * transform_variable * sp.sympify(expr)),
         random_symbol,
         parameter=parameter,
@@ -279,7 +295,7 @@ def asymptotic_characteristic_function(
     )
 
 
-def asymptotic_cgf(
+def cgf(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -289,7 +305,7 @@ def asymptotic_cgf(
     terms: int = 4,
 ) -> StatisticalTransformResult:
     """Compute the cumulant-generating function from a branch-safe MGF result."""
-    mgf = asymptotic_mgf(
+    mgf_result = mgf(
         expr,
         random_symbol,
         transform_variable=transform_variable,
@@ -297,7 +313,7 @@ def asymptotic_cgf(
         point=point,
         terms=terms,
     )
-    exact_value = sp.log(mgf.expression)
+    exact_value = sp.log(mgf_result.expression)
     value = exact_value
     truncated = False
     try:
@@ -306,11 +322,15 @@ def asymptotic_cgf(
         value = candidate
     except (ValueError, TypeError, NotImplementedError):
         pass
-    status = "FORMAL" if truncated and mgf.status != "UNKNOWN" else mgf.status
-    return StatisticalTransformResult(value, parameter, point, "cgf-from-mgf", status, (mgf,))
+    status = (
+        "FORMAL" if truncated and mgf_result.status != "UNKNOWN" else mgf_result.status
+    )
+    return StatisticalTransformResult(
+        value, parameter, point, "cgf-from-mgf", status, (mgf_result,)
+    )
 
 
-def asymptotic_cumulant(
+def cumulant(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -324,16 +344,26 @@ def asymptotic_cumulant(
     if not isinstance(order, int) or order < 1:
         raise ValueError("order must be a positive integer")
     t = transform_variable or sp.Dummy("t", real=True)
-    cgf = asymptotic_cgf(
-        expr, random_symbol, transform_variable=t, parameter=parameter, point=point, terms=terms
+    cgf_result = cgf(
+        expr,
+        random_symbol,
+        transform_variable=t,
+        parameter=parameter,
+        point=point,
+        terms=terms,
     )
-    value = sp.diff(cgf.expression, t, order).subs(t, 0)
+    value = sp.diff(cgf_result.expression, t, order).subs(t, 0)
     return StatisticalTransformResult(
-        sp.simplify(value), parameter, point, f"cumulant-{order}", cgf.status, (cgf,)
+        sp.simplify(value),
+        parameter,
+        point,
+        f"cumulant-{order}",
+        cgf_result.status,
+        (cgf_result,),
     )
 
 
-def asymptotic_cdf(
+def cdf(
     random_symbol: RandomSymbol,
     threshold: sp.Expr,
     *,
@@ -343,7 +373,7 @@ def asymptotic_cdf(
     method: str = "auto",
 ) -> StatisticalTransformResult:
     """Compute an asymptotic cumulative distribution function at a threshold."""
-    r = asymptotic_probability(
+    r = probability(
         random_symbol <= threshold,
         random_symbol,
         parameter=parameter,
@@ -354,7 +384,7 @@ def asymptotic_cdf(
     return StatisticalTransformResult(_expr(r), parameter, point, "cdf", r.status, (r,))
 
 
-def asymptotic_survival(
+def survival(
     random_symbol: RandomSymbol,
     threshold: sp.Expr,
     *,
@@ -364,7 +394,7 @@ def asymptotic_survival(
     method: str = "auto",
 ) -> StatisticalTransformResult:
     """Compute an asymptotic survival function for a one-sided upper-tail event."""
-    r = asymptotic_probability(
+    r = probability(
         random_symbol > threshold,
         random_symbol,
         parameter=parameter,
@@ -372,10 +402,12 @@ def asymptotic_survival(
         terms=terms,
         method=method,
     )
-    return StatisticalTransformResult(_expr(r), parameter, point, "survival", r.status, (r,))
+    return StatisticalTransformResult(
+        _expr(r), parameter, point, "survival", r.status, (r,)
+    )
 
 
-def asymptotic_quantile(
+def quantile(
     random_symbol: RandomSymbol,
     probability: sp.Expr,
     *,
@@ -417,16 +449,26 @@ def asymptotic_quantile(
         )
 
     q = quantile_variable or sp.Dummy("q", real=True)
-    cdf = asymptotic_cdf(random_symbol, q, parameter=parameter, point=point, terms=terms)
-    sols = bounded_solve_one(sp.Eq(cdf.expression, probability), q, allow_general=True) or ()
+    cdf_result = cdf(random_symbol, q, parameter=parameter, point=point, terms=terms)
+    sols = (
+        bounded_solve_one(
+            sp.Eq(cdf_result.expression, probability), q, allow_general=True
+        )
+        or ()
+    )
     real_sols = [sol for sol in sols if bounded_ask(sp.Q.real(sol)) is not False]
     if len(real_sols) == 1:
         return StatisticalTransformResult(
-            sp.sympify(real_sols[0]), parameter, point, "quantile-inversion", cdf.status, (cdf,)
+            sp.sympify(real_sols[0]),
+            parameter,
+            point,
+            "quantile-inversion",
+            cdf_result.status,
+            (cdf_result,),
         )
     try:
-        root = asymptotic_root(
-            cdf.expression - probability,
+        root_result = root(
+            cdf_result.expression - probability,
             q,
             parameter=parameter,
             point=point,
@@ -435,12 +477,12 @@ def asymptotic_quantile(
             branch=0,
         )
         return StatisticalTransformResult(
-            sp.sympify(root),
+            sp.sympify(root_result),
             parameter,
             point,
             "quantile-asymptotic-root",
             "FORMAL",
-            (cdf,),
+            (cdf_result,),
         )
     except (ValueError, TypeError, NotImplementedError, IndexError):
         return StatisticalTransformResult(
@@ -449,12 +491,12 @@ def asymptotic_quantile(
             point,
             "quantile-inversion",
             "UNKNOWN",
-            (cdf,),
+            (cdf_result,),
         )
 
 
-def asymptotic_rate_function(
-    probability_result: StatisticalAsymptoticResult
+def rate_function(
+    probability_result: StatisticalResult
     | StatisticalTransformResult
     | LogProbabilityResult,
     *,
@@ -468,7 +510,10 @@ def asymptotic_rate_function(
     taking a logarithm of a truncated tiny probability and preserves lattice
     prefactors separately from the exponential speed.
     """
-    if isinstance(probability_result, LogProbabilityResult) and probability_result.rate is not None:
+    if (
+        isinstance(probability_result, LogProbabilityResult)
+        and probability_result.rate is not None
+    ):
         return StatisticalTransformResult(
             sp.sympify(probability_result.rate),
             parameter,
@@ -493,7 +538,7 @@ def asymptotic_rate_function(
     )
 
 
-def asymptotic_product(
+def product(
     factor: sp.Expr,
     variable: sp.Symbol,
     lower: sp.Expr,
@@ -507,11 +552,13 @@ def asymptotic_product(
 ) -> StatisticalTransformResult:
     """Compute a positive asymptotic product by reducing its logarithm to a sum."""
     factor = sp.sympify(factor)
-    if not (factor.is_positive is True or bounded_ask(sp.Q.positive(factor), assumptions)):
+    if not (
+        factor.is_positive is True or bounded_ask(sp.Q.positive(factor), assumptions)
+    ):
         raise ValueError(
-            "asymptotic_product requires a provably positive factor for branch-safe logarithms"
+            "product requires a provably positive factor for branch-safe logarithms"
         )
-    summed = asymptotic_sum(
+    summed = sum(
         sp.log(factor),
         variable,
         lower,
@@ -542,7 +589,9 @@ def _density_on_support(random_symbol: RandomSymbol, variable: sp.Expr) -> sp.Ex
     return raw
 
 
-def _log_positive_asymptotic(expression: sp.Expr, parameter: sp.Symbol, terms: int) -> sp.Expr:
+def _log_positive_asymptotic(
+    expression: sp.Expr, parameter: sp.Symbol, terms: int
+) -> sp.Expr:
     """Take a logarithm while extracting manifest positive exponential factors."""
 
     expression = sp.sympify(expression)
@@ -570,7 +619,7 @@ def _log_positive_asymptotic(expression: sp.Expr, parameter: sp.Symbol, terms: i
     return sp.expand(value)
 
 
-def asymptotic_log_probability(
+def log_probability(
     event: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -585,10 +634,15 @@ def asymptotic_log_probability(
     large-deviation rate ``-log(P)/parameter`` and the residual log-prefactor.
     """
 
-    probability = asymptotic_probability(
-        event, random_symbol, parameter=parameter, point=point, terms=terms, method=method
+    probability_result = probability(
+        event,
+        random_symbol,
+        parameter=parameter,
+        point=point,
+        terms=terms,
+        method=method,
     )
-    lattice_tail = probability.normalization
+    lattice_tail = probability_result.normalization
     rate = None
     log_prefactor = None
     if type(lattice_tail).__name__ == "BinomialLatticeTailExpansion":
@@ -603,11 +657,15 @@ def asymptotic_log_probability(
         if point is sp.oo:
             value = value.xreplace({sp.log(1 / parameter): -sp.log(parameter)})
             rate = lattice_tail.local_mass.rate
-            log_prefactor = analytic_powsimp(lattice_tail.local_mass.log_prefactor + factor_log)
+            log_prefactor = analytic_powsimp(
+                lattice_tail.local_mass.log_prefactor + factor_log
+            )
     else:
-        value = _log_positive_asymptotic(_expr(probability), parameter, terms)
+        value = _log_positive_asymptotic(_expr(probability_result), parameter, terms)
         if point is sp.oo:
-            candidate = bounded_limit(-value / parameter, parameter, sp.oo, allow_general=True)
+            candidate = bounded_limit(
+                -value / parameter, parameter, sp.oo, allow_general=True
+            )
             if (
                 candidate is not None
                 and not isinstance(candidate, sp.Limit)
@@ -616,7 +674,13 @@ def asymptotic_log_probability(
                 rate = sp.simplify(candidate)
                 log_prefactor = sp.expand(value + parameter * rate)
     return LogProbabilityResult(
-        value, rate, log_prefactor, parameter, point, probability.status, probability
+        value,
+        rate,
+        log_prefactor,
+        parameter,
+        point,
+        probability_result.status,
+        probability_result,
     )
 
 
@@ -639,13 +703,13 @@ def _distribution_mode_data(random_symbol: RandomSymbol):
     return None
 
 
-def asymptotic_mode(
+def mode(
     random_symbol: RandomSymbol,
     *,
     parameter: sp.Symbol,
     point: sp.Expr = sp.oo,
     terms: int = 4,
-) -> AsymptoticModeResult:
+) -> ModeResult:
     """Return an asymptotic mode with explicit lattice-rounding information."""
 
     if not isinstance(random_symbol, RandomSymbol):
@@ -654,7 +718,7 @@ def asymptotic_mode(
     if special is not None:
         continuous, primary, candidates, method = special
         unique = tuple(dict.fromkeys(candidates))
-        return AsymptoticModeResult(
+        return ModeResult(
             primary,
             continuous,
             unique,
@@ -677,14 +741,32 @@ def asymptotic_mode(
             maxima.append(candidate)
     if not maxima:
         raise NotImplementedError("could not determine a dominant mode saddle")
-    continuous = maxima[0]
+
+    dominant = [maxima[0]]
+    best_value = sp.simplify(log_weight.subs(z, maxima[0]))
+    for candidate in maxima[1:]:
+        value = sp.simplify(log_weight.subs(z, candidate))
+        difference = sp.simplify(value - best_value)
+        if difference == 0 or difference.is_zero is True:
+            dominant.append(candidate)
+        elif difference.is_positive is True:
+            dominant = [candidate]
+            best_value = value
+        elif difference.is_negative is True:
+            continue
+        else:
+            raise NotImplementedError("could not determine the dominant mode saddle")
+
+    continuous = dominant[0]
     if random_symbol.pspace.is_Discrete:
-        primary = sp.floor(continuous + sp.Rational(1, 2))
-        lattice = (primary,)
+        lattice = tuple(
+            dict.fromkeys(sp.floor(item + sp.Rational(1, 2)) for item in dominant)
+        )
+        primary = lattice[0]
     else:
+        lattice = tuple(dominant)
         primary = continuous
-        lattice = (continuous,)
-    return AsymptoticModeResult(
+    return ModeResult(
         primary,
         continuous,
         lattice,
@@ -696,15 +778,18 @@ def asymptotic_mode(
     )
 
 
-def asymptotic_map(random_symbol: RandomSymbol, **kwargs) -> AsymptoticModeResult:
-    """Alias of :func:`asymptotic_mode` for maximum-a-posteriori calculations."""
+def map(random_symbol: RandomSymbol, **kwargs) -> ModeResult:
+    """Alias of :func:`mode` for maximum-a-posteriori calculations."""
 
-    return asymptotic_mode(random_symbol, **kwargs)
+    return mode(random_symbol, **kwargs)
 
 
 def _standard_binomial_parameters(random_symbol: RandomSymbol):
     distribution = random_symbol.pspace.distribution
-    if type(distribution).__name__ != "BinomialDistribution" or len(distribution.args) < 4:
+    if (
+        type(distribution).__name__ != "BinomialDistribution"
+        or len(distribution.args) < 4
+    ):
         return None
     count, probability, success, failure = distribution.args[:4]
     if success != 1 or failure != 0:
@@ -730,7 +815,7 @@ def _binomial_entropy_expansion(
     return value
 
 
-def asymptotic_entropy(
+def entropy(
     random_symbol: RandomSymbol,
     *,
     parameter: sp.Symbol,
@@ -744,18 +829,28 @@ def asymptotic_entropy(
     if binomial is not None:
         expansion = _binomial_entropy_expansion(*binomial, parameter, terms)
         if expansion is not None:
-            remainder = AsymptoticRemainder.big_o(
+            remainder = Remainder.big_o(
                 parameter**-2 if terms >= 2 else parameter**-1,
                 parameter,
                 point,
                 source="formal Binomial entropy expansion",
             )
             return StatisticalTransformResult(
-                expansion, parameter, point, "binomial-entropy", "FORMAL", remainder=remainder
+                expansion,
+                parameter,
+                point,
+                "binomial-entropy",
+                "FORMAL",
+                remainder=remainder,
             )
     weight = _density_on_support(random_symbol, random_symbol)
-    result = asymptotic_expectation(
-        -sp.log(weight), random_symbol, parameter=parameter, point=point, terms=terms, method=method
+    result = expectation(
+        -sp.log(weight),
+        random_symbol,
+        parameter=parameter,
+        point=point,
+        terms=terms,
+        method=method,
     )
     return StatisticalTransformResult(
         _expr(result),
@@ -768,7 +863,7 @@ def asymptotic_entropy(
     )
 
 
-def asymptotic_cross_entropy(
+def cross_entropy(
     reference: RandomSymbol,
     target: RandomSymbol,
     *,
@@ -790,7 +885,9 @@ def asymptotic_cross_entropy(
         _count, q = right_binomial
         entropy = _binomial_entropy_expansion(count, p, parameter, terms)
         if entropy is not None:
-            divergence = count * (p * sp.log(p / q) + (1 - p) * sp.log((1 - p) / (1 - q)))
+            divergence = count * (
+                p * sp.log(p / q) + (1 - p) * sp.log((1 - p) / (1 - q))
+            )
             return StatisticalTransformResult(
                 entropy + divergence,
                 parameter,
@@ -800,11 +897,15 @@ def asymptotic_cross_entropy(
             )
     source_support = _support(reference)
     target_support = _support(target)
-    subset, support_condition = _support_subset_condition(source_support, target_support)
+    subset, support_condition = _support_subset_condition(
+        source_support, target_support
+    )
     if subset is False:
-        return StatisticalTransformResult(sp.oo, parameter, point, "cross-entropy", "EXACT")
+        return StatisticalTransformResult(
+            sp.oo, parameter, point, "cross-entropy", "EXACT"
+        )
     target_weight = _density_on_support(target, reference)
-    result = asymptotic_expectation(
+    result = expectation(
         -sp.log(target_weight),
         reference,
         parameter=parameter,
@@ -825,7 +926,7 @@ def asymptotic_cross_entropy(
     )
 
 
-def asymptotic_kl_divergence(
+def kl_divergence(
     reference: RandomSymbol,
     target: RandomSymbol,
     *,
@@ -853,10 +954,14 @@ def asymptotic_kl_divergence(
     q_weight = _density_on_support(target, reference)
     source_support = _support(reference)
     target_support = _support(target)
-    subset, support_condition = _support_subset_condition(source_support, target_support)
+    subset, support_condition = _support_subset_condition(
+        source_support, target_support
+    )
     if subset is False:
-        return StatisticalTransformResult(sp.oo, parameter, point, "kl-divergence", "EXACT")
-    result = asymptotic_expectation(
+        return StatisticalTransformResult(
+            sp.oo, parameter, point, "kl-divergence", "EXACT"
+        )
+    result = expectation(
         sp.log(p_weight / q_weight),
         reference,
         parameter=parameter,
@@ -877,7 +982,7 @@ def asymptotic_kl_divergence(
     )
 
 
-def asymptotic_cumulative_hazard(
+def cumulative_hazard(
     random_symbol: RandomSymbol,
     threshold: sp.Expr,
     *,
@@ -888,7 +993,7 @@ def asymptotic_cumulative_hazard(
 ) -> StatisticalTransformResult:
     """Compute cumulative hazard ``-log S(threshold)`` asymptotically."""
 
-    log_survival = asymptotic_log_probability(
+    log_survival = log_probability(
         random_symbol > threshold,
         random_symbol,
         parameter=parameter,
@@ -906,7 +1011,7 @@ def asymptotic_cumulative_hazard(
     )
 
 
-def asymptotic_hazard(
+def hazard(
     random_symbol: RandomSymbol,
     threshold: sp.Expr,
     *,
@@ -919,7 +1024,7 @@ def asymptotic_hazard(
 
     support = _support(random_symbol)
     if support.is_subset(sp.S.Integers) is True:
-        survival = asymptotic_probability(
+        survival_result = probability(
             random_symbol >= threshold,
             random_symbol,
             parameter=parameter,
@@ -928,19 +1033,29 @@ def asymptotic_hazard(
             method=method,
         )
     else:
-        survival = asymptotic_survival(
-            random_symbol, threshold, parameter=parameter, point=point, terms=terms, method=method
+        survival_result = survival(
+            random_symbol,
+            threshold,
+            parameter=parameter,
+            point=point,
+            terms=terms,
+            method=method,
         )
-    local = asymptotic_local_limit(
+    local = local_limit(
         random_symbol, threshold, parameter=parameter, point=point, terms=terms
     )
-    value = sp.simplify(local.expression / survival.expression)
+    value = sp.simplify(local.expression / survival_result.expression)
     return StatisticalTransformResult(
-        value, parameter, point, "hazard", _status(local, survival), (local, survival)
+        value,
+        parameter,
+        point,
+        "hazard",
+        _status(local, survival_result),
+        (local, survival_result),
     )
 
 
-def asymptotic_factorial_moment(
+def factorial_moment(
     random_symbol: RandomSymbol,
     *,
     order: int,
@@ -957,7 +1072,11 @@ def asymptotic_factorial_moment(
         count, probability = binomial
         value = sp.prod(count - j for j in range(order)) * probability**order
         return StatisticalTransformResult(
-            sp.simplify(value), parameter, point, f"binomial-factorial-moment-{order}", "EXACT"
+            sp.simplify(value),
+            parameter,
+            point,
+            f"binomial-factorial-moment-{order}",
+            "EXACT",
         )
     distribution = random_symbol.pspace.distribution
     if type(distribution).__name__ == "PoissonDistribution" and distribution.args:
@@ -969,15 +1088,20 @@ def asymptotic_factorial_moment(
             "EXACT",
         )
     falling = sp.prod(random_symbol - j for j in range(order))
-    result = asymptotic_expectation(
+    result = expectation(
         falling, random_symbol, parameter=parameter, point=point, terms=terms
     )
     return StatisticalTransformResult(
-        _expr(result), parameter, point, f"factorial-moment-{order}", result.status, (result,)
+        _expr(result),
+        parameter,
+        point,
+        f"factorial-moment-{order}",
+        result.status,
+        (result,),
     )
 
 
-def asymptotic_pgf(
+def pgf(
     random_symbol: RandomSymbol,
     *,
     transform_variable: sp.Symbol,
@@ -991,12 +1115,16 @@ def asymptotic_pgf(
     if binomial is not None:
         count, probability = binomial
         value = (1 - probability + probability * transform_variable) ** count
-        return StatisticalTransformResult(value, parameter, point, "binomial-pgf", "EXACT")
+        return StatisticalTransformResult(
+            value, parameter, point, "binomial-pgf", "EXACT"
+        )
     distribution = random_symbol.pspace.distribution
     if type(distribution).__name__ == "PoissonDistribution" and distribution.args:
         value = sp.exp(distribution.args[0] * (transform_variable - 1))
-        return StatisticalTransformResult(value, parameter, point, "poisson-pgf", "EXACT")
-    result = asymptotic_expectation(
+        return StatisticalTransformResult(
+            value, parameter, point, "poisson-pgf", "EXACT"
+        )
+    result = expectation(
         transform_variable**random_symbol,
         random_symbol,
         parameter=parameter,
@@ -1008,7 +1136,7 @@ def asymptotic_pgf(
     )
 
 
-def asymptotic_local_limit(
+def local_limit(
     random_symbol: RandomSymbol,
     location: sp.Expr,
     *,
@@ -1031,7 +1159,9 @@ def asymptotic_local_limit(
         if discrete
         else sp.Dummy(str(random_symbol.symbol), real=True)
     )
-    raw = _restrict_piecewise_to_support(sp.sympify(density(random_symbol)(z)), support, z)
+    raw = _restrict_piecewise_to_support(
+        sp.sympify(density(random_symbol)(z)), support, z
+    )
     normalization = None
     approximant = raw
     remainder = None
@@ -1077,17 +1207,23 @@ def asymptotic_local_limit(
         local_stirling = None
     if local_stirling is None:
         try:
-            expansion = transseries_from_expression(localized, parameter, point=point).prefix(terms)
+            expansion = transseries_from_expression(
+                localized, parameter, point=point
+            ).prefix(terms)
             expression = expansion.truncate()
         except (ValueError, TypeError, NotImplementedError):
             try:
-                expression = sp.series(localized, parameter, point, max(2, terms)).removeO()
+                expression = sp.series(
+                    localized, parameter, point, max(2, terms)
+                ).removeO()
             except (ValueError, TypeError, NotImplementedError):
                 expression = localized
     if normalization is not None and normalization.relative_error_bound is not None:
         bound = sp.simplify(normalization.relative_error_bound.subs(z, location))
         ctx = AsymptoticContext(parameter, point=point)
-        truncation = local_stirling.truncation_scale if local_stirling is not None else sp.S.One
+        truncation = (
+            local_stirling.truncation_scale if local_stirling is not None else sp.S.One
+        )
         bound_limit = ctx.limit(bound)
         if bound_limit != 0 and (bound.has(sp.floor) or bound.has(sp.ceiling)):
             # floor(u)-u and ceiling(u)-u are uniformly bounded.  For the
@@ -1101,11 +1237,14 @@ def asymptotic_local_limit(
             if ctx.limit(smooth_bound) == 0:
                 bound_limit = sp.S.Zero
         if bound_limit == 0 and ctx.limit(truncation) == 0:
-            remainder = AsymptoticRemainder.big_o(
+            remainder = Remainder.big_o(
                 sp.Abs(expression) * (bound + truncation),
                 parameter,
                 point,
-                source=("positive-real Stirling bound plus analytic local-limit Taylor truncation"),
+                source=(
+                    "positive-real Stirling bound plus analytic local-limit "
+                    "Taylor truncation"
+                ),
             )
             status = "CERTIFIED"
     condition = sp.Contains(location, support, evaluate=False)

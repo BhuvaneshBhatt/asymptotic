@@ -16,7 +16,8 @@ from benchmarks.workloads import (
 
 
 def _clear_caches():
-    from asymptotic.function_properties.semantics import clear_entailment_cache
+    from funcprops import clear_entailment_cache
+
     from asymptotic.multivariate import clear_weight_cone_cache
     from asymptotic.remainder_theorems import clear_characteristic_poly_cache
 

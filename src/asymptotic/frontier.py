@@ -26,7 +26,7 @@ class AnalyticCompositionFrontier:
     family in Shackell §4.3.1, but uses a heap instead of repeatedly scanning
     the waiting lists.
 
-    The class is intentionally independent of SymPy's ``series`` machinery and
+    The class is independent of SymPy's ``series`` machinery and
     can therefore be reused by exp/log/binomial composition.
     """
 
@@ -77,13 +77,19 @@ class AnalyticCompositionFrontier:
         # Minimal larger tuples under componentwise order: increment the final
         # occurrence of each distinct index while preserving nondecreasing order.
         for position in range(len(indices) - 1, -1, -1):
-            if position < len(indices) - 1 and indices[position] == indices[position + 1]:
+            if (
+                position < len(indices) - 1
+                and indices[position] == indices[position + 1]
+            ):
                 continue
             candidate = list(indices)
             candidate[position] += 1
             if candidate[position] >= len(self.terms):
                 continue
-            if position + 1 < len(candidate) and candidate[position] > candidate[position + 1]:
+            if (
+                position + 1 < len(candidate)
+                and candidate[position] > candidate[position + 1]
+            ):
                 continue
             self._push(tuple(candidate))
         # When the all-zero p-tuple is consumed, introduce the (p+1)-power.

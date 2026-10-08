@@ -2,14 +2,14 @@
 
 import sympy as sp
 
-from asymptotic import asymptotic_sum
+from asymptotic import sum
 
 
 def main() -> None:
     n = sp.symbols("n", nonnegative=True, integer=True)
     k = sp.symbols("k", integer=True)
 
-    telescoped = asymptotic_sum(
+    telescoped = sum(
         sp.binomial(n, k),
         k,
         0,
@@ -17,12 +17,13 @@ def main() -> None:
         parameter=n,
         method="zeilberger",
         terms=3,
+        return_result=True,
     )
     print("Zeilberger:", telescoped.expression, telescoped.status)
     print("certificate verifies:", telescoped.certificate.replay())
 
     x = sp.symbols("x", positive=True)
-    gaussian = asymptotic_sum(
+    gaussian = sum(
         sp.exp(-x * k**2),
         k,
         -sp.oo,
@@ -31,11 +32,12 @@ def main() -> None:
         point=0,
         method="poisson",
         terms=2,
+        return_result=True,
     )
     print("Poisson:", gaussian.expression, gaussian.remainder)
 
     positive_k = sp.symbols("positive_k", positive=True, integer=True)
-    bessel = asymptotic_sum(
+    bessel = sum(
         sp.besselk(0, x * positive_k),
         positive_k,
         1,
@@ -44,11 +46,12 @@ def main() -> None:
         point=0,
         method="mellin",
         terms=3,
+        return_result=True,
     )
     print("Mellin:", bessel.expression, bessel.status)
 
     i, j = sp.symbols("i j", integer=True)
-    multi = asymptotic_sum(
+    multi = sum(
         (1 + x * i) * (1 + x * j),
         (i, j),
         (0, 0),
@@ -57,6 +60,7 @@ def main() -> None:
         point=0,
         method="series",
         terms=3,
+        return_result=True,
     )
     print("multidimensional:", multi.expression, multi.status)
 

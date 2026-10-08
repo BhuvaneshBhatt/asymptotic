@@ -1,14 +1,13 @@
 import sympy as sp
 
-from asymptotic import (
-    dominant_balance_candidates,
-    series_reversion,
-)
+from asymptotic._property_support import nested_branch_safe_substitution_decision
 from asymptotic.canonical import (
     canonical_equal,
     canonical_expr,
 )
-from asymptotic.function_properties import nested_branch_safe_substitution_decision
+from asymptotic.dominant import (
+    dominant_balance_candidates,
+)
 from asymptotic.multivariate import (
     clear_weight_cone_cache,
     multivariate_scaling_regimes,
@@ -19,6 +18,7 @@ from asymptotic.remainder_theorems import (
     characteristic_poly_cache_info,
     clear_characteristic_poly_cache,
 )
+from asymptotic.reversion import series_reversion
 from asymptotic.stratification import (
     ParameterStratum,
     stratify_parameter_cases,
@@ -36,7 +36,9 @@ def test_canonical_equality_ignores_unevaluated_commutative_arg_order():
 
 def test_dominant_balance_certificate_replays_global_minimum_decision():
     x, y = sp.symbols("x y")
-    candidates = dominant_balance_candidates(y**2 + x * y + x**3, y, x, stratify_parameters=False)
+    candidates = dominant_balance_candidates(
+        y**2 + x * y + x**3, y, x, stratify_parameters=False
+    )
     assert candidates
     assert all(candidate.certificate is not None for candidate in candidates)
     assert all(candidate.replay() is True for candidate in candidates)
@@ -45,7 +47,10 @@ def test_dominant_balance_certificate_replays_global_minimum_decision():
 def test_equivalent_overlapping_parameter_strata_are_merged():
     a = sp.symbols("a", real=True)
     strat = stratify_parameter_cases(
-        [ParameterStratum(a >= 0, sp.Integer(1)), ParameterStratum(a <= 0, sp.Integer(1))],
+        [
+            ParameterStratum(a >= 0, sp.Integer(1)),
+            ParameterStratum(a <= 0, sp.Integer(1)),
+        ],
         parameters=(a,),
         require_disjoint=True,
         require_exhaustive=True,
@@ -87,7 +92,7 @@ def test_characteristic_poly_cache_reused_and_green_replays():
     assert info1.misses == 1 and info2.hits >= 1
 
 
-def test_nested_branch_trace_detects_inner_principal_cut_and_is_retained_on_reversion():
+def test_reversion_preserves_inner_branch_cut():
     x, y = sp.symbols("x y")
     expr = sp.log(sp.sqrt(x))
     bad = nested_branch_safe_substitution_decision(expr, x, -1)
@@ -100,7 +105,7 @@ def test_nested_branch_trace_detects_inner_principal_cut_and_is_retained_on_reve
     assert all(decision.verdict is True for decision in branch.branch_decisions)
 
 
-def test_ode_green_interchange_is_replayed_and_certified_without_importing_odeanalysis():
+def test_ode_green_interchange_replays_without_import():
     from types import SimpleNamespace
 
     from asymptotic.ode_adapter import certify_green_operator_data
@@ -114,7 +119,7 @@ def test_ode_green_interchange_is_replayed_and_certified_without_importing_odean
         coefficients=(sp.Integer(2), sp.Integer(-3), sp.Integer(1)),
         order=2,
         characteristic_parameter=lam,
-        characteristic_poly=lam**2 - 3 * lam + 2,
+        characteristic_polynomial=lam**2 - 3 * lam + 2,
     )
 
     theorem, green = certify_green_operator_data(data, sp.exp(-x))
@@ -144,7 +149,7 @@ def test_ode_green_interchange_rejects_stale_characteristic_poly():
         coefficients=(sp.Integer(2), sp.Integer(-3), sp.Integer(1)),
         order=2,
         characteristic_parameter=lam,
-        characteristic_poly=lam**2 + 1,
+        characteristic_polynomial=lam**2 + 1,
     )
 
     with pytest.raises(FormalODEAdapterError, match="failed replay"):
@@ -152,7 +157,7 @@ def test_ode_green_interchange_rejects_stale_characteristic_poly():
 
 
 def test_entailment_cache_is_context_sensitive_and_order_independent():
-    from asymptotic.function_properties.semantics import (
+    from funcprops.assumptions import (
         clear_entailment_cache,
         entailment_cache_info,
         entails,

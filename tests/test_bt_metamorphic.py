@@ -43,12 +43,14 @@ def scalar_equivalent_lifts():
     return _lift(recurrence), _lift(7 * recurrence)
 
 
-def test_repeated_secondary_bt_is_invariant_under_nonzero_scalar_multiple(scalar_equivalent_lifts):
+def test_repeated_secondary_bt_is_scalar_multiple(
+    scalar_equivalent_lifts,
+):
     baseline, scaled = scalar_equivalent_lifts
     assert scaled[0] == baseline[0]
 
 
-def test_metamorphic_repeated_secondary_branches_keep_residual_replay_and_hierarchy(
+def test_secondary_branches_preserve_replay_hierarchy(
     scalar_equivalent_lifts,
 ):
     for signature, data, branches in scalar_equivalent_lifts:

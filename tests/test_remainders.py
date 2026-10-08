@@ -2,17 +2,23 @@ import sympy as sp
 
 from asymptotic import (
     AsymptoticContext,
-    AsymptoticRemainder,
+    Remainder,
     RemainderKind,
     TransseriesExpansion,
+)
+from asymptotic.general_ops import (
     compose_transseries,
+)
+from asymptotic.transseries import (
     transseries_from_expression,
 )
 
 
 def test_exact_truncation_retains_exact_omitted_tail_and_big_o():
     x = sp.symbols("x", positive=True)
-    s = transseries_from_expression(1 / x + 2 / x**2 + 3 / x**3, x, point=sp.oo, complete=True)
+    s = transseries_from_expression(
+        1 / x + 2 / x**2 + 3 / x**3, x, point=sp.oo, complete=True
+    )
     t = s.truncation(1)
     assert sp.simplify(t.prefix - 1 / x) == 0
     assert t.remainder.kind is RemainderKind.BIG_O
@@ -24,7 +30,7 @@ def test_exact_truncation_retains_exact_omitted_tail_and_big_o():
 
 def test_prefix_preserves_preexisting_little_o_information():
     x = sp.symbols("x", positive=True)
-    rem = AsymptoticRemainder.little_o(x**-3, x, sp.oo)
+    rem = Remainder.little_o(x**-3, x, sp.oo)
     s = transseries_from_expression(1 / x + 1 / x**2, x, point=sp.oo, remainder=rem)
     p = s.prefix(1)
     assert p.remainder.kind is RemainderKind.BIG_O
@@ -38,13 +44,13 @@ def test_remainder_addition_and_product_rules():
         sp.oo,
         (),
         center=1,
-        remainder=AsymptoticRemainder.big_o(1 / x, x, sp.oo),
+        remainder=Remainder.big_o(1 / x, x, sp.oo),
     )
     b = transseries_from_expression(
         x,
         x,
         point=sp.oo,
-        remainder=AsymptoticRemainder.little_o(1, x, sp.oo),
+        remainder=Remainder.little_o(1, x, sp.oo),
     )
     product = a * b
     assert product.remainder.kind is RemainderKind.BIG_O
@@ -59,7 +65,7 @@ def test_differentiation_does_not_unsafely_differentiate_big_o():
         1 / x,
         x,
         point=sp.oo,
-        remainder=AsymptoticRemainder.big_o(x**-2, x, sp.oo),
+        remainder=Remainder.big_o(x**-2, x, sp.oo),
     )
     d = s.differentiate()
     assert d.remainder.kind is RemainderKind.UNKNOWN
@@ -84,14 +90,17 @@ def test_exact_recursive_exponential_representation_remains_exact():
 
 
 def test_asymptotic_integration_records_next_term_remainder():
-    from asymptotic import asymptotic_integrate
+    from asymptotic import integrate
 
     x = sp.symbols("x", positive=True)
     source = transseries_from_expression(sp.exp(-(x**2)), x, point=sp.oo, complete=True)
-    primitive = asymptotic_integrate(source, terms=4)
+    primitive = integrate(source, terms=4, return_result=True)
     assert primitive.remainder.kind is RemainderKind.BIG_O
     assert (
-        sp.simplify(primitive.remainder.scale + sp.Rational(105, 32) * sp.exp(-(x**2)) / x**9) == 0
+        sp.simplify(
+            primitive.remainder.scale + sp.Rational(105, 32) * sp.exp(-(x**2)) / x**9
+        )
+        == 0
     )
     residual = sp.simplify(sp.diff(primitive.truncate(), x) - sp.exp(-(x**2)))
     assert residual == -sp.Rational(105, 16) * sp.exp(-(x**2)) / x**8
@@ -101,7 +110,7 @@ def test_remainder_replay_rejects_mismatched_context():
     import pytest
 
     x, y = sp.symbols("x y", positive=True)
-    remainder = AsymptoticRemainder.big_o(1 / x, x, sp.oo, exact_expression=1 / x**2)
+    remainder = Remainder.big_o(1 / x, x, sp.oo, exact_expression=1 / x**2)
 
     with pytest.raises(ValueError, match="different coordinates"):
         remainder.check(context=AsymptoticContext(y, sp.oo))

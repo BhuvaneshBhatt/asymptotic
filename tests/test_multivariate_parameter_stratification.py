@@ -1,13 +1,17 @@
 import sympy as sp
 
 from asymptotic import (
+    implicit,
+)
+from asymptotic.dominant import (
     dominant_balance_candidates,
-    implicit_asymptotic,
+)
+from asymptotic.multivariate import (
     multivariate_dominant_balance_candidates,
 )
 from asymptotic.nonlinear_ode import (
+    differential_transseries,
     nonlinear_differential_dominant_balances,
-    nonlinear_differential_transseries,
 )
 from asymptotic.stratification import AsymptoticStratification
 
@@ -24,7 +28,9 @@ def test_multivariate_scaling_path_anisotropic_balance():
     balance = balances[0]
     assert balance.dependent_exponent == 1
     assert set(balance.coefficients) == {-sp.sqrt(2), sp.sqrt(2)}
-    assert sp.expand(balance.transformed_equation) == y**2 - 2 * balance.path.parameter**2
+    assert (
+        sp.expand(balance.transformed_equation) == y**2 - 2 * balance.path.parameter**2
+    )
 
 
 def test_multivariate_scaling_path_changes_dominant_face():
@@ -54,7 +60,7 @@ def test_dominant_balance_automatically_stratifies_vanishing_coefficient():
 
 def test_implicit_solver_automatically_stratifies_parameter_case():
     x, y, a = sp.symbols("x y a")
-    result = implicit_asymptotic((a + 1) * y - x, y, x, terms=2)
+    result = implicit((a + 1) * y - x, y, x, terms=2, return_result=True)
     assert isinstance(result, AsymptoticStratification)
     singular = result.select(sp.Eq(a, -1))
     generic = result.select(sp.Ne(a, -1))
@@ -76,7 +82,7 @@ def test_nonlinear_ode_stratifies_characteristic_degeneracy_too():
     assert ordinary is not None
     assert ordinary.result[0].roots == (1 / (a + 2),)
 
-    lifted = nonlinear_differential_transseries(equation, y, x, terms=2)
+    lifted = differential_transseries(equation, y, x, terms=2)
     assert isinstance(lifted, AsymptoticStratification)
     exceptional_lift = lifted.select(sp.Eq(a, -2))
     ordinary_lift = lifted.select(sp.And(sp.Ne(a, -1), sp.Ne(a, -2)))
@@ -86,3 +92,23 @@ def test_nonlinear_ode_stratifies_characteristic_degeneracy_too():
     assert exceptional_lift.result[0].steps[0].correction_kind == "logarithmic"
     assert ordinary_lift is not None
     assert sp.simplify(ordinary_lift.result[0].series - x / (a + 2)) == 0
+
+
+def test_recursive_parameter_removable_value_valid_for_all_parameters():
+    x, y, a = sp.symbols("x y a", real=True)
+    from asymptotic.limits import LimitStatus
+    from asymptotic.multivariate_certificates import (
+        recursive_parameter_stratified_limit,
+    )
+
+    result = recursive_parameter_stratified_limit(
+        (a * (x**2 + y**2) + x**4 + y**4) / (x**2 + y**2),
+        (x, y),
+        (0, 0),
+        (a,),
+    )
+    assert result.exhaustive and len(result.strata) == 1
+    stratum = result.strata[0]
+    assert stratum.condition is sp.S.true
+    assert stratum.result.status is LimitStatus.PROVED
+    assert stratum.result.value == a

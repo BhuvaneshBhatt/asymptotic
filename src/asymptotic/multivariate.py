@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from functools import lru_cache
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._power_simplify import analytic_powsimp
 from .canonical import canonical_equal, canonical_expr
@@ -38,7 +39,8 @@ class ScalingPath:
     @property
     def substitution(self) -> dict[sp.Symbol, sp.Expr]:
         return {
-            variable: sp.sympify(center) + sp.sympify(amplitude) * self.parameter**weight
+            variable: sp.sympify(center)
+            + sp.sympify(amplitude) * self.parameter**weight
             for variable, weight, center, amplitude in zip(
                 self.variables, self.weights, self.centers, self.amplitudes
             )
@@ -70,8 +72,14 @@ def scaling_path(
     weights: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr],
     *,
     parameter: sp.Symbol | None = None,
-    centers: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr] | None = None,
-    amplitudes: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr] | None = None,
+    centers: tuple[sp.Expr, ...]
+    | list[sp.Expr]
+    | Mapping[sp.Symbol, sp.Expr]
+    | None = None,
+    amplitudes: tuple[sp.Expr, ...]
+    | list[sp.Expr]
+    | Mapping[sp.Symbol, sp.Expr]
+    | None = None,
 ) -> ScalingPath:
     """Construct a weighted one-parameter scaling path for multivariate limits."""
     variables = tuple(variables)
@@ -99,7 +107,9 @@ def scaling_path(
     amplitude_values = values(amplitudes, sp.S.One)
     if any(a == 0 for a in amplitude_values):
         raise ValueError("scaling-path amplitudes must be nonzero")
-    return ScalingPath(variables, weight_values, epsilon, center_values, amplitude_values)
+    return ScalingPath(
+        variables, weight_values, epsilon, center_values, amplitude_values
+    )
 
 
 def _wrap_stratified(
@@ -135,11 +145,20 @@ def multivariate_dominant_balance_candidates(
     equation: sp.Expr,
     dependent: sp.Symbol,
     variables: tuple[sp.Symbol, ...] | list[sp.Symbol],
-    weights: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr] | None = None,
+    weights: tuple[sp.Expr, ...]
+    | list[sp.Expr]
+    | Mapping[sp.Symbol, sp.Expr]
+    | None = None,
     *,
     parameter: sp.Symbol | None = None,
-    centers: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr] | None = None,
-    amplitudes: tuple[sp.Expr, ...] | list[sp.Expr] | Mapping[sp.Symbol, sp.Expr] | None = None,
+    centers: tuple[sp.Expr, ...]
+    | list[sp.Expr]
+    | Mapping[sp.Symbol, sp.Expr]
+    | None = None,
+    amplitudes: tuple[sp.Expr, ...]
+    | list[sp.Expr]
+    | Mapping[sp.Symbol, sp.Expr]
+    | None = None,
     assumptions: sp.Expr | bool = sp.S.true,
     stratify_parameters: bool = True,
     max_parameter_splits: int = 6,
@@ -151,8 +170,7 @@ def multivariate_dominant_balance_candidates(
 
     When ``weights`` is omitted, all admissible automatic Newton weight cones
     are discovered and the balances from their rational representative paths
-    are returned.  Supplying ``weights`` preserves the historical single-path
-    behavior.
+    are returned. Supplying ``weights`` requests one prescribed scaling path.
     """
 
     if weights is None:
@@ -170,7 +188,11 @@ def multivariate_dominant_balance_candidates(
                 tuple(
                     ParameterStratum(
                         stratum.condition,
-                        tuple(balance for regime in stratum.result for balance in regime.balances),
+                        tuple(
+                            balance
+                            for regime in stratum.result
+                            for balance in regime.balances
+                        ),
                         stratum.knowledge,
                         stratum.provenance,
                         stratum.decisions,
@@ -203,7 +225,9 @@ def multivariate_dominant_balance_candidates(
     )
     if isinstance(result, AsymptoticStratification):
         return _wrap_stratified(result, path, transformed)
-    return tuple(MultivariateDominantBalanceCandidate(path, transformed, item) for item in result)
+    return tuple(
+        MultivariateDominantBalanceCandidate(path, transformed, item) for item in result
+    )
 
 
 @dataclass(frozen=True)
@@ -242,7 +266,10 @@ class WeightCone:
         if not self.equalities:
             return len(self.weight_symbols)
         matrix = sp.Matrix(
-            [[sp.expand(eq).coeff(w) for w in self.weight_symbols] for eq in self.equalities]
+            [
+                [sp.expand(eq).coeff(w) for w in self.weight_symbols]
+                for eq in self.equalities
+            ]
         )
         return len(self.weight_symbols) - matrix.rank()
 
@@ -316,7 +343,8 @@ def _linear_form(
     term: NewtonPolyhedronTerm, weights: tuple[sp.Symbol, ...], rho: sp.Expr
 ) -> sp.Expr:
     return sp.expand(
-        sum(a * w for a, w in zip(term.variable_exponents, weights)) + term.dependent_power * rho
+        sum(a * w for a, w in zip(term.variable_exponents, weights))
+        + term.dependent_power * rho
     )
 
 
@@ -397,11 +425,15 @@ def _discover_regimes_uncached(
                 continue
             numerator = sum(
                 (b - a) * w
-                for a, b, w in zip(left.variable_exponents, right.variable_exponents, ws)
+                for a, b, w in zip(
+                    left.variable_exponents, right.variable_exponents, ws
+                )
             )
             rho = sp.factor(numerator / (left.dependent_power - right.dependent_power))
             base = _linear_form(left, ws, rho)
-            differences = tuple(sp.factor(_linear_form(term, ws, rho) - base) for term in terms)
+            differences = tuple(
+                sp.factor(_linear_form(term, ws, rho) - base) for term in terms
+            )
             # Cone inequalities must retain their sign; normalizing a linear
             # form up to sign would reverse part of the cone.
             inequalities = tuple(sp.factor(d) for d in differences if d != 0)
@@ -419,13 +451,18 @@ def _discover_regimes_uncached(
                 continue
             # Refine to the exact face seen at the representative.
             equalities = tuple(
-                _normalize_linear(differences[k], ws) for k in active if differences[k] != 0
+                _normalize_linear(differences[k], ws)
+                for k in active
+                if differences[k] != 0
             )
             inequalities2 = tuple(
-                differences[k] for k in range(len(terms)) if k not in active and differences[k] != 0
+                differences[k]
+                for k in range(len(terms))
+                if k not in active and differences[k] != 0
             )
             representative2 = (
-                _rational_representative(ws, equalities, inequalities2) or representative
+                _rational_representative(ws, equalities, inequalities2)
+                or representative
             )
             weights_value = representative2
             balances_raw = multivariate_dominant_balance_candidates(
@@ -441,7 +478,9 @@ def _discover_regimes_uncached(
             # Keep only the candidate corresponding to rho at this path.
             expected_rho = sp.simplify(rho.subs(dict(zip(ws, weights_value))))
             balances = tuple(
-                b for b in balances_raw if canonical_equal(b.dependent_exponent, expected_rho)
+                b
+                for b in balances_raw
+                if canonical_equal(b.dependent_exponent, expected_rho)
             )
             if not balances:
                 continue
@@ -460,14 +499,20 @@ def _discover_regimes_uncached(
         current = list(regimes.values())
         for a_idx, first in enumerate(current):
             for second in current[a_idx + 1 :]:
-                difference = sp.simplify(first.cone.dependent_weight - second.cone.dependent_weight)
+                difference = sp.simplify(
+                    first.cone.dependent_weight - second.cone.dependent_weight
+                )
                 extra_equalities = ()
                 if difference != 0:
                     eq = _normalize_linear(difference, ws)
                     if eq != 0:
                         extra_equalities = (eq,)
                 equalities = tuple(
-                    dict.fromkeys(first.cone.equalities + second.cone.equalities + extra_equalities)
+                    dict.fromkeys(
+                        first.cone.equalities
+                        + second.cone.equalities
+                        + extra_equalities
+                    )
                 )
                 inequalities = first.cone.inequalities + second.cone.inequalities
                 rep = _rational_representative(ws, equalities, inequalities)
@@ -484,20 +529,28 @@ def _discover_regimes_uncached(
                 )
                 if isinstance(raw, AsymptoticStratification):
                     continue
-                expected = sp.simplify(first.cone.dependent_weight.subs(dict(zip(ws, rep))))
-                raw = tuple(item for item in raw if canonical_equal(item.exponent, expected))
+                expected = sp.simplify(
+                    first.cone.dependent_weight.subs(dict(zip(ws, rep)))
+                )
+                raw = tuple(
+                    item for item in raw if canonical_equal(item.exponent, expected)
+                )
                 if not raw:
                     continue
                 wrapped = tuple(
-                    MultivariateDominantBalanceCandidate(path, transformed, item) for item in raw
+                    MultivariateDominantBalanceCandidate(path, transformed, item)
+                    for item in raw
                 )
                 subs = dict(zip(ws, rep))
                 rho_value = raw[0].exponent
                 weighted = [
-                    sp.simplify(_linear_form(term, ws, rho_value).subs(subs)) for term in terms
+                    sp.simplify(_linear_form(term, ws, rho_value).subs(subs))
+                    for term in terms
                 ]
                 minimum = min(weighted)
-                active = tuple(k for k, value in enumerate(weighted) if value == minimum)
+                active = tuple(
+                    k for k, value in enumerate(weighted) if value == minimum
+                )
                 if len(active) < 2 or active in regimes:
                     continue
                 rho = first.cone.dependent_weight
@@ -512,7 +565,10 @@ def _discover_regimes_uncached(
                 changed = True
 
     return tuple(
-        sorted(regimes.values(), key=lambda r: (len(r.cone.active_indices), r.cone.representative))
+        sorted(
+            regimes.values(),
+            key=lambda r: (len(r.cone.active_indices), r.cone.representative),
+        )
     )
 
 
@@ -523,7 +579,9 @@ def _discover_regimes_cached(
     variables: tuple[sp.Symbol, ...],
     assumptions: sp.Expr,
 ) -> tuple[ScalingRegime, ...]:
-    return _discover_regimes_uncached(equation, dependent, variables, assumptions=assumptions)
+    return _discover_regimes_uncached(
+        equation, dependent, variables, assumptions=assumptions
+    )
 
 
 def clear_weight_cone_cache() -> None:
@@ -563,12 +621,14 @@ def multivariate_scaling_regimes(
         structural = tuple(term.coefficient for term in terms)
 
         def evaluate(condition: sp.Expr) -> tuple[ScalingRegime, ...]:
-            specialized = specialize_expression(equation, condition, parameters=parameters)
+            specialized = specialize_expression(
+                equation, condition, parameters=parameters
+            )
             return _discover_regimes_cached(
                 canonical_expr(specialized),
                 dependent,
                 variables,
-                canonical_expr(sp.And(sp.sympify(assumptions), condition)),
+                canonical_expr(sp.And(normalize_assumptions(assumptions), condition)),
             )
 
         strat = automatic_parameter_stratification(

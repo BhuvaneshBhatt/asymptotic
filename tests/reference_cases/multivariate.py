@@ -2,7 +2,7 @@
 
 import sympy as sp
 
-from asymptotic import implicit_asymptotic
+from asymptotic import implicit
 from asymptotic.multivariate import multivariate_scaling_regimes
 from asymptotic.stratification import AsymptoticStratification
 
@@ -17,7 +17,14 @@ def _weight_cones() -> bool:
 
 def _multiplicity_strata() -> bool:
     x, y, a = sp.symbols("x y a")
-    result = implicit_asymptotic((y - 1) ** 2 + a * (y - 1) - x, y, x, dependent_limit=1, terms=3)
+    result = implicit(
+        (y - 1) ** 2 + a * (y - 1) - x,
+        y,
+        x,
+        dependent_limit=1,
+        terms=3,
+        return_result=True,
+    )
     if not isinstance(result, AsymptoticStratification):
         return False
     conditions = {sp.simplify(stratum.condition) for stratum in result.strata}
@@ -26,7 +33,10 @@ def _multiplicity_strata() -> bool:
 
 CASES = (
     ReferenceCase(
-        "two-variable-weight-cones", "multivariate", CapabilityStatus.FORMAL, _weight_cones
+        "two-variable-weight-cones",
+        "multivariate",
+        CapabilityStatus.FORMAL,
+        _weight_cones,
     ),
     ReferenceCase(
         "parameter-dependent-multiplicity",

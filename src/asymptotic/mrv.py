@@ -3,8 +3,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
-from .context import AsymptoticContext, GrowthComparison, context_for
+from ._symbolic_policy import bounded_refine
+from .context import AsymptoticContext, AsymptoticGrowthComparison, context_for
 from .decomposition import StructuralDecomposition, decompose_expression
 from .tower import ExpLogTower
 
@@ -40,7 +42,9 @@ def _stirling_log_scale(z: sp.Expr, ctx: AsymptoticContext) -> sp.Expr | None:
     return None
 
 
-def _factorial_family_log(expr: sp.Expr, ctx: AsymptoticContext) -> tuple[sp.Expr, bool] | None:
+def _factorial_family_log(
+    expr: sp.Expr, ctx: AsymptoticContext
+) -> tuple[sp.Expr, bool] | None:
     """Normalize factorial-family products to one additive logarithmic scale.
 
     Gamma, factorial, binomial and rising-factorial/Pochhammer factors are
@@ -131,24 +135,30 @@ def mrv_decomposition(
     *,
     context: AsymptoticContext | None = None,
     structural: StructuralDecomposition | None = None,
+    assumptions: sp.Expr = sp.S.true,
 ) -> MRVDecomposition:
     """Compute explicit MRV comparability classes for an expression.
 
     Candidates come from the dependency-ordered exp/log tower plus the
     independent variable.  They are grouped by logarithmic growth and the
     class with the largest variation measure is selected.  Unknown comparisons
-    remain separate rather than being silently equated.
+    remain separate when their comparison is unresolved.
     """
 
-    expr = sp.sympify(expr)
+    assumptions = normalize_assumptions(assumptions)
+    expr = bounded_refine(sp.sympify(expr), assumptions)
     ctx = context_for(variable, point, context)
     structural = structural or decompose_expression(expr, variable)
     tower = ExpLogTower.from_expr(structural.canonical, variable)
     candidates: list[sp.Expr] = [variable]
-    candidates.extend(ext.generator for ext in tower.extensions if ext.generator.has(variable))
+    candidates.extend(
+        ext.generator for ext in tower.extensions if ext.generator.has(variable)
+    )
     # Include maximal composition inners because a non-exp/log analytic wrapper
     # can hide the actual rapidly varying argument.
-    candidates.extend(layer.inner for layer in structural.composition if layer.inner.has(variable))
+    candidates.extend(
+        layer.inner for layer in structural.composition if layer.inner.has(variable)
+    )
     # Gamma/factorial factors are genuine Hardy-scale generators even though
     # they do not belong to the exp/log tower syntactically.
     factorial_funcs = {sp.gamma, sp.factorial, sp.binomial, sp.RisingFactorial}
@@ -182,7 +192,7 @@ def mrv_decomposition(
             rel, _ = ctx.compare_growth(
                 _variation_measure(candidate, ctx), _variation_measure(group[0], ctx)
             )
-            if rel is GrowthComparison.SAME_ORDER:
+            if rel is AsymptoticGrowthComparison.SAME_ORDER:
                 group.append(candidate)
                 placed = True
                 break
@@ -202,7 +212,7 @@ def mrv_decomposition(
                     _variation_measure(candidate.representative, ctx),
                     _variation_measure(other.representative, ctx),
                 )
-                if rel is not GrowthComparison.LARGER:
+                if rel is not AsymptoticGrowthComparison.LARGER:
                     dominates_all = False
                     break
             if dominates_all:

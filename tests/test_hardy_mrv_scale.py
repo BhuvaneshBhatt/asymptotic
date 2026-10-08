@@ -19,7 +19,8 @@ def test_binomial_and_factorial_products_use_net_stirling_growth():
     central = sp.binomial(2 * n, n)
     central_result = mrv_decomposition(central + sp.exp(n), n)
     assert any(
-        central in cls.members and sp.exp(n) in cls.members for cls in central_result.classes
+        central in cls.members and sp.exp(n) in cls.members
+        for cls in central_result.classes
     )
 
     product = sp.factorial(n) * sp.factorial(n + 1)

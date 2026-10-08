@@ -1,4 +1,4 @@
-"""Deep repeated-secondary Birkhoff--Trjitzinsky regression."""
+"""Deep repeated-secondary Birkhoff–Trjitzinsky regression."""
 
 import pytest
 import sympy as sp

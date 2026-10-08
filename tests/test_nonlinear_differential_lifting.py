@@ -1,6 +1,6 @@
 import sympy as sp
 
-from asymptotic.nonlinear_ode import nonlinear_differential_transseries
+from asymptotic.nonlinear_ode import differential_transseries
 
 
 def _riccati_equation_for_exact_solution(target, y, x):
@@ -8,13 +8,13 @@ def _riccati_equation_for_exact_solution(target, y, x):
     return sp.diff(y(x), x) - y(x) ** 2 - forcing
 
 
-def test_recursive_nonlinear_differential_lifting_exact_branch_at_zero():
+def test_recursive_nonlinear_differential_lifting_at_zero():
     x = sp.symbols("x", positive=True)
     y = sp.Function("y")
     target = 1 / x + x
     equation = _riccati_equation_for_exact_solution(target, y, x)
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=0, terms=4)
+    branches = differential_transseries(equation, y, x, point=0, terms=4)
     branch = next(b for b in branches if sp.simplify(b.series - target) == 0)
 
     assert branch.complete is True
@@ -32,7 +32,7 @@ def test_recursive_lifting_uses_exact_reciprocal_change_at_infinity():
     target = 2 / x + 3 / x**2
     equation = _riccati_equation_for_exact_solution(target, y, x)
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=sp.oo, terms=4)
+    branches = differential_transseries(equation, y, x, point=sp.oo, terms=4)
     branch = next(b for b in branches if sp.simplify(b.series - target) == 0)
 
     assert branch.complete is True
@@ -51,13 +51,14 @@ def test_recursive_lifting_residual_valuation_strictly_improves():
     target = 1 / x + x
     equation = _riccati_equation_for_exact_solution(target, y, x)
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=0, terms=4)
+    branches = differential_transseries(equation, y, x, point=0, terms=4)
     nonexact = next(b for b in branches if sp.simplify(b.series - target) != 0)
 
     certified = [
         (step.residual_order_before, step.residual_order_after)
         for step in nonexact.steps[1:]
-        if step.residual_order_before is not None and step.residual_order_after is not None
+        if step.residual_order_before is not None
+        and step.residual_order_after is not None
     ]
     assert certified
     assert all(after > before for before, after in certified)
@@ -70,7 +71,7 @@ def test_recursive_lifting_finite_translated_point():
     target = 1 / h + h
     equation = _riccati_equation_for_exact_solution(target, y, x)
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=2, terms=4)
+    branches = differential_transseries(equation, y, x, point=2, terms=4)
     branch = next(b for b in branches if sp.simplify(b.series - target) == 0)
 
     assert branch.complete is True
@@ -78,13 +79,13 @@ def test_recursive_lifting_finite_translated_point():
     assert tuple(step.local_exponent for step in branch.steps) == (-1, 1)
 
 
-def test_recursive_lifting_reports_truncation_without_claiming_completion():
+def test_recursive_lifting_reports_truncation_claiming_completion():
     x = sp.symbols("x", positive=True)
     y = sp.Function("y")
     target = 1 / x + x
     equation = _riccati_equation_for_exact_solution(target, y, x)
 
-    branches = nonlinear_differential_transseries(equation, y, x, point=0, terms=1)
+    branches = differential_transseries(equation, y, x, point=0, terms=1)
 
     assert branches
     assert all(branch.complete is False for branch in branches)

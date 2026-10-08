@@ -1,8 +1,8 @@
-"""Durable recurrence and Birkhoff--Trjitzinsky reference cases."""
+"""Durable recurrence and Birkhoff–Trjitzinsky reference cases."""
 
 import sympy as sp
 
-from asymptotic import asymptotic_rsolve
+from asymptotic import rsolve
 from asymptotic.discrete_scale import (
     birkhoff_trjitzinsky_branches,
     linear_recurrence_data,
@@ -14,11 +14,13 @@ from . import CapabilityStatus, ReferenceCase
 def _harmonic_resonance() -> bool:
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
-    result = asymptotic_rsolve(a(n + 1) - a(n) - 1 / n, a(n), n, terms=4)
+    result = rsolve(a(n + 1) - a(n) - 1 / n, a(n), n, terms=4, return_result=True)
     particular = result.particular_expression
     if particular is None or not particular.has(sp.log(n)):
         return False
-    defect = sp.series((particular.subs(n, n + 1) - particular - 1 / n), n, sp.oo, 5).removeO()
+    defect = sp.series(
+        (particular.subs(n, n + 1) - particular - 1 / n), n, sp.oo, 5
+    ).removeO()
     return sp.expand(defect) == 0
 
 
@@ -42,7 +44,10 @@ def _repeated_secondary_tertiary_descent() -> bool:
 
 CASES = (
     ReferenceCase(
-        "first-order-log-resonance", "recurrence", CapabilityStatus.FORMAL, _harmonic_resonance
+        "first-order-log-resonance",
+        "recurrence",
+        CapabilityStatus.FORMAL,
+        _harmonic_resonance,
     ),
     ReferenceCase(
         "repeated-secondary-tertiary-descent",

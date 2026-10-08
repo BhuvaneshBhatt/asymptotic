@@ -1,9 +1,9 @@
 """Asymptotic summation by structural discrete reductions.
 
-The public dispatcher deliberately combines several mathematically different
+The public dispatcher combines several mathematically different
 routes rather than forcing all sums through a generic symbolic ``Sum``.  Exact
 summation is preferred when cheap enough for SymPy, followed by termwise
-parameter expansion, summation by parts, Euler--Maclaurin, Mellin-pole
+parameter expansion, summation by parts, Euler–Maclaurin, Mellin-pole
 expansion for supported infinite sums, scaled Riemann sums, and lattice
 saddles.  Routes that need unproved interchange or contour hypotheses are
 reported as formal rather than certified.
@@ -11,17 +11,21 @@ reported as formal rather than certified.
 
 from __future__ import annotations
 
+import builtins
 from dataclasses import dataclass
 from typing import Literal
 
 import sympy as sp
+from funcprops import normalize_assumptions
 from sympy.concrete.gosper import gosper_sum
 
+from ._polynomial_bounds import bounded_degree
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_assumption_sign, bounded_limit, bounded_primitive
+from .context import AsymptoticContext
 from .instrumentation import record_symbolic_event
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 from .sum_advanced import (
     MellinShiftCertificate,
     UniformSummationCertificate,
@@ -34,6 +38,7 @@ from .sum_advanced import (
     separable_multisum,
     zeilberger_recurrence,
 )
+from .theorem_registry import CertificationStrength, Theorem, TheoremRegistry
 from .transseries import TransseriesExpansion, transseries_from_expression
 
 SumStatus = Literal["EXACT", "CERTIFIED", "FORMAL", "UNKNOWN"]
@@ -71,26 +76,45 @@ DISCRETE_STAT_METHODS = SUM_METHODS | frozenset({"pmf", "sum"})
 
 @dataclass(frozen=True)
 class EulerMaclaurinCertificate:
-    """Replayable evidence for a SymPy Euler--Maclaurin remainder estimate."""
+    """Replayable evidence for a SymPy Euler–Maclaurin remainder estimate."""
 
     reduction: sp.Sum
     m: int
     n: int
     error: sp.Expr
-    remainder: AsymptoticRemainder
+    remainder: Remainder
+    approximation: sp.Expr
+    expression: sp.Expr
+    theorem: str | None
 
     def replay(self) -> bool | None:
         if not self.remainder.is_certified:
             return False
         try:
-            _approximation, error = self.reduction.euler_maclaurin(m=self.m, n=self.n)
-        except (ValueError, TypeError, NotImplementedError, AttributeError, *SYMBOLIC_ERRORS):
+            approximation, error = self.reduction.euler_maclaurin(m=self.m, n=self.n)
+        except (
+            ValueError,
+            TypeError,
+            NotImplementedError,
+            AttributeError,
+            *SYMBOLIC_ERRORS,
+        ):
             return None
-        return sp.simplify(error - self.error) == 0
+        bound = sp.Abs(approximation - self.expression) + sp.Abs(error)
+        return (
+            _euler_maclaurin_theorem(self.reduction, self.n) == self.theorem
+            and self.theorem is not None
+            and sp.simplify(error - self.error) == 0
+            and sp.simplify(approximation - self.approximation) == 0
+            and sp.simplify(
+                bound - (0 if self.remainder.is_exact else self.remainder.scale)
+            )
+            == 0
+        )
 
 
 @dataclass(frozen=True)
-class AsymptoticSumResult:
+class SumResult:
     """Finite asymptotic description of a parameter-dependent discrete sum."""
 
     expression: sp.Expr
@@ -102,7 +126,7 @@ class AsymptoticSumResult:
     method: str
     status: SumStatus
     series: TransseriesExpansion | None = None
-    remainder: AsymptoticRemainder | None = None
+    remainder: Remainder | None = None
     reduction: sp.Sum | None = None
     transformation: tuple[sp.Symbol, sp.Expr] | None = None
     certificate: object | None = None
@@ -127,12 +151,12 @@ def _series_result(
     method: str,
     status: SumStatus,
     *,
-    remainder: AsymptoticRemainder | None,
+    remainder: Remainder | None,
     reduction: sp.Sum,
     transformation: tuple[sp.Symbol, sp.Expr] | None = None,
     certificate: object | None = None,
     terms: int = 4,
-) -> AsymptoticSumResult:
+) -> SumResult:
     series = None
     try:
         series = transseries_from_expression(
@@ -144,7 +168,7 @@ def _series_result(
         ).prefix(terms)
     except (TypeError, ValueError, NotImplementedError):
         pass
-    return AsymptoticSumResult(
+    return SumResult(
         analytic_powsimp(expression),
         variable,
         lower,
@@ -184,7 +208,7 @@ def _termwise_series(
 
     The bounds must be independent of the expansion parameter.  This keeps the
     transformation structural: moving-boundary effects belong to
-    Euler--Maclaurin or a scaled-lattice route instead.
+    Euler–Maclaurin or a scaled-lattice route instead.
     """
 
     if parameter in sp.Tuple(lower, upper).free_symbols:
@@ -205,19 +229,47 @@ def _termwise_series(
         total = sp.series(total, parameter, point, terms).removeO()
     except (TypeError, ValueError, NotImplementedError, *SYMBOLIC_ERRORS):
         pass
-    record_symbolic_event("asymptotic_sum_series")
+    record_symbolic_event("sum_series")
     cert = fixed_finite_uniformity(lower, upper, parameter)
     if cert is None:
-        cert = geometric_uniformity(summand, variable, lower, upper, parameter, point, terms)
+        cert = geometric_uniformity(
+            summand, variable, lower, upper, parameter, point, terms
+        )
     return analytic_powsimp(total), cert
 
 
-def _boundary_value(expr: sp.Expr, variable: sp.Symbol, bound: sp.Expr) -> sp.Expr | None:
+def _boundary_value(
+    expr: sp.Expr, variable: sp.Symbol, bound: sp.Expr, *, limit_evaluator=bounded_limit
+) -> sp.Expr | None:
     """Evaluate one summation-by-parts boundary without an unrestricted limit."""
 
     if bound not in (-sp.oo, sp.oo):
         return analytic_powsimp(expr.xreplace({variable: bound}))
-    value = bounded_limit(expr, variable, bound, allow_general=True)
+    if bound is sp.oo and expr.has(sp.binomial):
+        try:
+            combinatorial = sp.combsimp(expr)
+        except (TypeError, ValueError, NotImplementedError):
+            combinatorial = expr
+        finite_support = False
+        for atom in combinatorial.atoms(sp.binomial):
+            top, bottom = atom.args
+            if (
+                variable not in top.free_symbols
+                and top.is_integer is True
+                and top.is_nonnegative is True
+                and variable in bottom.free_symbols
+            ):
+                try:
+                    bottom_poly = sp.Poly(bottom, variable)
+                except sp.PolynomialError:
+                    continue
+                if bottom_poly.degree() == 1 and bottom_poly.LC() > 0:
+                    finite_support = True
+                    break
+        if finite_support:
+            return sp.S.Zero
+        expr = combinatorial
+    value = limit_evaluator(expr, variable, bound, allow_general=True)
     if value is None or value.has(sp.Limit) or value in (sp.oo, -sp.oo, sp.zoo, sp.nan):
         return None
     return analytic_powsimp(value)
@@ -273,9 +325,11 @@ def _summation_by_parts(
         lower_term = _boundary_value(primitive * other, variable, lower)
         if upper_term is None or lower_term is None:
             continue
-        residual = analytic_powsimp(-primitive.xreplace({variable: variable + 1}) * delta_other)
+        residual = analytic_powsimp(
+            -primitive.xreplace({variable: variable + 1}) * delta_other
+        )
         residual_upper = upper if upper is sp.oo else analytic_powsimp(upper - 1)
-        record_symbolic_event("asymptotic_sum_parts")
+        record_symbolic_event("sum_parts")
         return upper_term - lower_term, residual, lower, residual_upper
     return None
 
@@ -289,7 +343,7 @@ def _summation_by_parts_expansion(
 ) -> sp.Expr | None:
     """Build a finite Abel-transform prefix by repeated summation by parts.
 
-    This is intentionally a formal route.  Each transformation is exact, but
+    This is a formal route.  Each transformation is exact, but
     the final residual sum is omitted only after at least one successful
     descent; certification of that discarded residual requires additional
     monotonicity/sign information that is not inferred here.
@@ -312,7 +366,9 @@ def _summation_by_parts_expansion(
     return analytic_powsimp(prefix)
 
 
-def _mellin_candidates(transform: sp.Expr, s: sp.Symbol, terms: int) -> tuple[sp.Expr, ...]:
+def _mellin_candidates(
+    transform: sp.Expr, s: sp.Symbol, terms: int
+) -> tuple[sp.Expr, ...]:
     """Extract a finite deterministic pole set from Gamma and zeta factors."""
 
     candidates: set[sp.Expr] = set()
@@ -381,7 +437,11 @@ def _summed_mellin_strip(
         arg = zeta.args[0]
         slope = sp.simplify(sp.diff(arg, s))
         intercept = sp.simplify(arg - slope * s)
-        if s in slope.free_symbols or s in intercept.free_symbols or slope.is_real is not True:
+        if (
+            s in slope.free_symbols
+            or s in intercept.free_symbols
+            or slope.is_real is not True
+        ):
             return None
         if slope.is_positive is True:
             lo = sp.Max(lo, sp.simplify((1 - intercept) / slope))
@@ -481,7 +541,7 @@ def _mellin_sum(
             if next_lower is not None
             else sp.simplify(last - sp.Rational(1, 2))
         )
-        remainder = AsymptoticRemainder.big_o(
+        remainder = Remainder.big_o(
             parameter ** (-shifted),
             parameter,
             0,
@@ -492,7 +552,7 @@ def _mellin_sum(
         )
         if candidate.replay():
             cert = candidate
-    record_symbolic_event("asymptotic_sum_mellin")
+    record_symbolic_event("sum_mellin")
     return expression, cert
 
 
@@ -527,8 +587,44 @@ def _riemann_sum(
         expression = sp.series(integral, parameter, point, terms).removeO()
     except (TypeError, ValueError, NotImplementedError, *SYMBOLIC_ERRORS):
         expression = integral
-    record_symbolic_event("asymptotic_sum_riemann")
+    record_symbolic_event("sum_riemann")
     return analytic_powsimp(expression), (variable, parameter * x)
+
+
+def _euler_maclaurin_theorem(reduction, order):
+    """Recognize families with an actual Euler–Maclaurin remainder bound.
+
+    Polynomial exactness follows when the next even derivative vanishes.
+    Positive inverse-power tails have a Laplace integral representation whose
+    alternating Bernoulli remainder is bounded by the first omitted term.
+    Other summands keep an estimate without a certification claim.
+    """
+    if len(reduction.limits) != 1:
+        return None
+    variable, lower, upper = reduction.limits[0]
+    summand = reduction.function
+    if upper.is_Integer or upper.is_integer is True:
+        if (
+            lower.is_integer is True
+            and bounded_degree(summand, (variable,), 2 * order + 1) is not None
+        ):
+            polynomial = sp.Poly(summand, variable)
+            if polynomial.degree() <= 2 * order + 1:
+                return "finite-polynomial"
+    if upper is not sp.oo or lower.is_integer is not True:
+        return None
+    independent, dependent = summand.as_independent(variable, as_Add=False)
+    base, exponent = dependent.as_base_exp()
+    shift = base - variable
+    if (
+        exponent.is_Rational is True
+        and exponent < -1
+        and not shift.has(variable)
+        and (lower + shift).is_positive is True
+        and independent.is_finite is True
+    ):
+        return "positive-inverse-power-tail"
+    return None
 
 
 def _euler_maclaurin(
@@ -536,29 +632,56 @@ def _euler_maclaurin(
     parameter: sp.Symbol,
     point: sp.Expr,
     terms: int,
-) -> tuple[sp.Expr, AsymptoticRemainder, EulerMaclaurinCertificate] | None:
-    """Use SymPy's Euler--Maclaurin formula and retain its error scale."""
+) -> tuple[sp.Expr, Remainder, EulerMaclaurinCertificate] | None:
+    """Combine the Euler–Maclaurin estimate with the discarded prefix tail.
+
+    The estimate returned by SymPy belongs to the full approximation. Its
+    difference from the returned finite prefix must also enter the error bound.
+    """
 
     m = max(1, terms)
     n = max(1, terms)
     try:
         approximation, error = reduction.euler_maclaurin(m=m, n=n)
-    except (ValueError, TypeError, NotImplementedError, AttributeError, *SYMBOLIC_ERRORS):
+    except (
+        ValueError,
+        TypeError,
+        NotImplementedError,
+        AttributeError,
+        *SYMBOLIC_ERRORS,
+    ):
         return None
     if approximation.has(sp.Integral, sp.Sum) or error.has(sp.Integral, sp.Sum):
         return None
     try:
-        expanded = sp.series(approximation, parameter, point, max(2, terms + 1)).removeO()
+        expanded = sp.series(
+            approximation, parameter, point, max(2, terms + 1)
+        ).removeO()
     except SYMBOLIC_ERRORS:
         expanded = approximation
-    remainder = AsymptoticRemainder.big_o(
-        analytic_powsimp(error),
-        parameter,
-        point,
-        source="Euler--Maclaurin remainder estimate",
+    expanded = analytic_powsimp(expanded)
+    bound = sp.Abs(approximation - expanded) + sp.Abs(error)
+    theorem = _euler_maclaurin_theorem(reduction, n)
+    remainder = (
+        Remainder.exact_zero(parameter, point, source="exact Euler–Maclaurin prefix")
+        if bound == 0 and theorem is not None
+        else Remainder.big_o(
+            bound,
+            parameter,
+            point,
+            source="Euler–Maclaurin estimate plus discarded approximation tail",
+        )
+        if theorem is not None
+        else Remainder.unknown(
+            parameter,
+            point,
+            source="Euler–Maclaurin estimate lacks a proved remainder bound",
+        )
     )
     record_symbolic_event("euler_maclaurin_routes")
-    certificate = EulerMaclaurinCertificate(reduction, m, n, error, remainder)
+    certificate = EulerMaclaurinCertificate(
+        reduction, m, n, error, remainder, approximation, expanded, theorem
+    )
     return analytic_powsimp(expanded), remainder, certificate
 
 
@@ -612,11 +735,15 @@ def _lattice_saddle(
             x = form.variable
             try:
                 observable = analytic_powsimp(summand / normalization.expression)
-                scaled_observable = analytic_powsimp(observable.xreplace({variable: parameter * x}))
+                scaled_observable = analytic_powsimp(
+                    observable.xreplace({variable: parameter * x})
+                )
             except (ValueError, TypeError, NotImplementedError):
                 scaled_observable = sp.S.One
             amplitude = analytic_powsimp(form.amplitude * scaled_observable)
-            scaled_integrand = analytic_powsimp(amplitude * sp.exp(-parameter * form.phase))
+            scaled_integrand = analytic_powsimp(
+                amplitude * sp.exp(-parameter * form.phase)
+            )
             extracted_form = (sp.S.One, amplitude, form.phase, True)
         else:
             scaled_integrand = None
@@ -644,7 +771,7 @@ def _lattice_saddle(
         )
     except NotImplementedError:
         return None
-    record_symbolic_event("asymptotic_sum_saddles")
+    record_symbolic_event("sum_saddles")
     return integral, x, domain
 
 
@@ -657,19 +784,21 @@ def _recurrence_sum(
     point: sp.Expr,
     terms: int,
 ):
-    """Generate an exact recurrence and hand it to ``asymptotic_rsolve``."""
-    from .rsolve import asymptotic_rsolve
+    """Generate an exact recurrence and hand it to ``rsolve``."""
+    from .rsolve import rsolve
 
     seq = sp.Function("S")
     endpoint = endpoint_recurrence(summand, variable, lower, upper, parameter)
     if endpoint is not None:
         _unit, rhs = endpoint
         recurrence = seq(parameter + 1) - seq(parameter) - rhs
-        initial = _exact_sum(sp.Sum(summand, (variable, lower, upper.subs(parameter, 0))))
+        initial = _exact_sum(
+            sp.Sum(summand, (variable, lower, upper.subs(parameter, 0)))
+        )
         conditions = {seq(0): initial} if initial is not None else None
         for initial_data in (conditions, None):
             try:
-                solved = asymptotic_rsolve(
+                solved = rsolve(
                     recurrence,
                     seq(parameter),
                     parameter,
@@ -692,7 +821,10 @@ def _recurrence_sum(
     if lo is None or hi is None:
         return None
     boundary = analytic_powsimp(hi - lo)
-    recurrence = sum(c * seq(parameter + j) for j, c in enumerate(cert.coeffs)) - boundary
+    recurrence = (
+        builtins.sum(c * seq(parameter + j) for j, c in enumerate(cert.coeffs))
+        - boundary
+    )
     conditions = {}
     for j in range(len(cert.coeffs) - 1):
         value = _exact_sum(sp.Sum(summand.subs(parameter, j), (variable, lower, upper)))
@@ -701,7 +833,7 @@ def _recurrence_sum(
             break
         conditions[seq(j)] = value
     try:
-        solved = asymptotic_rsolve(
+        solved = rsolve(
             recurrence,
             seq(parameter),
             parameter,
@@ -728,11 +860,15 @@ def _multidimensional_sum(
 ):
     """Evaluate separable multidimensional sums by exact tensor factorization."""
     if not (len(variables) == len(lowers) == len(uppers)) or not variables:
-        raise ValueError("multidimensional variables and bounds must have equal nonzero length")
+        raise ValueError(
+            "multidimensional variables and bounds must have equal nonzero length"
+        )
     factors = separable_multisum(summand, variables)
     if factors is None:
         # Fixed finite boxes admit rigorous termwise expansion by direct nesting.
-        if all(fixed_finite_uniformity(a, b, parameter) for a, b in zip(lowers, uppers)):
+        if all(
+            fixed_finite_uniformity(a, b, parameter) for a, b in zip(lowers, uppers)
+        ):
             expr = summand
             try:
                 prefix = sp.series(expr, parameter, point, terms).removeO()
@@ -748,17 +884,300 @@ def _multidimensional_sum(
     expression = sp.S.One
     certificates = []
     for factor, v, a, b in zip(factors, variables, lowers, uppers):
-        result = asymptotic_sum(
-            factor, v, a, b, parameter=parameter, point=point, terms=terms, method=method
+        result = sum(
+            factor,
+            v,
+            a,
+            b,
+            parameter=parameter,
+            point=point,
+            terms=terms,
+            method=method,
         )
         if result.status == "UNKNOWN":
             return None
         expression *= result.expression
         certificates.append(result.certificate)
-    return analytic_powsimp(expression), "multidimensional-separable", tuple(certificates)
+    return (
+        analytic_powsimp(expression),
+        "multidimensional-separable",
+        tuple(certificates),
+    )
 
 
-def asymptotic_sum(
+@dataclass(frozen=True)
+class _SumRouteProblem:
+    summand: sp.Expr
+    variable: sp.Symbol
+    lower: sp.Expr
+    upper: sp.Expr
+    parameter: sp.Symbol
+    point: sp.Expr
+    terms: int
+    method: str
+    normalization: object | None
+    reduction: sp.Sum
+
+
+def _sum_route_applicable(route: str):
+    return lambda problem: problem.method in {"auto", route}
+
+
+def _sum_route_hypotheses(_problem: _SumRouteProblem) -> tuple[sp.Expr, ...]:
+    return ()
+
+
+def _sum_route_construct(route: str, p: _SumRouteProblem) -> SumResult | None:
+    if route == "exact":
+        exact = _exact_sum(p.reduction)
+        if exact is None:
+            return None
+        record_symbolic_event("sum_exact")
+        return _series_result(
+            exact,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "exact-sum",
+            "EXACT",
+            remainder=Remainder.exact_zero(
+                p.parameter, p.point, source="exact summation"
+            ),
+            reduction=p.reduction,
+            terms=p.terms,
+        )
+    if route == "series":
+        data = _termwise_series(
+            p.summand, p.variable, p.lower, p.upper, p.parameter, p.point, p.terms
+        )
+        if data is None:
+            return None
+        expression, uniformity = data
+        status = (
+            "CERTIFIED" if uniformity is not None and uniformity.replay() else "FORMAL"
+        )
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "termwise-series",
+            status,
+            remainder=None,
+            reduction=p.reduction,
+            certificate=uniformity,
+            terms=p.terms,
+        )
+    if route == "summation-by-parts":
+        expression = _summation_by_parts_expansion(
+            p.summand, p.variable, p.lower, p.upper, p.terms
+        )
+        if expression is None:
+            return None
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "summation-by-parts",
+            "FORMAL",
+            remainder=None,
+            reduction=p.reduction,
+            terms=p.terms,
+        )
+    if route == "zeilberger":
+        data = _recurrence_sum(
+            p.summand, p.variable, p.lower, p.upper, p.parameter, p.point, p.terms
+        )
+        if data is None:
+            return None
+        expression, cert, solve_status = data
+        status = solve_status if solve_status in {"EXACT", "CERTIFIED"} else "FORMAL"
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "creative-telescoping",
+            status,
+            remainder=None,
+            reduction=p.reduction,
+            certificate=cert,
+            terms=p.terms,
+        )
+    if route == "poisson":
+        data = poisson_gaussian_sum(
+            p.summand, p.variable, p.lower, p.upper, p.parameter, p.point
+        )
+        if data is None:
+            return None
+        expression, remainder = data
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "poisson-summation",
+            "CERTIFIED",
+            remainder=remainder,
+            reduction=p.reduction,
+            terms=p.terms,
+        )
+    if route == "oscillatory":
+        expression = linear_exponential_sum(p.summand, p.variable, p.lower, p.upper)
+        if expression is None:
+            return None
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "oscillatory-geometric",
+            "EXACT",
+            remainder=Remainder.exact_zero(
+                p.parameter, p.point, source="exact finite geometric sum"
+            ),
+            reduction=p.reduction,
+            terms=p.terms,
+        )
+    if route == "euler-maclaurin":
+        data = _euler_maclaurin(p.reduction, p.parameter, p.point, p.terms)
+        if data is None:
+            return None
+        expression, remainder, certificate = data
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "euler-maclaurin",
+            "CERTIFIED" if remainder.is_certified else "FORMAL",
+            remainder=remainder,
+            reduction=p.reduction,
+            certificate=certificate,
+            terms=p.terms,
+        )
+    if route == "mellin":
+        data = _mellin_sum(
+            p.summand, p.variable, p.lower, p.upper, p.parameter, p.point, p.terms
+        )
+        if data is None:
+            return None
+        expression, cert = data
+        remainder = cert.remainder if cert is not None else None
+        status = "CERTIFIED" if cert is not None and cert.replay() else "FORMAL"
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "mellin-poles",
+            status,
+            remainder=remainder,
+            reduction=p.reduction,
+            certificate=cert,
+            terms=p.terms,
+        )
+    if route == "riemann":
+        data = _riemann_sum(
+            p.summand, p.variable, p.lower, p.upper, p.parameter, p.point, p.terms
+        )
+        if data is None:
+            return None
+        expression, transformation = data
+        return _series_result(
+            expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "riemann-sum",
+            "FORMAL",
+            remainder=None,
+            reduction=p.reduction,
+            transformation=transformation,
+            terms=p.terms,
+        )
+    if route == "saddle":
+        data = _lattice_saddle(
+            p.summand,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            p.terms,
+            normalization=p.normalization,
+        )
+        if data is None:
+            return None
+        integral, x, _domain = data
+        return _series_result(
+            integral.expression,
+            p.variable,
+            p.lower,
+            p.upper,
+            p.parameter,
+            p.point,
+            "discrete-" + integral.method,
+            "CERTIFIED" if integral.certified else "FORMAL",
+            remainder=getattr(integral, "remainder", None),
+            reduction=p.reduction,
+            transformation=(p.variable, p.parameter * x),
+            certificate=getattr(integral, "certificate", None),
+            terms=p.terms,
+        )
+    raise ValueError(f"unknown sum theorem route: {route}")
+
+
+_SUM_ROUTE_REGISTRY = TheoremRegistry()
+for _priority, (_route, _strength) in enumerate(
+    (
+        ("exact", CertificationStrength.EXACT),
+        ("series", CertificationStrength.CERTIFIED),
+        ("summation-by-parts", CertificationStrength.FORMAL),
+        ("zeilberger", CertificationStrength.CERTIFIED),
+        ("poisson", CertificationStrength.CERTIFIED),
+        ("oscillatory", CertificationStrength.EXACT),
+        ("euler-maclaurin", CertificationStrength.CERTIFIED),
+        ("mellin", CertificationStrength.CERTIFIED),
+        ("riemann", CertificationStrength.FORMAL),
+        ("saddle", CertificationStrength.CERTIFIED),
+    )
+):
+    _SUM_ROUTE_REGISTRY.register(
+        Theorem(
+            name=f"sum:{_route}",
+            family="sum",
+            applicability=_sum_route_applicable(_route),
+            hypotheses=_sum_route_hypotheses,
+            constructor=lambda problem, route=_route: _sum_route_construct(
+                route, problem
+            ),
+            certification=_strength,
+            priority=_priority,
+        )
+    )
+
+
+def sum(
     summand: sp.Expr,
     variable: sp.Symbol | tuple[sp.Symbol, ...],
     lower: sp.Expr | tuple[sp.Expr, ...],
@@ -768,12 +1187,13 @@ def asymptotic_sum(
     point: sp.Expr = sp.oo,
     terms: int = 4,
     method: SumMethod = "auto",
-) -> AsymptoticSumResult:
+    assumptions: sp.Expr = sp.S.true,
+) -> SumResult:
     """Expand a parameter-dependent discrete sum asymptotically.
 
     ``auto`` tries exact summation, certified/formal termwise expansion, Abel
-    transforms, creative telescoping into :func:`asymptotic_rsolve`, Poisson or
-    finite oscillatory reduction, Euler--Maclaurin, certified Mellin shifts,
+    transforms, creative telescoping into :func:`rsolve`, Poisson or
+    finite oscillatory reduction, Euler–Maclaurin, certified Mellin shifts,
     scaled Riemann sums, and lattice saddles. Tuple-valued variables and bounds
     support separable multidimensional sums and fixed finite boxes.
 
@@ -781,7 +1201,20 @@ def asymptotic_sum(
     are proved; unsupported contour, uniformity, or lattice hypotheses remain
     ``FORMAL`` or ``UNKNOWN`` rather than being guessed.
     """
-    return _asymptotic_sum_impl(
+    assumptions = normalize_assumptions(assumptions)
+    summand = sp.refine(sp.sympify(summand), assumptions)
+    indices = variable if isinstance(variable, tuple) else (variable,)
+    integer_indices = {
+        index: sp.Dummy(index.name, integer=True)
+        for index in indices
+        if isinstance(index, sp.Symbol)
+    }
+    # Sum binds each index to integers even when its incoming Symbol is real.
+    # Simplify periodic/parity identities in that scope, then restore its name.
+    summand = summand.xreplace(integer_indices).xreplace(
+        {integer: index for index, integer in integer_indices.items()}
+    )
+    return _sum_impl(
         summand,
         variable,
         lower,
@@ -794,7 +1227,7 @@ def asymptotic_sum(
     )
 
 
-def _asymptotic_sum_impl(
+def _sum_impl(
     summand: sp.Expr,
     variable: sp.Symbol | tuple[sp.Symbol, ...],
     lower: sp.Expr | tuple[sp.Expr, ...],
@@ -805,7 +1238,7 @@ def _asymptotic_sum_impl(
     terms: int,
     method: SumMethod,
     normalization: object | None,
-) -> AsymptoticSumResult:
+) -> SumResult:
     if not isinstance(parameter, sp.Symbol):
         raise TypeError("parameter must be a symbol")
     if isinstance(variable, tuple):
@@ -823,10 +1256,11 @@ def _asymptotic_sum_impl(
             method=method,
         )
         reduction = sp.Sum(
-            sp.sympify(summand), *[(v, a, b) for v, a, b in zip(variables, lowers, uppers)]
+            sp.sympify(summand),
+            *[(v, a, b) for v, a, b in zip(variables, lowers, uppers)],
         )
         if multi is None:
-            return AsymptoticSumResult(
+            return SumResult(
                 reduction,
                 variables,
                 lowers,
@@ -876,316 +1310,27 @@ def _asymptotic_sum_impl(
     upper = sp.sympify(upper)
     reduction = sp.Sum(summand, (variable, lower, upper))
 
-    if method in {"auto", "exact"}:
-        exact = _exact_sum(reduction)
-        if exact is not None:
-            record_symbolic_event("asymptotic_sum_exact")
-            rem = AsymptoticRemainder.exact_zero(parameter, point, source="exact summation")
-            return _series_result(
-                exact,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "exact-sum",
-                "EXACT",
-                remainder=rem,
-                reduction=reduction,
-                terms=terms,
-            )
-        if method == "exact":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "exact-sum",
-                "UNKNOWN",
-                reduction=reduction,
-            )
+    problem = _SumRouteProblem(
+        summand,
+        variable,
+        lower,
+        upper,
+        parameter,
+        point,
+        terms,
+        method,
+        normalization,
+        reduction,
+    )
+    context = AsymptoticContext(parameter, point=point)
+    for decision in _SUM_ROUTE_REGISTRY.candidates(problem, context=context):
+        result = decision.theorem.constructor(problem)
+        if result is not None:
+            return result
+        if method != "auto":
+            break
 
-    if method in {"auto", "series"}:
-        series_data = _termwise_series(summand, variable, lower, upper, parameter, point, terms)
-        if series_data is not None:
-            expression, uniformity = series_data
-            status = "CERTIFIED" if uniformity is not None and uniformity.replay() else "FORMAL"
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "termwise-series",
-                status,
-                remainder=None,
-                reduction=reduction,
-                certificate=uniformity,
-                terms=terms,
-            )
-        if method == "series":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "termwise-series",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "summation-by-parts"}:
-        expression = _summation_by_parts_expansion(summand, variable, lower, upper, terms)
-        if expression is not None:
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "summation-by-parts",
-                "FORMAL",
-                remainder=None,
-                reduction=reduction,
-                terms=terms,
-            )
-        if method == "summation-by-parts":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "summation-by-parts",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "zeilberger"}:
-        recurrence = _recurrence_sum(summand, variable, lower, upper, parameter, point, terms)
-        if recurrence is not None:
-            expression, cert, solve_status = recurrence
-            status = solve_status if solve_status in {"EXACT", "CERTIFIED"} else "FORMAL"
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "creative-telescoping",
-                status,
-                remainder=None,
-                reduction=reduction,
-                certificate=cert,
-                terms=terms,
-            )
-        if method == "zeilberger":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "creative-telescoping",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "poisson"}:
-        poisson = poisson_gaussian_sum(summand, variable, lower, upper, parameter, point)
-        if poisson is not None:
-            expression, remainder = poisson
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "poisson-summation",
-                "CERTIFIED",
-                remainder=remainder,
-                reduction=reduction,
-                terms=terms,
-            )
-        if method == "poisson":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "poisson-summation",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "oscillatory"}:
-        oscillatory = linear_exponential_sum(summand, variable, lower, upper)
-        if oscillatory is not None:
-            return _series_result(
-                oscillatory,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "oscillatory-geometric",
-                "EXACT",
-                remainder=AsymptoticRemainder.exact_zero(
-                    parameter, point, source="exact finite geometric sum"
-                ),
-                reduction=reduction,
-                terms=terms,
-            )
-        if method == "oscillatory":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "oscillatory-geometric",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "euler-maclaurin"}:
-        em = _euler_maclaurin(reduction, parameter, point, terms)
-        if em is not None:
-            expression, remainder, certificate = em
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "euler-maclaurin",
-                "CERTIFIED",
-                remainder=remainder,
-                reduction=reduction,
-                certificate=certificate,
-                terms=terms,
-            )
-        if method == "euler-maclaurin":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "euler-maclaurin",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "mellin"}:
-        mellin = _mellin_sum(summand, variable, lower, upper, parameter, point, terms)
-        if mellin is not None:
-            expression, shift_cert = mellin
-            remainder = shift_cert.remainder if shift_cert is not None else None
-            status = "CERTIFIED" if shift_cert is not None and shift_cert.replay() else "FORMAL"
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "mellin-poles",
-                status,
-                remainder=remainder,
-                reduction=reduction,
-                certificate=shift_cert,
-                terms=terms,
-            )
-        if method == "mellin":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "mellin-poles",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "riemann"}:
-        riemann = _riemann_sum(summand, variable, lower, upper, parameter, point, terms)
-        if riemann is not None:
-            expression, transformation = riemann
-            return _series_result(
-                expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "riemann-sum",
-                "FORMAL",
-                remainder=None,
-                reduction=reduction,
-                transformation=transformation,
-                terms=terms,
-            )
-        if method == "riemann":
-            return AsymptoticSumResult(
-                reduction,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "riemann-sum",
-                "UNKNOWN",
-                reduction=reduction,
-            )
-
-    if method in {"auto", "saddle"}:
-        saddle = _lattice_saddle(
-            summand,
-            variable,
-            lower,
-            upper,
-            parameter,
-            point,
-            terms,
-            normalization=normalization,
-        )
-        if saddle is not None:
-            integral, x, _domain = saddle
-            return _series_result(
-                integral.expression,
-                variable,
-                lower,
-                upper,
-                parameter,
-                point,
-                "discrete-" + integral.method,
-                "CERTIFIED" if integral.certified else "FORMAL",
-                remainder=getattr(integral, "remainder", None),
-                reduction=reduction,
-                transformation=(variable, parameter * x),
-                certificate=getattr(integral, "certificate", None),
-                terms=terms,
-            )
-
-    return AsymptoticSumResult(
+    return SumResult(
         reduction,
         variable,
         lower,

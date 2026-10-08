@@ -13,12 +13,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._power_simplify import analytic_powsimp
-from ._symbolic_errors import SYMBOLIC_ERRORS
-from ._symbolic_policy import bounded_primitive, bounded_solve_one
-from .context import AsymptoticContext
-from .function_properties import (
+from ._property_support import (
     PropertyDecision,
     PropertyKnowledge,
     PropertyProvenance,
@@ -26,7 +24,10 @@ from .function_properties import (
     decide,
     require_decision,
 )
-from .remainder import AsymptoticRemainder
+from ._symbolic_errors import SYMBOLIC_ERRORS
+from ._symbolic_policy import bounded_limit, bounded_primitive, bounded_solve_one
+from .context import AsymptoticContext
+from .remainder import Remainder, RemainderKind
 from .remainder_theorems import (
     certify_antiderivative_remainder,
     certify_finite_sum_remainder,
@@ -37,14 +38,18 @@ from .transseries import (
     transseries_from_expression,
 )
 
+_COMPOSITION_ERRORS = SYMBOLIC_ERRORS + (NotImplementedError, RecursionError)
+
 
 def _trim(series: TransseriesExpansion, terms: int) -> TransseriesExpansion:
-    """Trim without silently discarding the omitted-tail semantics."""
+    """Trim without discarding the omitted-tail semantics."""
 
     return series.normalized().prefix(max(0, int(terms)))
 
 
-def _constant_series(value: sp.Expr, inner: TransseriesExpansion) -> TransseriesExpansion:
+def _constant_series(
+    value: sp.Expr, inner: TransseriesExpansion
+) -> TransseriesExpansion:
     return TransseriesExpansion.from_terms(
         inner.variable, inner.point, (), center=sp.sympify(value), complete=True
     )
@@ -70,17 +75,31 @@ def compose_transseries(
     if terms < 1:
         raise ValueError("terms must be positive")
     if not isinstance(inner, TransseriesExpansion):
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        inner = asymptotic_element(inner).to_transseries(terms)
-    if isinstance(outer, TransseriesExpansion):
-        z = outer.variable
-        expr = outer.truncate()
+        inner = as_element(inner).to_transseries(terms)
+    outer_series = outer if isinstance(outer, TransseriesExpansion) else None
+    if outer_series is not None:
+        z = outer_series.variable
+        expr = outer_series.truncate()
+        try:
+            inner_target = bounded_limit(
+                inner.truncate(), inner.variable, inner.point, direction="+"
+            )
+        except SYMBOLIC_ERRORS + (NotImplementedError, RecursionError):
+            inner_target = None
+        if inner_target != outer_series.point:
+            raise ValueError(
+                "series composition requires the inner representation to tend "
+                "to the outer representation's expansion point"
+            )
     else:
         expr = sp.sympify(outer)
         z = argument
         if z is None:
-            symbols = tuple(sorted(expr.free_symbols - {inner.variable}, key=sp.default_sort_key))
+            symbols = tuple(
+                sorted(expr.free_symbols - {inner.variable}, key=sp.default_sort_key)
+            )
             if len(symbols) != 1:
                 raise ValueError("composition requires an explicit argument symbol")
             z = symbols[0]
@@ -111,28 +130,143 @@ def compose_transseries(
             if z in exponent.free_symbols:
                 # a(x)^b(x) = exp(b log a), provided both pieces are supported.
                 return _trim(
-                    (evaluate(exponent) * evaluate(base).log(terms=terms)).exp(terms=terms), terms
+                    (
+                        evaluate(exponent)
+                        * evaluate(base).log(
+                            terms=terms,
+                            assumptions=assumptions,
+                            allow_unknown_properties=allow_unknown_properties,
+                        )
+                    ).exp(terms=terms),
+                    terms,
                 )
-            return _trim(evaluate(base).constant_power(exponent, terms=terms), terms)
+            return _trim(
+                evaluate(base).constant_power(
+                    exponent,
+                    terms=terms,
+                    assumptions=assumptions,
+                    allow_unknown_properties=allow_unknown_properties,
+                ),
+                terms,
+            )
         if node.func is sp.exp:
             return _trim(evaluate(node.args[0]).exp(terms=terms), terms)
         if node.func is sp.log:
-            return _trim(evaluate(node.args[0]).log(terms=terms), terms)
+            return _trim(
+                evaluate(node.args[0]).log(
+                    terms=terms,
+                    assumptions=assumptions,
+                    allow_unknown_properties=allow_unknown_properties,
+                ),
+                terms,
+            )
 
-        # General meromorphic/analytic composition at a finite limiting center.
+        # Specialist providers can handle functions with fixed parameters and
+        # one asymptotically varying argument, as well as uniform expressions
+        # where the same composition variable occurs in several argument slots.
+        try:
+            composition_center = bounded_limit(
+                inner.truncate(), inner.variable, inner.point, direction="+"
+            )
+        except _COMPOSITION_ERRORS:
+            composition_center = None
+        if composition_center is not None and composition_center is not sp.zoo:
+            from .local_expansion import local_series
+
+            provider_expansion = local_series(node, z, composition_center, depth=terms)
+            if (
+                provider_expansion is not None
+                and provider_expansion.provider != "series"
+                and (
+                    provider_expansion.certificate is None
+                    or provider_expansion.certificate.hypotheses_verified
+                )
+            ):
+                provider_result = _trim(evaluate(provider_expansion.prefix), terms)
+                provider_remainder = provider_result.remainder
+                if provider_expansion.order is not None:
+                    transformed_scale = sp.simplify(
+                        provider_expansion.order.subs(z, inner.truncate())
+                    )
+                    provider_remainder = provider_remainder.add(
+                        Remainder.big_o(
+                            transformed_scale,
+                            inner.variable,
+                            inner.point,
+                            source=(
+                                "local/special/uniform composition provider "
+                                f"{provider_expansion.provider}"
+                            ),
+                        )
+                    )
+                else:
+                    provider_remainder = provider_remainder.add(
+                        Remainder.unknown(
+                            inner.variable,
+                            inner.point,
+                            source=(
+                                "composition provider supplied no remainder order: "
+                                f"{provider_expansion.provider}"
+                            ),
+                        )
+                    )
+                metadata = dict(provider_result.metadata)
+                metadata.setdefault("composition_providers", []).append(
+                    provider_expansion.provider
+                )
+                if provider_expansion.certificate is not None:
+                    metadata.setdefault("expansion_certificates", []).append(
+                        provider_expansion.certificate
+                    )
+                return TransseriesExpansion.from_terms(
+                    provider_result.variable,
+                    provider_result.point,
+                    provider_result.terms,
+                    center=provider_result.center,
+                    complete=provider_remainder.is_exact,
+                    metadata=metadata,
+                    remainder=provider_remainder,
+                )
+
+        # General unary composition.  Ask the package's local/special/uniform
+        # provider layer first; it knows nonanalytic finite germs, infinity
+        # expansions, and certified uniform regimes.  Analytic Taylor
+        # composition remains the fallback when no specialist provider applies.
         arg_series = evaluate(node.args[0]) if len(node.args) == 1 else None
         if arg_series is None:
-            raise NotImplementedError(f"unsupported multivariate composition node {node.func}")
-        if arg_series.center in (sp.oo, -sp.oo, sp.zoo):
-            raise NotImplementedError(f"{node.func} requires a finite analytic composition center")
-        decision = analytic_at_decision(node.func(z), z, arg_series.center, assumptions=assumptions)
+            raise NotImplementedError(
+                f"unsupported multivariate composition node {node.func}"
+            )
+
+        arg_prefix = arg_series.truncate()
+        try:
+            center = bounded_limit(
+                arg_prefix, arg_series.variable, arg_series.point, direction="+"
+            )
+        except _COMPOSITION_ERRORS:
+            center = None
+
+        if center in (None, sp.oo, -sp.oo, sp.zoo):
+            raise NotImplementedError(
+                f"{node.func} has no certified composition provider for this asymptotic regime"
+            )
+        decision = analytic_at_decision(
+            node.func(z), z, center, assumptions=assumptions
+        )
         require_decision(
             decision,
             operation=f"composition with {node.func}",
             allow_unknown=allow_unknown_properties,
         )
         result = _trim(
-            arg_series._compose_analytic_taylor(node.func(z), argument=z, terms=terms), terms
+            arg_series._compose_analytic_taylor(
+                node.func(z),
+                argument=z,
+                terms=terms,
+                assumptions=assumptions,
+                allow_unknown_properties=allow_unknown_properties,
+            ),
+            terms,
         )
         metadata = dict(result.metadata)
         metadata.setdefault("property_decisions", []).append(decision)
@@ -147,18 +281,48 @@ def compose_transseries(
         )
 
     result = _trim(evaluate(expr), terms)
+    output_remainder = result.remainder
+    if outer_series is not None and not outer_series.remainder.is_exact:
+        outer_remainder = outer_series.remainder
+        if outer_remainder.scale is None:
+            composed_outer_remainder = Remainder.unknown(
+                inner.variable,
+                inner.point,
+                source="outer series has an unknown remainder after composition",
+            )
+        else:
+            scale_series = _trim(evaluate(outer_remainder.scale), terms)
+            scale = sp.simplify(scale_series.truncate())
+            if outer_remainder.kind is RemainderKind.LITTLE_O:
+                composed_outer_remainder = Remainder.little_o(
+                    scale,
+                    inner.variable,
+                    inner.point,
+                    source="composed outer-series little-o remainder",
+                )
+            else:
+                composed_outer_remainder = Remainder.big_o(
+                    scale,
+                    inner.variable,
+                    inner.point,
+                    source="composed outer-series big-O remainder",
+                )
+        output_remainder = output_remainder.add(composed_outer_remainder)
+
     metadata = dict(result.metadata)
     metadata.setdefault("operation_provenance", []).append(
         PropertyProvenance("asymptotic.compose_transseries", reference="Shackell §5.3")
     )
+    if outer_series is not None:
+        metadata.setdefault("composition_providers", []).append("series-on-series")
     return TransseriesExpansion.from_terms(
         result.variable,
         result.point,
         result.terms,
         center=result.center,
-        complete=result.complete,
+        complete=output_remainder.is_exact,
         metadata=metadata,
-        remainder=result.remainder,
+        remainder=output_remainder,
     )
 
 
@@ -232,7 +396,9 @@ def inverse_logexp(
     ctx = AsymptoticContext(variable, point=point)
     lim = ctx.limit(f)
     if lim not in (sp.oo, -sp.oo):
-        raise NotImplementedError("log-exp inverse requires f to tend to directed infinity")
+        raise NotImplementedError(
+            "log-exp inverse requires f to tend to directed infinity"
+        )
 
     derivative = sp.diff(f, variable)
     sign = ctx.eventual_sign(derivative)
@@ -240,7 +406,7 @@ def inverse_logexp(
     monotone_decision = PropertyDecision(
         monotone_predicate,
         sign in (-1, 1) if sign is not None else None,
-        sp.sympify(assumptions),
+        normalize_assumptions(assumptions),
         PropertyKnowledge.SUFFICIENT,
         (
             PropertyProvenance(
@@ -252,10 +418,12 @@ def inverse_logexp(
         (f"eventual derivative sign: {sign}",),
     )
     require_decision(
-        monotone_decision, operation="functional inversion", allow_unknown=allow_unknown_properties
+        monotone_decision,
+        operation="functional inversion",
+        allow_unknown=allow_unknown_properties,
     )
 
-    # Shackell stage 1: if the largest scale occurs as an exponential factor,
+    # If the largest scale occurs as an exponential factor,
     # lower the height by taking logs and restore the target with log(y).
     if _log_depth < 8:
         try:
@@ -276,21 +444,30 @@ def inverse_logexp(
             )
             mapped = sp.expand(reduced.truncate().xreplace({y: sp.log(y)}))
             series = _trim(
-                transseries_from_expression(mapped, y, point=sp.oo, complete=False), terms
+                transseries_from_expression(mapped, y, point=sp.oo, complete=False),
+                terms,
             )
             md = dict(series.metadata)
             md.setdefault("property_decisions", []).append(monotone_decision)
             md.setdefault("operation_provenance", []).append(
                 PropertyProvenance(
-                    "asymptotic.inverse_logexp", reference="Shackell §7.2 / Ecalle iteration"
+                    "asymptotic.inverse_logexp",
+                    reference="Shackell §7.2 / Ecalle iteration",
                 )
             )
             certificate = certify_inverse_remainder(
-                f, variable, y, series.truncate(), source_point=point, target_point=sp.oo
+                f,
+                variable,
+                y,
+                series.truncate(),
+                source_point=point,
+                target_point=sp.oo,
             )
             md.setdefault("remainder_certificates", []).append(certificate)
             remainder = (
-                certificate.conclusion if certificate.conclusion.is_certified else series.remainder
+                certificate.conclusion
+                if certificate.conclusion.is_certified
+                else series.remainder
             )
             series = TransseriesExpansion.from_terms(
                 series.variable,
@@ -342,7 +519,9 @@ def inverse_logexp(
         total = sp.series(total, y, sp.oo, max(terms + 2, 5)).removeO()
     except SYMBOLIC_ERRORS:
         total = sp.expand(total)
-    series = _trim(transseries_from_expression(total, y, point=sp.oo, complete=False), terms)
+    series = _trim(
+        transseries_from_expression(total, y, point=sp.oo, complete=False), terms
+    )
     md = dict(series.metadata)
     md.setdefault("property_decisions", []).append(monotone_decision)
     md.setdefault("operation_provenance", []).append(
@@ -354,7 +533,11 @@ def inverse_logexp(
         f, variable, y, series.truncate(), source_point=point, target_point=sp.oo
     )
     md.setdefault("remainder_certificates", []).append(certificate)
-    remainder = certificate.conclusion if certificate.conclusion.is_certified else series.remainder
+    remainder = (
+        certificate.conclusion
+        if certificate.conclusion.is_certified
+        else series.remainder
+    )
     series = TransseriesExpansion.from_terms(
         series.variable,
         series.point,
@@ -415,7 +598,8 @@ def _power_log_integral(
         assumptions,
         provenance=(
             PropertyProvenance(
-                "asymptotic.asymptotic_integrate", reference="Shackell Theorem 14 case 2/3"
+                "asymptotic.integrate",
+                reference="Shackell Theorem 14 case 2/3",
             ),
         ),
     )
@@ -425,7 +609,8 @@ def _power_log_integral(
             assumptions,
             provenance=(
                 PropertyProvenance(
-                    "asymptotic.asymptotic_integrate", reference="Shackell Theorem 14 case 3"
+                    "asymptotic.integrate",
+                    reference="Shackell Theorem 14 case 3",
                 ),
             ),
         )
@@ -436,7 +621,7 @@ def _power_log_integral(
                 PropertyDecision(
                     sp.Ne(b + 1, 0),
                     None,
-                    sp.sympify(assumptions),
+                    normalize_assumptions(assumptions),
                     PropertyKnowledge.EXACT,
                     log_resonance.provenance,
                 ),
@@ -449,7 +634,7 @@ def _power_log_integral(
             PropertyDecision(
                 sp.Ne(a + 1, 0),
                 None,
-                sp.sympify(assumptions),
+                normalize_assumptions(assumptions),
                 PropertyKnowledge.EXACT,
                 power_resonance.provenance,
             ),
@@ -468,7 +653,7 @@ def _power_log_integral(
     return analytic_powsimp(c * total)
 
 
-def asymptotic_integrate(
+def _integrate_expression(
     obj: object,
     variable: sp.Symbol | None = None,
     *,
@@ -492,9 +677,9 @@ def asymptotic_integrate(
         point = obj.point
         source = obj.normalized()
     elif variable is None and not isinstance(obj, sp.Expr):
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        adapted = asymptotic_element(obj)
+        adapted = as_element(obj)
         x = adapted.variable
         point = adapted.point
         source = adapted.to_transseries(terms).normalized()
@@ -505,7 +690,7 @@ def asymptotic_integrate(
         source = transseries_from_expression(sp.sympify(obj), x, point=point)
 
     primitive = sp.sympify(constant)
-    integration_remainder = AsymptoticRemainder.exact_zero(
+    integration_remainder = Remainder.exact_zero(
         x, point, source="exactly integrated finite prefix"
     )
     if source.center != 0:
@@ -523,7 +708,9 @@ def asymptotic_integrate(
         if approx is not None:
             primitive += approx
             more = (
-                _power_log_integral(term, x, terms + 1, assumptions, allow_unknown_properties)
+                _power_log_integral(
+                    term, x, terms + 1, assumptions, allow_unknown_properties
+                )
                 if point is sp.oo
                 else None
             )
@@ -531,7 +718,7 @@ def asymptotic_integrate(
                 next_piece = analytic_powsimp(sp.expand(more - approx))
                 if next_piece != 0:
                     integration_remainder = integration_remainder.add(
-                        AsymptoticRemainder.big_o(
+                        Remainder.big_o(
                             next_piece,
                             x,
                             point,
@@ -545,15 +732,20 @@ def asymptotic_integrate(
             continue
         approx = _ibp_exponential_term(term, x, terms)
         if approx is None:
-            raise NotImplementedError(f"no certified asymptotic integration rule for {term}")
+            raise NotImplementedError(
+                f"no certified asymptotic integration rule for {term}"
+            )
         primitive += approx
         more = _ibp_exponential_term(term, x, terms + 1)
         if more is not None:
             next_piece = analytic_powsimp(sp.expand(more - approx))
             if next_piece != 0:
                 integration_remainder = integration_remainder.add(
-                    AsymptoticRemainder.big_o(
-                        next_piece, x, point, source="next exponential integration-by-parts term"
+                    Remainder.big_o(
+                        next_piece,
+                        x,
+                        point,
+                        source="next exponential integration-by-parts term",
                     )
                 )
 
@@ -579,10 +771,12 @@ def asymptotic_integrate(
     md = dict(result.metadata)
     md.setdefault("operation_provenance", []).append(
         PropertyProvenance(
-            "asymptotic.asymptotic_integrate", reference="Shackell §5.2.2 / Theorem 14"
+            "asymptotic.integrate", reference="Shackell §5.2.2 / Theorem 14"
         )
     )
-    md.setdefault("remainder_certificates", []).extend((source_certificate, combined_certificate))
+    md.setdefault("remainder_certificates", []).extend(
+        (source_certificate, combined_certificate)
+    )
     return TransseriesExpansion.from_terms(
         result.variable,
         result.point,
@@ -592,14 +786,3 @@ def asymptotic_integrate(
         metadata=md,
         remainder=result.remainder,
     )
-
-
-def asymptotic_integral(*args, **kwargs) -> TransseriesExpansion:
-    """Alias for :func:`asymptotic_integrate` using noun-style operator naming.
-
-    The implementation is intentionally a zero-overhead forwarding wrapper so
-    users who prefer ``asymptotic_sum``/``asymptotic_integral`` symmetry do not
-    need to learn a second integration algorithm or result type.
-    """
-
-    return asymptotic_integrate(*args, **kwargs)

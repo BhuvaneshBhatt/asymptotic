@@ -6,7 +6,7 @@ from pathlib import Path
 GITHUB_DOC_PREFIX = "https://github.com/BhuvaneshBhatt/asymptotic/blob/main/"
 
 
-def test_readme_documentation_links_are_absolute_and_resolve_in_repository():
+def test_readme_documentation_links_are_in_repository():
     readme = Path("README.md").read_text()
     links = re.findall(r"\[[^]]+\]\(([^)]+)\)", readme)
     relative_docs = [link for link in links if link.startswith(("docs/", "examples/"))]

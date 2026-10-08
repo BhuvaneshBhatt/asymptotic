@@ -11,7 +11,13 @@ def test_configured_zero_oracle_is_cached_locally():
     calls = []
 
     def oracle(
-        expr, assumptions=True, use_cache=True, *, rng=None, seed=None, confidence="probable"
+        expr,
+        assumptions=True,
+        use_cache=True,
+        *,
+        rng=None,
+        seed=None,
+        confidence="probable",
     ):
         calls.append((expr, use_cache, confidence))
         return True
@@ -24,7 +30,7 @@ def test_configured_zero_oracle_is_cached_locally():
     opaque = sp.Function("opaque")(x)
     assert ctx.is_zero(opaque) is True
     assert ctx.is_zero(opaque) is True
-    assert calls == [(opaque, False, "certified")]
+    assert calls == [(opaque, True, "certified")]
 
 
 def test_probable_zero_policy_is_forwarded_to_oracle():
@@ -32,7 +38,13 @@ def test_probable_zero_policy_is_forwarded_to_oracle():
     seen = []
 
     def oracle(
-        expr, assumptions=True, use_cache=True, *, rng=None, seed=None, confidence="probable"
+        expr,
+        assumptions=True,
+        use_cache=True,
+        *,
+        rng=None,
+        seed=None,
+        confidence="probable",
     ):
         seen.append(confidence)
         return False

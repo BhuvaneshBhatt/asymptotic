@@ -4,12 +4,13 @@ from dataclasses import dataclass
 from functools import reduce
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._integer_utils import integer_lcm as _lcm
+from ._property_support import PropertyDecision, nested_branch_safety_decisions
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_limit, bounded_solve_one
 from .context import AsymptoticContext, context_for
-from .function_properties import PropertyDecision, nested_branch_safety_decisions
 from .puiseux import BranchChoice, PuiseuxSeries, PuiseuxTerm, _extract_puiseux_terms
 
 
@@ -38,15 +39,21 @@ def _leading_zero_series(expr: sp.Expr, x: sp.Symbol) -> tuple[sp.Rational, sp.E
     lead = sp.expand(expr).as_leading_term(x)
     exponent = sp.sympify(lead.as_powers_dict().get(x, 0))
     if not exponent.is_Rational:
-        raise NotImplementedError("series reversion requires a rational leading exponent")
+        raise NotImplementedError(
+            "series reversion requires a rational leading exponent"
+        )
     exponent = sp.Rational(exponent)
     if exponent <= 0:
-        raise ValueError("local reversion requires f(x)-f(0) to vanish with positive order")
+        raise ValueError(
+            "local reversion requires f(x)-f(0) to vanish with positive order"
+        )
     coefficient = sp.simplify(lead / x**exponent)
     return exponent, coefficient
 
 
-def _series_coefficients_in_t(expr: sp.Expr, t: sp.Symbol) -> dict[sp.Rational, sp.Expr]:
+def _series_coefficients_in_t(
+    expr: sp.Expr, t: sp.Symbol
+) -> dict[sp.Rational, sp.Expr]:
     expanded = sp.expand(expr)
     grouped = {}
     for term in sp.Add.make_args(expanded):
@@ -86,7 +93,9 @@ def _lift_inverse_branch(
         # containing a_k. SymPy is used as a local Taylor/Puiseux expander here;
         # the coefficient-solving loop itself is demand-driven and has no fixed
         # oversampling ratio.
-        residual = sp.series(local_f.xreplace({x: trial}) - t**p, t, 0, p + q + k + 4).removeO()
+        residual = sp.series(
+            local_f.xreplace({x: trial}) - t**p, t, 0, p + q + k + 4
+        ).removeO()
         grouped = _series_coefficients_in_t(residual, t)
         solved = None
         for power in sorted(grouped):
@@ -118,6 +127,7 @@ def series_reversion(
     terms: int = 6,
     branch: int | None = None,
     context: AsymptoticContext | None = None,
+    assumptions: sp.Expr = sp.S.true,
 ) -> tuple[ReversionBranch, ...] | ReversionBranch:
     """Revert a local (possibly Puiseux) series ``y=f(x)``.
 
@@ -127,7 +137,8 @@ def series_reversion(
     recursively. Exact zero decisions are delegated to ``AsymptoticContext``.
     """
 
-    expr = sp.sympify(expr)
+    assumptions = normalize_assumptions(assumptions)
+    expr = sp.refine(sp.sympify(expr), assumptions)
     y = inverse_variable or sp.Symbol("y", positive=True)
     ctx = context_for(variable, point, context)
     branch_decisions = nested_branch_safety_decisions(expr, variable, point)
@@ -136,12 +147,20 @@ def series_reversion(
         base = sp.simplify(expr.subs(variable, point))
         local = sp.expand(expr.xreplace({variable: point + u}) - base)
         shifted = series_reversion(
-            local, u, y, point=0, terms=terms, branch=branch, context=AsymptoticContext(u, point=0)
+            local,
+            u,
+            y,
+            point=0,
+            terms=terms,
+            branch=branch,
+            context=AsymptoticContext(u, point=0),
         )
         seq = (shifted,) if isinstance(shifted, ReversionBranch) else shifted
         out = []
         for item in seq:
-            terms2 = tuple(PuiseuxTerm(t.exponent, t.coefficient) for t in item.series.terms)
+            terms2 = tuple(
+                PuiseuxTerm(t.exponent, t.coefficient) for t in item.series.terms
+            )
             series = PuiseuxSeries(
                 point + item.series.expr,
                 y,
@@ -191,7 +210,9 @@ def series_reversion(
     result = []
     for index, root in selected:
         choice = BranchChoice(index=index, label=f"inverse-branch-{index}")
-        formal = _lift_inverse_branch(local_f, variable, y, r, a, root, terms=terms, context=ctx)
+        formal = _lift_inverse_branch(
+            local_f, variable, y, r, a, root, terms=terms, context=ctx
+        )
         pterms = _extract_terms(formal, y)[:terms]
         ram = reduce(_lcm, (int(t.exponent.q) for t in pterms), 1)
         ps = PuiseuxSeries(sp.expand(formal + point), y, f0, pterms, ram, choice)
@@ -214,9 +235,9 @@ def series_reversion(
     return tuple(result)
 
 
-def inverse_asymptotic(
-    expr: sp.Expr,
-    variable: sp.Symbol,
+def inverse(
+    expr,
+    variable: sp.Symbol | None = None,
     inverse_variable: sp.Symbol | None = None,
     *,
     point: sp.Expr = sp.oo,
@@ -233,6 +254,15 @@ def inverse_asymptotic(
     if ``f(x)->0`` we revert ``f(1/u)`` against ``y``. The returned expression
     is mapped back to the original inverse variable.
     """
+
+    if variable is None:
+        if isinstance(expr, sp.Expr):
+            raise TypeError("variable is required when inverting a symbolic expression")
+        from .algebra import as_element
+
+        wrapped = as_element(expr)
+        result = wrapped.inverse(inverse_variable, terms=terms, branch=branch)
+        return result
 
     y = inverse_variable or sp.Symbol("y", positive=True)
     if point not in (sp.oo, -sp.oo):
@@ -265,7 +295,12 @@ def inverse_asymptotic(
         z = sp.Dummy("z", positive=True)
         local = sp.simplify(1 / transformed)
         rev = series_reversion(
-            local, u, z, terms=terms, branch=branch, context=AsymptoticContext(u, point=0)
+            local,
+            u,
+            z,
+            terms=terms,
+            branch=branch,
+            context=AsymptoticContext(u, point=0),
         )
         seq = (rev,) if isinstance(rev, ReversionBranch) else rev
         out = []
@@ -273,7 +308,9 @@ def inverse_asymptotic(
             inv_u = sp.expand(sign / item.series.truncate())
             mapped = sp.series(inv_u.xreplace({z: 1 / y}), y, sp.oo, terms).removeO()
             pterms = tuple(
-                sorted(_extract_terms(mapped, y), key=lambda t: t.exponent, reverse=True)
+                sorted(
+                    _extract_terms(mapped, y), key=lambda t: t.exponent, reverse=True
+                )
             )
             ram = reduce(_lcm, (int(t.exponent.q) for t in pterms), 1)
             ps = PuiseuxSeries(mapped, y, sp.oo, pterms, ram, item.choice)
@@ -295,14 +332,21 @@ def inverse_asymptotic(
 
     if lim == 0:
         rev = series_reversion(
-            transformed, u, y, terms=terms, branch=branch, context=AsymptoticContext(u, point=0)
+            transformed,
+            u,
+            y,
+            terms=terms,
+            branch=branch,
+            context=AsymptoticContext(u, point=0),
         )
         seq = (rev,) if isinstance(rev, ReversionBranch) else rev
         out = []
         for item in seq:
             mapped = sp.expand(sign / item.series.truncate())
             pterms = tuple(
-                sorted(_extract_terms(mapped, y), key=lambda t: t.exponent, reverse=True)
+                sorted(
+                    _extract_terms(mapped, y), key=lambda t: t.exponent, reverse=True
+                )
             )
             ram = reduce(_lcm, (int(t.exponent.q) for t in pterms), 1)
             ps = PuiseuxSeries(mapped, y, sp.S.Zero, pterms, ram, item.choice)
@@ -322,4 +366,6 @@ def inverse_asymptotic(
             )
         return out[0] if branch is not None else tuple(out)
 
-    raise NotImplementedError("inverse asymptotics requires f to tend to 0 or directed infinity")
+    raise NotImplementedError(
+        "inverse asymptotics requires f to tend to 0 or directed infinity"
+    )

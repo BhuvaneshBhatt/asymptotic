@@ -1,6 +1,6 @@
 """Stable canonicalization helpers for symbolic asymptotic certificates.
 
-The helpers deliberately avoid relying on incidental ``args`` order in unevaluated
+The helpers avoid relying on incidental ``args`` order in unevaluated
 SymPy objects.  They are conservative: ``canonical_equal`` only returns ``True``
 when structural normalization or an exact algebraic simplification proves equality.
 """
@@ -18,7 +18,9 @@ from ._symbolic_errors import SYMBOLIC_ERRORS
 def _canonical_expr(expr: sp.Basic) -> sp.Basic:
     if not expr.args:
         return expr
-    args = tuple(_canonical_expr(arg) if isinstance(arg, sp.Basic) else arg for arg in expr.args)
+    args = tuple(
+        _canonical_expr(arg) if isinstance(arg, sp.Basic) else arg for arg in expr.args
+    )
     if expr.is_Add:
         return sp.Add(*sorted(args, key=sp.default_sort_key), evaluate=False)
     if expr.is_Mul and expr.is_commutative:
@@ -55,7 +57,9 @@ def canonical_key(value: object) -> object:
         return (
             value.__class__.__module__,
             value.__class__.__qualname__,
-            tuple((f.name, canonical_key(getattr(value, f.name))) for f in fields(value)),
+            tuple(
+                (f.name, canonical_key(getattr(value, f.name))) for f in fields(value)
+            ),
         )
     if isinstance(value, Mapping):
         items = ((canonical_key(k), canonical_key(v)) for k, v in value.items())
@@ -92,5 +96,7 @@ def canonical_equal(left: object, right: object) -> bool:
         and not isinstance(left, (str, bytes))
         and not isinstance(right, (str, bytes))
     ):
-        return len(left) == len(right) and all(canonical_equal(a, b) for a, b in zip(left, right))
+        return len(left) == len(right) and all(
+            canonical_equal(a, b) for a, b in zip(left, right)
+        )
     return left == right

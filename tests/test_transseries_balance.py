@@ -2,7 +2,7 @@ import sympy as sp
 
 from asymptotic import (
     TransseriesExpansion,
-    implicit_asymptotic,
+    implicit,
 )
 from asymptotic.dominant import transseries_dominant_balance_candidates
 from asymptotic.transseries import transseries_valuation
@@ -29,14 +29,10 @@ def test_general_balance_finds_exponential_correction_scale():
     assert candidate.coefficients == (sp.Rational(1, 2),)
 
 
-def test_implicit_solver_adds_beyond_all_orders_correction_at_infinity():
+def test_implicit_solver_adds_beyond_at_infinity():
     x, y = sp.symbols("x y", positive=True)
-    branches = implicit_asymptotic(
-        y**2 - x**2 - sp.exp(-x),
-        y,
-        x,
-        point=sp.oo,
-        terms=2,
+    branches = implicit(
+        y**2 - x**2 - sp.exp(-x), y, x, point=sp.oo, terms=2, return_result=True
     )
     assert len(branches) == 2
     assert all(isinstance(branch.series, TransseriesExpansion) for branch in branches)
@@ -49,12 +45,8 @@ def test_implicit_solver_adds_beyond_all_orders_correction_at_infinity():
 
 def test_implicit_solver_handles_logarithmic_corrections():
     x, y = sp.symbols("x y", positive=True)
-    branches = implicit_asymptotic(
-        y**2 - x**2 - sp.log(x),
-        y,
-        x,
-        point=sp.oo,
-        terms=3,
+    branches = implicit(
+        y**2 - x**2 - sp.log(x), y, x, point=sp.oo, terms=3, return_result=True
     )
     positive = next(
         branch
@@ -66,8 +58,10 @@ def test_implicit_solver_handles_logarithmic_corrections():
     assert sp.simplify(got - expected) == 0
 
 
-def test_puiseux_branches_remain_puiseux_for_backward_compatibility():
+def test_puiseux_branches_keep_native_representation():
     x, y = sp.symbols("x y", positive=True)
-    branches = implicit_asymptotic(y**2 - x - x**2, y, x, terms=3)
+    branches = implicit(y**2 - x - x**2, y, x, terms=3, return_result=True)
     assert all(not branch.is_transseries for branch in branches)
-    assert {branch.series.leading_term.exponent for branch in branches} == {sp.Rational(1, 2)}
+    assert {branch.series.leading_term.exponent for branch in branches} == {
+        sp.Rational(1, 2)
+    }

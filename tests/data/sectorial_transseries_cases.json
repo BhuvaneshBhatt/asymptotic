@@ -1,0 +1,14 @@
+[
+  {"family":"exponential_dominance","expression":"exp(-1/z)","sector_center":"0","sector_opening":"pi/2","expected":"smaller"},
+  {"family":"exponential_dominance","expression":"exp(-1/z)","sector_center":"pi","sector_opening":"pi/2","expected":"larger"},
+  {"family":"exponential_dominance","expression":"exp(1/z)","sector_center":"0","sector_opening":"pi/2","expected":"larger"},
+  {"family":"exponential_dominance","expression":"exp(1/z)","sector_center":"pi","sector_opening":"pi/2","expected":"smaller"},
+  {"family":"stokes_crossing","expression":"exp(-1/z)","sector_center":"0","sector_opening":"3*pi/2","expected":"unknown"},
+  {"family":"inverse_square","expression":"exp(1/z**2)","sector_center":"0","sector_opening":"pi/4","expected":"larger"},
+  {"family":"inverse_square","expression":"exp(1/z**2)","sector_center":"pi/2","sector_opening":"pi/4","expected":"smaller"},
+  {"family":"oscillatory_boundary","expression":"exp(I/z)","sector_center":"0","sector_opening":"pi/3","expected":"unknown"},
+  {"family":"branch_log","expression":"log(z)","sector_center":"0","sector_opening":"pi/2","branch_cut":"pi","expected":"certified"},
+  {"family":"branch_log","expression":"log(z)","sector_center":"pi","sector_opening":"pi/2","branch_cut":"pi","expected":"unknown"},
+  {"family":"branch_power","expression":"z**(1/3)","sector_center":"0","sector_opening":"pi/2","branch_cut":"pi","expected":"certified"},
+  {"family":"branch_boundary","expression":"log(z)","sector_center":"0","sector_opening":"pi","branch_cut":"pi/2","expected":"certified"}
+]

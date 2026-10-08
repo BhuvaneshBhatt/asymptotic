@@ -1,7 +1,7 @@
 import sympy as sp
 
 from asymptotic import (
-    AsymptoticScale,
+    Scale,
     multiseries,
 )
 from asymptotic.multiseries import MultiseriesTerm, multiply_term_lists
@@ -11,13 +11,15 @@ def native_multiseries(*args, **kwargs):
     """Construct a multiseries with the compatibility fallback disabled."""
 
     kwargs["allow_series_fallback"] = False
-    return multiseries(*args, **kwargs)
+    return multiseries(*args, **kwargs, return_result=True)
 
 
 def test_two_scale_recursive_expansion():
     x = sp.symbols("x", positive=True)
-    scale = AsymptoticScale.from_exprs(x, [1 / sp.log(x), 1 / x])
-    ms = multiseries(sp.exp(1 / x + 1 / sp.log(x)), x, scale=scale, terms=4)
+    scale = Scale.from_exprs(x, [1 / sp.log(x), 1 / x])
+    ms = multiseries(
+        sp.exp(1 / x + 1 / sp.log(x)), x, scale=scale, terms=4, return_result=True
+    )
     top = ms.terms(3)
     assert [t.exponent for t in top] == [0, 1, 2]
     assert sp.simplify(top[0].coefficient - sp.exp(1 / sp.log(x))) == 0
@@ -42,7 +44,9 @@ def test_explicit_scale_logarithmic_example():
     x = sp.symbols("x", positive=True)
     t1 = 1 / sp.log(x)
     t2 = 1 / x
-    ms = multiseries(sp.log(1 - t1 - t2), x, scale=[t1, t2], terms=3)
+    ms = multiseries(
+        sp.log(1 - t1 - t2), x, scale=[t1, t2], terms=3, return_result=True
+    )
     top = ms.terms(2)
     assert top[0].exponent == 0
     assert sp.simplify(top[0].coefficient - sp.log(1 - t1)) == 0
@@ -54,19 +58,21 @@ def test_exponential_scale_alias_is_factored():
     x = sp.symbols("x", positive=True)
     t1 = 1 / x
     t2 = sp.exp(-x)
-    ms = multiseries(sp.exp(-2 * x + 1 / x), x, scale=[t1, t2], terms=2)
+    ms = multiseries(
+        sp.exp(-2 * x + 1 / x), x, scale=[t1, t2], terms=2, return_result=True
+    )
     top = ms.terms(1)
     assert top[0].exponent == 2
     assert sp.simplify(top[0].coefficient - sp.exp(1 / x)) == 0
 
 
-def test_book_indefinite_cancellation_example_expands_largest_scale_first():
+def test_book_indefinite_cancellation_example_scale_first():
     x = sp.symbols("x", positive=True)
     t1 = 1 / sp.log(x)
     t2 = 1 / x
     t3 = sp.exp(-x)
     expr = sp.log(1 + 1 / sp.log(x + sp.exp(-x))) - sp.log(1 + 1 / sp.log(x))
-    ms = multiseries(expr, x, scale=[t1, t2, t3], terms=2)
+    ms = multiseries(expr, x, scale=[t1, t2, t3], terms=2, return_result=True)
     top = ms.terms(1)
     assert len(top) == 1
     assert top[0].exponent == 1
@@ -76,7 +82,7 @@ def test_book_indefinite_cancellation_example_expands_largest_scale_first():
 
 def test_native_analytic_composition_uses_native_sparse_backend():
     x = sp.symbols("x", positive=True)
-    scale = AsymptoticScale.from_exprs(x, [1 / sp.log(x), 1 / x])
+    scale = Scale.from_exprs(x, [1 / sp.log(x), 1 / x])
     ms = native_multiseries(sp.exp(1 / x + 1 / sp.log(x)), x, scale=scale, terms=3)
 
     top = ms.terms(3)
@@ -84,7 +90,7 @@ def test_native_analytic_composition_uses_native_sparse_backend():
     assert sp.simplify(top[2].coefficient - sp.exp(1 / sp.log(x)) / 2) == 0
 
 
-def test_recursive_sparse_backend_handles_deep_expression_tree_with_native_sparse_backend():
+def test_sparse_backend_handles_deep_tree():
     x = sp.symbols("x", positive=True)
     z = sp.symbols("z", positive=True)
     expr = sp.exp(sp.log(2 + 1 / x) / (1 + 1 / x)) * (1 + 1 / x) ** sp.Rational(-3, 2)
@@ -98,7 +104,7 @@ def test_recursive_sparse_backend_handles_deep_expression_tree_with_native_spars
     assert sp.expand(got - expected) == 0
 
 
-def test_sparse_backend_handles_fractional_laurent_power_with_native_sparse_backend():
+def test_sparse_backend_handles_fractional_laurent_power():
     x = sp.symbols("x", positive=True)
     expr = (1 / x + 1 / x**2) ** sp.Rational(-3, 2)
 
@@ -130,7 +136,7 @@ def test_sparse_log_of_top_scale_uses_lower_scale_representation():
     assert got[2].coefficient == sp.Rational(-1, 2)
 
 
-def test_sparse_failure_dynamically_adds_exponential_scale_with_native_sparse_backend():
+def test_sparse_failure_adds_exponential_scale():
     x = sp.symbols("x", positive=True)
     expr = sp.exp(x + 1 / x)
 
@@ -256,7 +262,7 @@ def test_terminal_unsupported_obligation_is_recorded_before_fallback():
     from asymptotic.obligations import ObligationKind
 
     x = sp.symbols("x", positive=True)
-    ms = multiseries(sp.gamma(1 + 1 / x), x, scale=[1 / x], terms=3)
+    ms = multiseries(sp.gamma(1 + 1 / x), x, scale=[1 / x], terms=3, return_result=True)
     got = ms.terms(3)
 
     assert got[0].exponent == 0
@@ -270,14 +276,16 @@ def test_native_analytic_unary_functions_use_native_sparse_backend():
     expr = sp.sin(1 / x) + sp.cos(1 / x) + sp.atan(1 / x)
 
     z = sp.symbols("z")
-    expected = sp.series(sp.sin(z) + sp.cos(z) + sp.atan(z), z, 0, 5).removeO().subs(z, 1 / x)
+    expected = (
+        sp.series(sp.sin(z) + sp.cos(z) + sp.atan(z), z, 0, 5).removeO().subs(z, 1 / x)
+    )
 
     ms = native_multiseries(expr, x, scale=[1 / x], terms=5)
     got = ms.truncate(5)
     assert sp.expand(got - expected) == 0
 
 
-def test_native_hyperbolic_and_erf_composition_with_native_sparse_backend():
+def test_native_hyperbolic_and_erf_sparse_backend():
     x = sp.symbols("x", positive=True)
     expr = sp.sinh(1 / x) + sp.cosh(1 / x) + sp.erf(1 / x)
     reference = sp.series(expr, x, sp.oo, 5).removeO()

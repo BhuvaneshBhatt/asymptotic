@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from functools import reduce
 
 import sympy as sp
+from funcprops import entails, normalize_assumptions
 
 from ._integer_utils import integer_lcm as _lcm
 from ._power_simplify import analytic_powsimp, formal_powsimp
@@ -15,14 +16,13 @@ from .dominant import (
     lift_transseries_balance_branches,
     transseries_balance_terms,
 )
-from .function_properties.semantics import entails
 from .parameter_auto import (
     automatic_parameter_stratification,
     parameter_symbols,
     specialize_expression,
 )
 from .puiseux import BranchChoice, PuiseuxSeries, PuiseuxTerm, _extract_puiseux_terms
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 from .stratification import AsymptoticStratification
 from .transseries import TransseriesExpansion, TransseriesTerm
 
@@ -36,7 +36,7 @@ class ImplicitSingularityProfile:
 
     ``multiplicity`` is the first nonzero dependent derivative order of the
     local equation at the requested center.  A value greater than one marks a
-    singular implicit root and triggers Newton--Puiseux/scaling lifting.
+    singular implicit root and triggers Newton–Puiseux/scaling lifting.
     ``turning_point`` is certified when the dependent Jacobian vanishes but
     the first variable derivative does not.
     """
@@ -56,7 +56,7 @@ class ImplicitSingularityProfile:
 
     @property
     def requires_blowup(self) -> bool:
-        """Whether a singular Newton--Puiseux/scaling lift is certified necessary."""
+        """Whether a singular Newton–Puiseux/scaling lift is certified necessary."""
 
         return self.multiplicity is not None and self.multiplicity > 1
 
@@ -85,7 +85,9 @@ def _localize_implicit_equation(
         transformed, _ = sp.fraction(transformed)
     elif point == 0:
         transformed = (
-            sp.sympify(equation).subs(dependent, dependent_limit + delta).xreplace({variable: u})
+            sp.sympify(equation)
+            .subs(dependent, dependent_limit + delta)
+            .xreplace({variable: u})
         )
     else:
         transformed = (
@@ -108,7 +110,7 @@ def implicit_singularity_profile(
 ) -> ImplicitSingularityProfile:
     """Diagnose local root multiplicity, turning points, and Puiseux scales.
 
-    The routine is deliberately local and bounded.  For polynomial dependence
+    The routine is local and bounded.  For polynomial dependence
     it also records a small-degree discriminant; for analytic dependence it
     searches dependent derivatives only through ``taylor_degree``.
     """
@@ -118,7 +120,7 @@ def implicit_singularity_profile(
         equation, dependent, variable, point=point, dependent_limit=dependent_limit
     )
     ctx = AsymptoticContext(u, point=0)
-    assumptions = sp.sympify(assumptions)
+    assumptions = normalize_assumptions(assumptions)
 
     def zero_decision(value: sp.Expr) -> bool | None:
         value = sp.simplify(value)
@@ -156,7 +158,13 @@ def implicit_singularity_profile(
     jzero = zero_decision(jacobian)
     singular = True if jzero is True else False if jzero is False else None
     xzero = zero_decision(variable_derivative)
-    turning = True if singular is True and xzero is False else False if singular is False else None
+    turning = (
+        True
+        if singular is True and xzero is False
+        else False
+        if singular is False
+        else None
+    )
 
     discriminant = None
     try:
@@ -170,11 +178,18 @@ def implicit_singularity_profile(
     if singular is True:
         try:
             balances = dominant_balance_candidates(
-                local, delta, u, context=ctx, taylor_degree=taylor_degree, stratify_parameters=False
+                local,
+                delta,
+                u,
+                context=ctx,
+                taylor_degree=taylor_degree,
+                stratify_parameters=False,
             )
             if isinstance(balances, AsymptoticStratification):
                 raise TypeError("unstratified balance search returned a stratification")
-            scaling_exponents = tuple(sorted({b.exponent for b in balances if b.exponent > 0}))
+            scaling_exponents = tuple(
+                sorted({b.exponent for b in balances if b.exponent > 0})
+            )
         except (NotImplementedError, ValueError, TypeError):
             pass
 
@@ -217,12 +232,12 @@ class ImplicitAsymptoticBranch:
         return self.series.point
 
     @property
-    def remainder(self) -> AsymptoticRemainder:
+    def remainder(self) -> Remainder:
         if self.complete:
-            return AsymptoticRemainder.exact_zero(
+            return Remainder.exact_zero(
                 self.variable, self.point, source="complete implicit branch"
             )
-        return AsymptoticRemainder.unknown(
+        return Remainder.unknown(
             self.variable,
             self.point,
             source="implicit prefix; solution error requires an implicit remainder theorem",
@@ -235,11 +250,11 @@ class ImplicitAsymptoticBranch:
     def truncate(self, terms: int | None = None) -> sp.Expr:
         return self.series.truncate(terms)
 
-    def asymptotic_element(self):
+    def as_element(self):
         """View this implicit branch through the common asymptotic algebra."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self, self.variable, point=self.point)
+        return as_element(self, self.variable, point=self.point)
 
 
 def _extract_terms(expr: sp.Expr, x: sp.Expr) -> tuple[PuiseuxTerm, ...]:
@@ -251,7 +266,9 @@ def _extract_terms(expr: sp.Expr, x: sp.Expr) -> tuple[PuiseuxTerm, ...]:
     )
 
 
-def _power_monomial_exponent(monomial: sp.Expr, variable: sp.Symbol) -> sp.Rational | None:
+def _power_monomial_exponent(
+    monomial: sp.Expr, variable: sp.Symbol
+) -> sp.Rational | None:
     monomial = formal_powsimp(sp.sympify(monomial))
     power = sp.sympify(monomial.as_powers_dict().get(variable, 0))
     if not power.is_Rational:
@@ -289,7 +306,8 @@ def _build_series(
         return PuiseuxSeries(expression, variable, point, pterms, ram, choice)
 
     tterms = tuple(
-        TransseriesTerm(sp.simplify(c), formal_powsimp(m)) for c, m in zip(coefficients, monomials)
+        TransseriesTerm(sp.simplify(c), formal_powsimp(m))
+        for c, m in zip(coefficients, monomials)
     )
     return TransseriesExpansion(
         expression=expression,
@@ -300,7 +318,7 @@ def _build_series(
     )
 
 
-def _local_implicit_asymptotic(
+def _local_implicit(
     equation: sp.Expr,
     dependent: sp.Symbol,
     variable: sp.Symbol,
@@ -395,7 +413,9 @@ def _map_branch(
                 TransseriesTerm(
                     term.coefficient,
                     formal_powsimp(
-                        (old_variable**term.exponent).xreplace({old_variable: replacement})
+                        (old_variable**term.exponent).xreplace(
+                            {old_variable: replacement}
+                        )
                     ),
                 )
                 for term in item.series.terms
@@ -462,11 +482,15 @@ def _implicit_structural_coefficients(
     if point in (sp.oo, -sp.oo):
         local_variable = sp.Dummy("u", positive=True)
         sign = 1 if point is sp.oo else -1
-        transformed = sp.together(local_equation.xreplace({variable: sign / local_variable}))
+        transformed = sp.together(
+            local_equation.xreplace({variable: sign / local_variable})
+        )
         local_equation, _ = sp.fraction(transformed)
     elif point != 0:
         local_variable = sp.Dummy("u", positive=True)
-        local_equation = sp.simplify(local_equation.xreplace({variable: point + local_variable}))
+        local_equation = sp.simplify(
+            local_equation.xreplace({variable: point + local_variable})
+        )
     correction = sp.Dummy("implicit_structural_delta")
     local_equation = sp.expand(
         local_equation.subs(dependent, sp.sympify(dependent_limit) + correction)
@@ -494,7 +518,9 @@ def _implicit_structural_coefficients(
     try:
         poly = sp.Poly(local_equation, correction)
         if 2 <= poly.degree() <= 6 and sp.count_ops(local_equation) <= 80:
-            disc = sp.factor(sp.discriminant(poly.as_expr(), correction).subs(local_variable, 0))
+            disc = sp.factor(
+                sp.discriminant(poly.as_expr(), correction).subs(local_variable, 0)
+            )
             if disc != 0:
                 structural.append(disc)
     except (sp.PolynomialError, NotImplementedError, ValueError):
@@ -502,7 +528,7 @@ def _implicit_structural_coefficients(
     return tuple(structural)
 
 
-def implicit_asymptotic(
+def implicit(
     equation: sp.Expr,
     dependent: sp.Symbol,
     variable: sp.Symbol,
@@ -540,7 +566,7 @@ def implicit_asymptotic(
                 equation, dependent, variable, point, taylor_degree, dependent_limit
             )
             try:
-                generic_probe = implicit_asymptotic(
+                generic_probe = implicit(
                     equation,
                     dependent,
                     variable,
@@ -556,8 +582,12 @@ def implicit_asymptotic(
                     max_parameter_splits=max_parameter_splits,
                 )
                 if isinstance(generic_probe, AsymptoticStratification):
-                    raise TypeError("unstratified implicit probe returned a stratification")
-                branch_coefficients = [branch.leading_coefficient for branch in generic_probe]
+                    raise TypeError(
+                        "unstratified implicit probe returned a stratification"
+                    )
+                branch_coefficients = [
+                    branch.leading_coefficient for branch in generic_probe
+                ]
                 for branch in generic_probe:
                     for balance in branch.balance_path:
                         branch_coefficients.extend(balance.coefficients)
@@ -571,8 +601,10 @@ def implicit_asymptotic(
                 pass
 
             def evaluate(condition: sp.Expr) -> tuple[ImplicitAsymptoticBranch, ...]:
-                specialized = specialize_expression(equation, condition, parameters=parameters)
-                result = implicit_asymptotic(
+                specialized = specialize_expression(
+                    equation, condition, parameters=parameters
+                )
+                result = implicit(
                     specialized,
                     dependent,
                     variable,
@@ -606,7 +638,7 @@ def implicit_asymptotic(
         sign = 1 if point is sp.oo else -1
         transformed = sp.together(equation.xreplace({variable: sign / u}))
         num, _ = sp.fraction(transformed)
-        local = implicit_asymptotic(
+        local = implicit(
             num,
             dependent,
             u,
@@ -639,7 +671,7 @@ def implicit_asymptotic(
     if point != 0:
         u = sp.Dummy("u", positive=True)
         transformed = sp.simplify(equation.xreplace({variable: point + u}))
-        local = implicit_asymptotic(
+        local = implicit(
             transformed,
             dependent,
             u,
@@ -679,7 +711,7 @@ def implicit_asymptotic(
         taylor_degree=taylor_degree,
         assumptions=assumptions,
     )
-    return _local_implicit_asymptotic(
+    return _local_implicit(
         equation,
         dependent,
         variable,

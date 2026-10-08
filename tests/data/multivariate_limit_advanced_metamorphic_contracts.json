@@ -1,0 +1,7158 @@
+[
+  {
+    "id": "advmeta_comprehensive_001_glq_unitriangular",
+    "seed_id": "comprehensive_001",
+    "capability": "continuous_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_002_glq_unitriangular",
+    "seed_id": "comprehensive_002",
+    "capability": "continuous_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_002_piecewise_split",
+    "seed_id": "comprehensive_002",
+    "capability": "continuous_composition",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_002_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_002",
+    "capability": "continuous_composition",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_003_glq_unitriangular",
+    "seed_id": "comprehensive_003",
+    "capability": "continuous_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_003_negative_prerequisite",
+    "seed_id": "comprehensive_003",
+    "capability": "continuous_composition",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_004_glq_unitriangular",
+    "seed_id": "comprehensive_004",
+    "capability": "continuous_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_005_glq_unitriangular",
+    "seed_id": "comprehensive_005",
+    "capability": "removable_radial",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_006_glq_unitriangular",
+    "seed_id": "comprehensive_006",
+    "capability": "removable_radial",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_007_glq_unitriangular",
+    "seed_id": "comprehensive_007",
+    "capability": "removable_radial",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_007_negative_prerequisite",
+    "seed_id": "comprehensive_007",
+    "capability": "removable_radial",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_008_glq_unitriangular",
+    "seed_id": "comprehensive_008",
+    "capability": "removable_radial",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_008_branch_conjugation",
+    "seed_id": "comprehensive_008",
+    "capability": "removable_radial",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_009_glq_unitriangular",
+    "seed_id": "comprehensive_009",
+    "capability": "squeeze_envelope",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_010_glq_unitriangular",
+    "seed_id": "comprehensive_010",
+    "capability": "squeeze_envelope",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_011_glq_unitriangular",
+    "seed_id": "comprehensive_011",
+    "capability": "squeeze_envelope",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_011_negative_prerequisite",
+    "seed_id": "comprehensive_011",
+    "capability": "squeeze_envelope",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_012_glq_unitriangular",
+    "seed_id": "comprehensive_012",
+    "capability": "squeeze_envelope",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_013_glq_unitriangular",
+    "seed_id": "comprehensive_013",
+    "capability": "ray_conflict",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_014_glq_unitriangular",
+    "seed_id": "comprehensive_014",
+    "capability": "ray_conflict",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_015_glq_unitriangular",
+    "seed_id": "comprehensive_015",
+    "capability": "ray_conflict",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_015_negative_prerequisite",
+    "seed_id": "comprehensive_015",
+    "capability": "ray_conflict",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_016_glq_unitriangular",
+    "seed_id": "comprehensive_016",
+    "capability": "ray_conflict",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_017_glq_unitriangular",
+    "seed_id": "comprehensive_017",
+    "capability": "curved_path_detection",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_018_glq_unitriangular",
+    "seed_id": "comprehensive_018",
+    "capability": "curved_path_detection",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_019_glq_unitriangular",
+    "seed_id": "comprehensive_019",
+    "capability": "curved_path_detection",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_019_negative_prerequisite",
+    "seed_id": "comprehensive_019",
+    "capability": "curved_path_detection",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_020_glq_unitriangular",
+    "seed_id": "comprehensive_020",
+    "capability": "curved_path_detection",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_021_glq_unitriangular",
+    "seed_id": "comprehensive_021",
+    "capability": "homogeneous_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_022_glq_unitriangular",
+    "seed_id": "comprehensive_022",
+    "capability": "homogeneous_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_023_glq_unitriangular",
+    "seed_id": "comprehensive_023",
+    "capability": "homogeneous_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_023_negative_prerequisite",
+    "seed_id": "comprehensive_023",
+    "capability": "homogeneous_order",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_024_glq_unitriangular",
+    "seed_id": "comprehensive_024",
+    "capability": "homogeneous_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_025_glq_unitriangular",
+    "seed_id": "comprehensive_025",
+    "capability": "anisotropic_newton",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_025_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_025",
+    "capability": "anisotropic_newton",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_026_glq_unitriangular",
+    "seed_id": "comprehensive_026",
+    "capability": "anisotropic_newton",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_026_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_026",
+    "capability": "anisotropic_newton",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_027_glq_unitriangular",
+    "seed_id": "comprehensive_027",
+    "capability": "anisotropic_newton",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_027_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_027",
+    "capability": "anisotropic_newton",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_027_negative_prerequisite",
+    "seed_id": "comprehensive_027",
+    "capability": "anisotropic_newton",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_028_glq_unitriangular",
+    "seed_id": "comprehensive_028",
+    "capability": "anisotropic_newton",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_028_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_028",
+    "capability": "anisotropic_newton",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_029_glq_unitriangular",
+    "seed_id": "comprehensive_029",
+    "capability": "bounded_oscillation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_030_glq_unitriangular",
+    "seed_id": "comprehensive_030",
+    "capability": "bounded_oscillation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_031_glq_unitriangular",
+    "seed_id": "comprehensive_031",
+    "capability": "bounded_oscillation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_031_negative_prerequisite",
+    "seed_id": "comprehensive_031",
+    "capability": "bounded_oscillation",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_032_glq_unitriangular",
+    "seed_id": "comprehensive_032",
+    "capability": "bounded_oscillation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_033_glq_unitriangular",
+    "seed_id": "comprehensive_033",
+    "capability": "oscillatory_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_034_glq_unitriangular",
+    "seed_id": "comprehensive_034",
+    "capability": "oscillatory_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_035_glq_unitriangular",
+    "seed_id": "comprehensive_035",
+    "capability": "oscillatory_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_035_negative_prerequisite",
+    "seed_id": "comprehensive_035",
+    "capability": "oscillatory_paths",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_036_glq_unitriangular",
+    "seed_id": "comprehensive_036",
+    "capability": "oscillatory_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_037_glq_unitriangular",
+    "seed_id": "comprehensive_037",
+    "capability": "rational_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_038_glq_unitriangular",
+    "seed_id": "comprehensive_038",
+    "capability": "rational_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_039_glq_unitriangular",
+    "seed_id": "comprehensive_039",
+    "capability": "rational_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_039_negative_prerequisite",
+    "seed_id": "comprehensive_039",
+    "capability": "rational_poles",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_040_glq_unitriangular",
+    "seed_id": "comprehensive_040",
+    "capability": "rational_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_041_glq_unitriangular",
+    "seed_id": "comprehensive_041",
+    "capability": "domain_boundary",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_041_domain_double_negation",
+    "seed_id": "comprehensive_041",
+    "capability": "domain_boundary",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>=y))"
+  },
+  {
+    "id": "advmeta_comprehensive_042_glq_unitriangular",
+    "seed_id": "comprehensive_042",
+    "capability": "domain_boundary",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_042_domain_double_negation",
+    "seed_id": "comprehensive_042",
+    "capability": "domain_boundary",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(y>=0))"
+  },
+  {
+    "id": "advmeta_comprehensive_043_glq_unitriangular",
+    "seed_id": "comprehensive_043",
+    "capability": "domain_boundary",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_043_domain_double_negation",
+    "seed_id": "comprehensive_043",
+    "capability": "domain_boundary",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(a*x>=y))"
+  },
+  {
+    "id": "advmeta_comprehensive_043_negative_prerequisite",
+    "seed_id": "comprehensive_043",
+    "capability": "domain_boundary",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_044_glq_unitriangular",
+    "seed_id": "comprehensive_044",
+    "capability": "domain_boundary",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_044_domain_double_negation",
+    "seed_id": "comprehensive_044",
+    "capability": "domain_boundary",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>=1))"
+  },
+  {
+    "id": "advmeta_comprehensive_045_glq_unitriangular",
+    "seed_id": "comprehensive_045",
+    "capability": "domain_equality",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_045_domain_double_negation",
+    "seed_id": "comprehensive_045",
+    "capability": "domain_equality",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y,-x)))"
+  },
+  {
+    "id": "advmeta_comprehensive_046_glq_unitriangular",
+    "seed_id": "comprehensive_046",
+    "capability": "domain_equality",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_046_domain_double_negation",
+    "seed_id": "comprehensive_046",
+    "capability": "domain_equality",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_047_glq_unitriangular",
+    "seed_id": "comprehensive_047",
+    "capability": "domain_equality",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_047_domain_double_negation",
+    "seed_id": "comprehensive_047",
+    "capability": "domain_equality",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**3,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_047_negative_prerequisite",
+    "seed_id": "comprehensive_047",
+    "capability": "domain_equality",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_048_glq_unitriangular",
+    "seed_id": "comprehensive_048",
+    "capability": "domain_equality",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_048_domain_double_negation",
+    "seed_id": "comprehensive_048",
+    "capability": "domain_equality",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_049_glq_unitriangular",
+    "seed_id": "comprehensive_049",
+    "capability": "piecewise_accumulation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_049_piecewise_split",
+    "seed_id": "comprehensive_049",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_049_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_049",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_050_glq_unitriangular",
+    "seed_id": "comprehensive_050",
+    "capability": "piecewise_accumulation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_050_piecewise_split",
+    "seed_id": "comprehensive_050",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_050_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_050",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_051_glq_unitriangular",
+    "seed_id": "comprehensive_051",
+    "capability": "piecewise_accumulation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_051_piecewise_split",
+    "seed_id": "comprehensive_051",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_051_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_051",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_051_negative_prerequisite",
+    "seed_id": "comprehensive_051",
+    "capability": "piecewise_accumulation",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_052_glq_unitriangular",
+    "seed_id": "comprehensive_052",
+    "capability": "piecewise_accumulation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_052_piecewise_split",
+    "seed_id": "comprehensive_052",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_052_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_052",
+    "capability": "piecewise_accumulation",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_053_glq_unitriangular",
+    "seed_id": "comprehensive_053",
+    "capability": "piecewise_priority",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_053_piecewise_split",
+    "seed_id": "comprehensive_053",
+    "capability": "piecewise_priority",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_053_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_053",
+    "capability": "piecewise_priority",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_054_glq_unitriangular",
+    "seed_id": "comprehensive_054",
+    "capability": "piecewise_priority",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_054_piecewise_split",
+    "seed_id": "comprehensive_054",
+    "capability": "piecewise_priority",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_054_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_054",
+    "capability": "piecewise_priority",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_055_glq_unitriangular",
+    "seed_id": "comprehensive_055",
+    "capability": "piecewise_priority",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_055_piecewise_split",
+    "seed_id": "comprehensive_055",
+    "capability": "piecewise_priority",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_055_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_055",
+    "capability": "piecewise_priority",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_055_negative_prerequisite",
+    "seed_id": "comprehensive_055",
+    "capability": "piecewise_priority",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_056_glq_unitriangular",
+    "seed_id": "comprehensive_056",
+    "capability": "piecewise_priority",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_056_piecewise_split",
+    "seed_id": "comprehensive_056",
+    "capability": "piecewise_priority",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_056_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_056",
+    "capability": "piecewise_priority",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_057_glq_unitriangular",
+    "seed_id": "comprehensive_057",
+    "capability": "parameter_threshold",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_058_glq_unitriangular",
+    "seed_id": "comprehensive_058",
+    "capability": "parameter_threshold",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_059_glq_unitriangular",
+    "seed_id": "comprehensive_059",
+    "capability": "parameter_threshold",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_059_negative_prerequisite",
+    "seed_id": "comprehensive_059",
+    "capability": "parameter_threshold",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_060_glq_unitriangular",
+    "seed_id": "comprehensive_060",
+    "capability": "parameter_threshold",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_061_glq_unitriangular",
+    "seed_id": "comprehensive_061",
+    "capability": "parameter_fibers",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_062_glq_unitriangular",
+    "seed_id": "comprehensive_062",
+    "capability": "parameter_fibers",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_063_glq_unitriangular",
+    "seed_id": "comprehensive_063",
+    "capability": "parameter_fibers",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_063_negative_prerequisite",
+    "seed_id": "comprehensive_063",
+    "capability": "parameter_fibers",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_064_glq_unitriangular",
+    "seed_id": "comprehensive_064",
+    "capability": "parameter_fibers",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_067_negative_prerequisite",
+    "seed_id": "comprehensive_067",
+    "capability": "exp_vs_power",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_069_branch_conjugation",
+    "seed_id": "comprehensive_069",
+    "capability": "power_vs_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_070_branch_conjugation",
+    "seed_id": "comprehensive_070",
+    "capability": "power_vs_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_071_branch_conjugation",
+    "seed_id": "comprehensive_071",
+    "capability": "power_vs_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_071_negative_prerequisite",
+    "seed_id": "comprehensive_071",
+    "capability": "power_vs_log",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_072_branch_conjugation",
+    "seed_id": "comprehensive_072",
+    "capability": "power_vs_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_075_negative_prerequisite",
+    "seed_id": "comprehensive_075",
+    "capability": "nested_exp_log",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_078_glq_unitriangular",
+    "seed_id": "comprehensive_078",
+    "capability": "relative_growth",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_079_glq_unitriangular",
+    "seed_id": "comprehensive_079",
+    "capability": "relative_growth",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_079_negative_prerequisite",
+    "seed_id": "comprehensive_079",
+    "capability": "relative_growth",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_080_glq_unitriangular",
+    "seed_id": "comprehensive_080",
+    "capability": "relative_growth",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_080_domain_double_negation",
+    "seed_id": "comprehensive_080",
+    "capability": "relative_growth",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>0 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_080_branch_conjugation",
+    "seed_id": "comprehensive_080",
+    "capability": "relative_growth",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_081_glq_unitriangular",
+    "seed_id": "comprehensive_081",
+    "capability": "complex_argument",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_081_branch_conjugation",
+    "seed_id": "comprehensive_081",
+    "capability": "complex_argument",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_082_glq_unitriangular",
+    "seed_id": "comprehensive_082",
+    "capability": "complex_argument",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_082_branch_conjugation",
+    "seed_id": "comprehensive_082",
+    "capability": "complex_argument",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_083_glq_unitriangular",
+    "seed_id": "comprehensive_083",
+    "capability": "complex_argument",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_083_branch_conjugation",
+    "seed_id": "comprehensive_083",
+    "capability": "complex_argument",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_083_negative_prerequisite",
+    "seed_id": "comprehensive_083",
+    "capability": "complex_argument",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_084_glq_unitriangular",
+    "seed_id": "comprehensive_084",
+    "capability": "complex_argument",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_084_branch_conjugation",
+    "seed_id": "comprehensive_084",
+    "capability": "complex_argument",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_085_glq_unitriangular",
+    "seed_id": "comprehensive_085",
+    "capability": "complex_log",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_085_branch_conjugation",
+    "seed_id": "comprehensive_085",
+    "capability": "complex_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_086_glq_unitriangular",
+    "seed_id": "comprehensive_086",
+    "capability": "complex_log",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_086_branch_conjugation",
+    "seed_id": "comprehensive_086",
+    "capability": "complex_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_087_glq_unitriangular",
+    "seed_id": "comprehensive_087",
+    "capability": "complex_log",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_087_branch_conjugation",
+    "seed_id": "comprehensive_087",
+    "capability": "complex_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_087_negative_prerequisite",
+    "seed_id": "comprehensive_087",
+    "capability": "complex_log",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_088_glq_unitriangular",
+    "seed_id": "comprehensive_088",
+    "capability": "complex_log",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_088_branch_conjugation",
+    "seed_id": "comprehensive_088",
+    "capability": "complex_log",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_089_glq_unitriangular",
+    "seed_id": "comprehensive_089",
+    "capability": "fractional_power",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_089_branch_conjugation",
+    "seed_id": "comprehensive_089",
+    "capability": "fractional_power",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_090_glq_unitriangular",
+    "seed_id": "comprehensive_090",
+    "capability": "fractional_power",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_090_branch_conjugation",
+    "seed_id": "comprehensive_090",
+    "capability": "fractional_power",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_091_glq_unitriangular",
+    "seed_id": "comprehensive_091",
+    "capability": "fractional_power",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_091_negative_prerequisite",
+    "seed_id": "comprehensive_091",
+    "capability": "fractional_power",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_092_glq_unitriangular",
+    "seed_id": "comprehensive_092",
+    "capability": "fractional_power",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_092_branch_conjugation",
+    "seed_id": "comprehensive_092",
+    "capability": "fractional_power",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_093_glq_unitriangular",
+    "seed_id": "comprehensive_093",
+    "capability": "branch_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_093_branch_conjugation",
+    "seed_id": "comprehensive_093",
+    "capability": "branch_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_094_glq_unitriangular",
+    "seed_id": "comprehensive_094",
+    "capability": "branch_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_094_branch_conjugation",
+    "seed_id": "comprehensive_094",
+    "capability": "branch_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_095_glq_unitriangular",
+    "seed_id": "comprehensive_095",
+    "capability": "branch_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_095_branch_conjugation",
+    "seed_id": "comprehensive_095",
+    "capability": "branch_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_095_negative_prerequisite",
+    "seed_id": "comprehensive_095",
+    "capability": "branch_monodromy",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_096_glq_unitriangular",
+    "seed_id": "comprehensive_096",
+    "capability": "branch_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_096_branch_conjugation",
+    "seed_id": "comprehensive_096",
+    "capability": "branch_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_097_glq_unitriangular",
+    "seed_id": "comprehensive_097",
+    "capability": "vector_componentwise",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_097_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_097",
+    "capability": "vector_componentwise",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_098_glq_unitriangular",
+    "seed_id": "comprehensive_098",
+    "capability": "vector_componentwise",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_098_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_098",
+    "capability": "vector_componentwise",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_099_glq_unitriangular",
+    "seed_id": "comprehensive_099",
+    "capability": "vector_componentwise",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_099_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_099",
+    "capability": "vector_componentwise",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_099_negative_prerequisite",
+    "seed_id": "comprehensive_099",
+    "capability": "vector_componentwise",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_100_glq_unitriangular",
+    "seed_id": "comprehensive_100",
+    "capability": "vector_componentwise",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_100_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_100",
+    "capability": "vector_componentwise",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_101_glq_unitriangular",
+    "seed_id": "comprehensive_101",
+    "capability": "joint_cluster",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_101_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_101",
+    "capability": "joint_cluster",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_102_glq_unitriangular",
+    "seed_id": "comprehensive_102",
+    "capability": "joint_cluster",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_102_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_102",
+    "capability": "joint_cluster",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_103_glq_unitriangular",
+    "seed_id": "comprehensive_103",
+    "capability": "joint_cluster",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_103_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_103",
+    "capability": "joint_cluster",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_103_negative_prerequisite",
+    "seed_id": "comprehensive_103",
+    "capability": "joint_cluster",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_104_glq_unitriangular",
+    "seed_id": "comprehensive_104",
+    "capability": "joint_cluster",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_104_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_104",
+    "capability": "joint_cluster",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_105_glq_unitriangular",
+    "seed_id": "comprehensive_105",
+    "capability": "higher_dim_squeeze",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_106_glq_unitriangular",
+    "seed_id": "comprehensive_106",
+    "capability": "higher_dim_squeeze",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_107_glq_unitriangular",
+    "seed_id": "comprehensive_107",
+    "capability": "higher_dim_squeeze",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_107_negative_prerequisite",
+    "seed_id": "comprehensive_107",
+    "capability": "higher_dim_squeeze",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_108_glq_unitriangular",
+    "seed_id": "comprehensive_108",
+    "capability": "higher_dim_squeeze",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_109_glq_unitriangular",
+    "seed_id": "comprehensive_109",
+    "capability": "higher_dim_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_110_glq_unitriangular",
+    "seed_id": "comprehensive_110",
+    "capability": "higher_dim_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_111_glq_unitriangular",
+    "seed_id": "comprehensive_111",
+    "capability": "higher_dim_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_111_negative_prerequisite",
+    "seed_id": "comprehensive_111",
+    "capability": "higher_dim_paths",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_112_glq_unitriangular",
+    "seed_id": "comprehensive_112",
+    "capability": "higher_dim_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_113_glq_unitriangular",
+    "seed_id": "comprehensive_113",
+    "capability": "special_bessel",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_114_glq_unitriangular",
+    "seed_id": "comprehensive_114",
+    "capability": "special_bessel",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_115_glq_unitriangular",
+    "seed_id": "comprehensive_115",
+    "capability": "special_bessel",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_115_negative_prerequisite",
+    "seed_id": "comprehensive_115",
+    "capability": "special_bessel",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_116_glq_unitriangular",
+    "seed_id": "comprehensive_116",
+    "capability": "special_bessel",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_117_glq_unitriangular",
+    "seed_id": "comprehensive_117",
+    "capability": "special_erf",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_118_glq_unitriangular",
+    "seed_id": "comprehensive_118",
+    "capability": "special_erf",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_119_glq_unitriangular",
+    "seed_id": "comprehensive_119",
+    "capability": "special_erf",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_119_negative_prerequisite",
+    "seed_id": "comprehensive_119",
+    "capability": "special_erf",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_120_glq_unitriangular",
+    "seed_id": "comprehensive_120",
+    "capability": "special_erf",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_121_glq_unitriangular",
+    "seed_id": "comprehensive_121",
+    "capability": "absolute_value",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_122_glq_unitriangular",
+    "seed_id": "comprehensive_122",
+    "capability": "absolute_value",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_123_glq_unitriangular",
+    "seed_id": "comprehensive_123",
+    "capability": "absolute_value",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_123_negative_prerequisite",
+    "seed_id": "comprehensive_123",
+    "capability": "absolute_value",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_124_glq_unitriangular",
+    "seed_id": "comprehensive_124",
+    "capability": "absolute_value",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_125_glq_unitriangular",
+    "seed_id": "comprehensive_125",
+    "capability": "discontinuous_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_126_glq_unitriangular",
+    "seed_id": "comprehensive_126",
+    "capability": "discontinuous_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_127_glq_unitriangular",
+    "seed_id": "comprehensive_127",
+    "capability": "discontinuous_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_127_negative_prerequisite",
+    "seed_id": "comprehensive_127",
+    "capability": "discontinuous_maps",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_128_glq_unitriangular",
+    "seed_id": "comprehensive_128",
+    "capability": "discontinuous_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_129_glq_unitriangular",
+    "seed_id": "comprehensive_129",
+    "capability": "modular_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_130_glq_unitriangular",
+    "seed_id": "comprehensive_130",
+    "capability": "modular_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_131_glq_unitriangular",
+    "seed_id": "comprehensive_131",
+    "capability": "modular_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_131_negative_prerequisite",
+    "seed_id": "comprehensive_131",
+    "capability": "modular_maps",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_132_glq_unitriangular",
+    "seed_id": "comprehensive_132",
+    "capability": "modular_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_133_glq_unitriangular",
+    "seed_id": "comprehensive_133",
+    "capability": "translated_targets",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_134_glq_unitriangular",
+    "seed_id": "comprehensive_134",
+    "capability": "translated_targets",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_135_glq_unitriangular",
+    "seed_id": "comprehensive_135",
+    "capability": "translated_targets",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_135_negative_prerequisite",
+    "seed_id": "comprehensive_135",
+    "capability": "translated_targets",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_136_glq_unitriangular",
+    "seed_id": "comprehensive_136",
+    "capability": "translated_targets",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_137_glq_unitriangular",
+    "seed_id": "comprehensive_137",
+    "capability": "real_roots",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_137_branch_conjugation",
+    "seed_id": "comprehensive_137",
+    "capability": "real_roots",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_138_glq_unitriangular",
+    "seed_id": "comprehensive_138",
+    "capability": "real_roots",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_138_branch_conjugation",
+    "seed_id": "comprehensive_138",
+    "capability": "real_roots",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_139_glq_unitriangular",
+    "seed_id": "comprehensive_139",
+    "capability": "real_roots",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_139_negative_prerequisite",
+    "seed_id": "comprehensive_139",
+    "capability": "real_roots",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_140_glq_unitriangular",
+    "seed_id": "comprehensive_140",
+    "capability": "real_roots",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_140_branch_conjugation",
+    "seed_id": "comprehensive_140",
+    "capability": "real_roots",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_141_glq_unitriangular",
+    "seed_id": "comprehensive_141",
+    "capability": "normalized_derivatives",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_142_glq_unitriangular",
+    "seed_id": "comprehensive_142",
+    "capability": "normalized_derivatives",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_143_glq_unitriangular",
+    "seed_id": "comprehensive_143",
+    "capability": "normalized_derivatives",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_143_negative_prerequisite",
+    "seed_id": "comprehensive_143",
+    "capability": "normalized_derivatives",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_144_glq_unitriangular",
+    "seed_id": "comprehensive_144",
+    "capability": "normalized_derivatives",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_145_glq_unitriangular",
+    "seed_id": "comprehensive_145",
+    "capability": "cusp_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_145_domain_double_negation",
+    "seed_id": "comprehensive_145",
+    "capability": "cusp_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_145_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_145",
+    "capability": "cusp_domains",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_146_glq_unitriangular",
+    "seed_id": "comprehensive_146",
+    "capability": "cusp_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_146_domain_double_negation",
+    "seed_id": "comprehensive_146",
+    "capability": "cusp_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_146_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_146",
+    "capability": "cusp_domains",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_147_glq_unitriangular",
+    "seed_id": "comprehensive_147",
+    "capability": "cusp_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_147_domain_double_negation",
+    "seed_id": "comprehensive_147",
+    "capability": "cusp_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_147_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_147",
+    "capability": "cusp_domains",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_147_negative_prerequisite",
+    "seed_id": "comprehensive_147",
+    "capability": "cusp_domains",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_148_glq_unitriangular",
+    "seed_id": "comprehensive_148",
+    "capability": "cusp_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_148_domain_double_negation",
+    "seed_id": "comprehensive_148",
+    "capability": "cusp_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**3 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_148_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_148",
+    "capability": "cusp_domains",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_149_glq_unitriangular",
+    "seed_id": "comprehensive_149",
+    "capability": "deleted_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_149_domain_double_negation",
+    "seed_id": "comprehensive_149",
+    "capability": "deleted_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_150_glq_unitriangular",
+    "seed_id": "comprehensive_150",
+    "capability": "deleted_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_150_domain_double_negation",
+    "seed_id": "comprehensive_150",
+    "capability": "deleted_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_151_glq_unitriangular",
+    "seed_id": "comprehensive_151",
+    "capability": "deleted_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_151_domain_double_negation",
+    "seed_id": "comprehensive_151",
+    "capability": "deleted_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_151_negative_prerequisite",
+    "seed_id": "comprehensive_151",
+    "capability": "deleted_varieties",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_152_glq_unitriangular",
+    "seed_id": "comprehensive_152",
+    "capability": "deleted_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_152_domain_double_negation",
+    "seed_id": "comprehensive_152",
+    "capability": "deleted_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x**2-y**2,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_153_projective_reciprocal",
+    "seed_id": "comprehensive_153",
+    "capability": "infinite_targets",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_154_projective_reciprocal",
+    "seed_id": "comprehensive_154",
+    "capability": "infinite_targets",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_155_projective_reciprocal",
+    "seed_id": "comprehensive_155",
+    "capability": "infinite_targets",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_155_negative_prerequisite",
+    "seed_id": "comprehensive_155",
+    "capability": "infinite_targets",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_156_projective_reciprocal",
+    "seed_id": "comprehensive_156",
+    "capability": "infinite_targets",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_157_glq_unitriangular",
+    "seed_id": "comprehensive_157",
+    "capability": "nonalgebraic_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_158_glq_unitriangular",
+    "seed_id": "comprehensive_158",
+    "capability": "nonalgebraic_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_159_glq_unitriangular",
+    "seed_id": "comprehensive_159",
+    "capability": "nonalgebraic_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_159_negative_prerequisite",
+    "seed_id": "comprehensive_159",
+    "capability": "nonalgebraic_paths",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_160_glq_unitriangular",
+    "seed_id": "comprehensive_160",
+    "capability": "nonalgebraic_paths",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_161_glq_unitriangular",
+    "seed_id": "comprehensive_161",
+    "capability": "polar_angular",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_162_glq_unitriangular",
+    "seed_id": "comprehensive_162",
+    "capability": "polar_angular",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_163_glq_unitriangular",
+    "seed_id": "comprehensive_163",
+    "capability": "polar_angular",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_163_branch_conjugation",
+    "seed_id": "comprehensive_163",
+    "capability": "polar_angular",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_163_negative_prerequisite",
+    "seed_id": "comprehensive_163",
+    "capability": "polar_angular",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_164_glq_unitriangular",
+    "seed_id": "comprehensive_164",
+    "capability": "polar_angular",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_164_branch_conjugation",
+    "seed_id": "comprehensive_164",
+    "capability": "polar_angular",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_165_glq_unitriangular",
+    "seed_id": "comprehensive_165",
+    "capability": "principal_cut_sides",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_165_branch_conjugation",
+    "seed_id": "comprehensive_165",
+    "capability": "principal_cut_sides",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_166_glq_unitriangular",
+    "seed_id": "comprehensive_166",
+    "capability": "principal_cut_sides",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_166_branch_conjugation",
+    "seed_id": "comprehensive_166",
+    "capability": "principal_cut_sides",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_167_glq_unitriangular",
+    "seed_id": "comprehensive_167",
+    "capability": "principal_cut_sides",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_167_branch_conjugation",
+    "seed_id": "comprehensive_167",
+    "capability": "principal_cut_sides",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_167_negative_prerequisite",
+    "seed_id": "comprehensive_167",
+    "capability": "principal_cut_sides",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_168_glq_unitriangular",
+    "seed_id": "comprehensive_168",
+    "capability": "principal_cut_sides",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_168_branch_conjugation",
+    "seed_id": "comprehensive_168",
+    "capability": "principal_cut_sides",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_169_glq_unitriangular",
+    "seed_id": "comprehensive_169",
+    "capability": "independent_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_169_branch_conjugation",
+    "seed_id": "comprehensive_169",
+    "capability": "independent_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_170_glq_unitriangular",
+    "seed_id": "comprehensive_170",
+    "capability": "independent_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_170_branch_conjugation",
+    "seed_id": "comprehensive_170",
+    "capability": "independent_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_171_glq_unitriangular",
+    "seed_id": "comprehensive_171",
+    "capability": "independent_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_171_branch_conjugation",
+    "seed_id": "comprehensive_171",
+    "capability": "independent_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_171_negative_prerequisite",
+    "seed_id": "comprehensive_171",
+    "capability": "independent_monodromy",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_172_glq_unitriangular",
+    "seed_id": "comprehensive_172",
+    "capability": "independent_monodromy",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_172_branch_conjugation",
+    "seed_id": "comprehensive_172",
+    "capability": "independent_monodromy",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_173_glq_unitriangular",
+    "seed_id": "comprehensive_173",
+    "capability": "branch_point_radial_winding",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_173_branch_conjugation",
+    "seed_id": "comprehensive_173",
+    "capability": "branch_point_radial_winding",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_174_glq_unitriangular",
+    "seed_id": "comprehensive_174",
+    "capability": "branch_point_radial_winding",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_174_branch_conjugation",
+    "seed_id": "comprehensive_174",
+    "capability": "branch_point_radial_winding",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_175_glq_unitriangular",
+    "seed_id": "comprehensive_175",
+    "capability": "branch_point_radial_winding",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_175_branch_conjugation",
+    "seed_id": "comprehensive_175",
+    "capability": "branch_point_radial_winding",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_175_negative_prerequisite",
+    "seed_id": "comprehensive_175",
+    "capability": "branch_point_radial_winding",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_176_glq_unitriangular",
+    "seed_id": "comprehensive_176",
+    "capability": "branch_point_radial_winding",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_176_branch_conjugation",
+    "seed_id": "comprehensive_176",
+    "capability": "branch_point_radial_winding",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_177_glq_unitriangular",
+    "seed_id": "comprehensive_177",
+    "capability": "piecewise_boundary_intersections",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_177_piecewise_split",
+    "seed_id": "comprehensive_177",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_177_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_177",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_178_glq_unitriangular",
+    "seed_id": "comprehensive_178",
+    "capability": "piecewise_boundary_intersections",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_178_piecewise_split",
+    "seed_id": "comprehensive_178",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_178_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_178",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_179_glq_unitriangular",
+    "seed_id": "comprehensive_179",
+    "capability": "piecewise_boundary_intersections",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_179_piecewise_split",
+    "seed_id": "comprehensive_179",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_179_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_179",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_179_negative_prerequisite",
+    "seed_id": "comprehensive_179",
+    "capability": "piecewise_boundary_intersections",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_180_glq_unitriangular",
+    "seed_id": "comprehensive_180",
+    "capability": "piecewise_boundary_intersections",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_180_piecewise_split",
+    "seed_id": "comprehensive_180",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_180_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_180",
+    "capability": "piecewise_boundary_intersections",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_181_glq_unitriangular",
+    "seed_id": "comprehensive_181",
+    "capability": "nonaccumulating_pieces",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_181_piecewise_split",
+    "seed_id": "comprehensive_181",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_181_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_181",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_182_glq_unitriangular",
+    "seed_id": "comprehensive_182",
+    "capability": "nonaccumulating_pieces",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_182_piecewise_split",
+    "seed_id": "comprehensive_182",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_182_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_182",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_183_glq_unitriangular",
+    "seed_id": "comprehensive_183",
+    "capability": "nonaccumulating_pieces",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_183_piecewise_split",
+    "seed_id": "comprehensive_183",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_183_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_183",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_183_negative_prerequisite",
+    "seed_id": "comprehensive_183",
+    "capability": "nonaccumulating_pieces",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_184_glq_unitriangular",
+    "seed_id": "comprehensive_184",
+    "capability": "nonaccumulating_pieces",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_184_piecewise_split",
+    "seed_id": "comprehensive_184",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_split",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_184_piecewise_nonaccumulating",
+    "seed_id": "comprehensive_184",
+    "capability": "nonaccumulating_pieces",
+    "family": "piecewise_nonaccumulating",
+    "oracle": "SAME_RESULT"
+  },
+  {
+    "id": "advmeta_comprehensive_185_glq_unitriangular",
+    "seed_id": "comprehensive_185",
+    "capability": "disconnected_approach_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_185_domain_double_negation",
+    "seed_id": "comprehensive_185",
+    "capability": "disconnected_approach_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not((x>0) | (x<0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_186_glq_unitriangular",
+    "seed_id": "comprehensive_186",
+    "capability": "disconnected_approach_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_186_domain_double_negation",
+    "seed_id": "comprehensive_186",
+    "capability": "disconnected_approach_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not((x>0) | (x<0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_187_glq_unitriangular",
+    "seed_id": "comprehensive_187",
+    "capability": "disconnected_approach_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_187_domain_double_negation",
+    "seed_id": "comprehensive_187",
+    "capability": "disconnected_approach_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not((x*y>0) | (x*y<0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_187_negative_prerequisite",
+    "seed_id": "comprehensive_187",
+    "capability": "disconnected_approach_domains",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_188_glq_unitriangular",
+    "seed_id": "comprehensive_188",
+    "capability": "disconnected_approach_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_188_domain_double_negation",
+    "seed_id": "comprehensive_188",
+    "capability": "disconnected_approach_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not((x>0) | (x<0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_189_glq_unitriangular",
+    "seed_id": "comprehensive_189",
+    "capability": "strict_weak_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_189_domain_double_negation",
+    "seed_id": "comprehensive_189",
+    "capability": "strict_weak_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>=0))"
+  },
+  {
+    "id": "advmeta_comprehensive_190_glq_unitriangular",
+    "seed_id": "comprehensive_190",
+    "capability": "strict_weak_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_190_domain_double_negation",
+    "seed_id": "comprehensive_190",
+    "capability": "strict_weak_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>=0))"
+  },
+  {
+    "id": "advmeta_comprehensive_191_glq_unitriangular",
+    "seed_id": "comprehensive_191",
+    "capability": "strict_weak_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_191_domain_double_negation",
+    "seed_id": "comprehensive_191",
+    "capability": "strict_weak_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>a*y))"
+  },
+  {
+    "id": "advmeta_comprehensive_191_negative_prerequisite",
+    "seed_id": "comprehensive_191",
+    "capability": "strict_weak_domains",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_192_glq_unitriangular",
+    "seed_id": "comprehensive_192",
+    "capability": "strict_weak_domains",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_192_domain_double_negation",
+    "seed_id": "comprehensive_192",
+    "capability": "strict_weak_domains",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_193_glq_unitriangular",
+    "seed_id": "comprehensive_193",
+    "capability": "singular_domain_boundaries",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_193_domain_double_negation",
+    "seed_id": "comprehensive_193",
+    "capability": "singular_domain_boundaries",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_194_glq_unitriangular",
+    "seed_id": "comprehensive_194",
+    "capability": "singular_domain_boundaries",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_194_domain_double_negation",
+    "seed_id": "comprehensive_194",
+    "capability": "singular_domain_boundaries",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_195_glq_unitriangular",
+    "seed_id": "comprehensive_195",
+    "capability": "singular_domain_boundaries",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_195_domain_double_negation",
+    "seed_id": "comprehensive_195",
+    "capability": "singular_domain_boundaries",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**2 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_195_negative_prerequisite",
+    "seed_id": "comprehensive_195",
+    "capability": "singular_domain_boundaries",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_196_glq_unitriangular",
+    "seed_id": "comprehensive_196",
+    "capability": "singular_domain_boundaries",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_196_domain_double_negation",
+    "seed_id": "comprehensive_196",
+    "capability": "singular_domain_boundaries",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Abs(x)<=y**3 & y>0))"
+  },
+  {
+    "id": "advmeta_comprehensive_197_glq_unitriangular",
+    "seed_id": "comprehensive_197",
+    "capability": "denominator_strata",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_198_glq_unitriangular",
+    "seed_id": "comprehensive_198",
+    "capability": "denominator_strata",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_199_glq_unitriangular",
+    "seed_id": "comprehensive_199",
+    "capability": "denominator_strata",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_199_negative_prerequisite",
+    "seed_id": "comprehensive_199",
+    "capability": "denominator_strata",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_200_glq_unitriangular",
+    "seed_id": "comprehensive_200",
+    "capability": "denominator_strata",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_201_glq_unitriangular",
+    "seed_id": "comprehensive_201",
+    "capability": "deleted_variety_cancellation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_201_domain_double_negation",
+    "seed_id": "comprehensive_201",
+    "capability": "deleted_variety_cancellation",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x,y)))"
+  },
+  {
+    "id": "advmeta_comprehensive_202_glq_unitriangular",
+    "seed_id": "comprehensive_202",
+    "capability": "deleted_variety_cancellation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_202_domain_double_negation",
+    "seed_id": "comprehensive_202",
+    "capability": "deleted_variety_cancellation",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x,y)))"
+  },
+  {
+    "id": "advmeta_comprehensive_203_glq_unitriangular",
+    "seed_id": "comprehensive_203",
+    "capability": "deleted_variety_cancellation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_203_domain_double_negation",
+    "seed_id": "comprehensive_203",
+    "capability": "deleted_variety_cancellation",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x,y)))"
+  },
+  {
+    "id": "advmeta_comprehensive_203_negative_prerequisite",
+    "seed_id": "comprehensive_203",
+    "capability": "deleted_variety_cancellation",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_204_glq_unitriangular",
+    "seed_id": "comprehensive_204",
+    "capability": "deleted_variety_cancellation",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_204_domain_double_negation",
+    "seed_id": "comprehensive_204",
+    "capability": "deleted_variety_cancellation",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x,y)))"
+  },
+  {
+    "id": "advmeta_comprehensive_205_glq_unitriangular",
+    "seed_id": "comprehensive_205",
+    "capability": "signed_infinity",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_206_glq_unitriangular",
+    "seed_id": "comprehensive_206",
+    "capability": "signed_infinity",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_207_glq_unitriangular",
+    "seed_id": "comprehensive_207",
+    "capability": "signed_infinity",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_207_negative_prerequisite",
+    "seed_id": "comprehensive_207",
+    "capability": "signed_infinity",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_208_glq_unitriangular",
+    "seed_id": "comprehensive_208",
+    "capability": "signed_infinity",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_209_glq_unitriangular",
+    "seed_id": "comprehensive_209",
+    "capability": "finite_infinite_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_210_glq_unitriangular",
+    "seed_id": "comprehensive_210",
+    "capability": "finite_infinite_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_211_glq_unitriangular",
+    "seed_id": "comprehensive_211",
+    "capability": "finite_infinite_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_211_negative_prerequisite",
+    "seed_id": "comprehensive_211",
+    "capability": "finite_infinite_clusters",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_212_glq_unitriangular",
+    "seed_id": "comprehensive_212",
+    "capability": "finite_infinite_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_212_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_212",
+    "capability": "finite_infinite_clusters",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_213_domain_double_negation",
+    "seed_id": "comprehensive_213",
+    "capability": "symbolic_power_exponents",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_214_domain_double_negation",
+    "seed_id": "comprehensive_214",
+    "capability": "symbolic_power_exponents",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_215_negative_prerequisite",
+    "seed_id": "comprehensive_215",
+    "capability": "symbolic_power_exponents",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_217_domain_double_negation",
+    "seed_id": "comprehensive_217",
+    "capability": "symbolic_log_exponents",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_217_branch_conjugation",
+    "seed_id": "comprehensive_217",
+    "capability": "symbolic_log_exponents",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_218_domain_double_negation",
+    "seed_id": "comprehensive_218",
+    "capability": "symbolic_log_exponents",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_218_branch_conjugation",
+    "seed_id": "comprehensive_218",
+    "capability": "symbolic_log_exponents",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_219_branch_conjugation",
+    "seed_id": "comprehensive_219",
+    "capability": "symbolic_log_exponents",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_219_negative_prerequisite",
+    "seed_id": "comprehensive_219",
+    "capability": "symbolic_log_exponents",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_220_branch_conjugation",
+    "seed_id": "comprehensive_220",
+    "capability": "symbolic_log_exponents",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_221_domain_double_negation",
+    "seed_id": "comprehensive_221",
+    "capability": "exp_power_assumptions",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_222_domain_double_negation",
+    "seed_id": "comprehensive_222",
+    "capability": "exp_power_assumptions",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_223_negative_prerequisite",
+    "seed_id": "comprehensive_223",
+    "capability": "exp_power_assumptions",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_225_branch_conjugation",
+    "seed_id": "comprehensive_225",
+    "capability": "iterated_logarithms",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_226_branch_conjugation",
+    "seed_id": "comprehensive_226",
+    "capability": "iterated_logarithms",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_227_branch_conjugation",
+    "seed_id": "comprehensive_227",
+    "capability": "iterated_logarithms",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_227_negative_prerequisite",
+    "seed_id": "comprehensive_227",
+    "capability": "iterated_logarithms",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_228_branch_conjugation",
+    "seed_id": "comprehensive_228",
+    "capability": "iterated_logarithms",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_231_negative_prerequisite",
+    "seed_id": "comprehensive_231",
+    "capability": "nested_exponentials",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_232_domain_double_negation",
+    "seed_id": "comprehensive_232",
+    "capability": "nested_exponentials",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_233_domain_double_negation",
+    "seed_id": "comprehensive_233",
+    "capability": "mixed_exp_log_products",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_233_branch_conjugation",
+    "seed_id": "comprehensive_233",
+    "capability": "mixed_exp_log_products",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_234_domain_double_negation",
+    "seed_id": "comprehensive_234",
+    "capability": "mixed_exp_log_products",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_234_branch_conjugation",
+    "seed_id": "comprehensive_234",
+    "capability": "mixed_exp_log_products",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_235_branch_conjugation",
+    "seed_id": "comprehensive_235",
+    "capability": "mixed_exp_log_products",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_235_negative_prerequisite",
+    "seed_id": "comprehensive_235",
+    "capability": "mixed_exp_log_products",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_236_branch_conjugation",
+    "seed_id": "comprehensive_236",
+    "capability": "mixed_exp_log_products",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_237_domain_double_negation",
+    "seed_id": "comprehensive_237",
+    "capability": "scale_composition",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_238_domain_double_negation",
+    "seed_id": "comprehensive_238",
+    "capability": "scale_composition",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_239_negative_prerequisite",
+    "seed_id": "comprehensive_239",
+    "capability": "scale_composition",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_243_negative_prerequisite",
+    "seed_id": "comprehensive_243",
+    "capability": "positive_constant_scales",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_245_domain_double_negation",
+    "seed_id": "comprehensive_245",
+    "capability": "one_sided_scales",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_246_domain_double_negation",
+    "seed_id": "comprehensive_246",
+    "capability": "one_sided_scales",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_247_domain_double_negation",
+    "seed_id": "comprehensive_247",
+    "capability": "one_sided_scales",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x < 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_247_negative_prerequisite",
+    "seed_id": "comprehensive_247",
+    "capability": "one_sided_scales",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_248_domain_double_negation",
+    "seed_id": "comprehensive_248",
+    "capability": "one_sided_scales",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x < 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_249_glq_unitriangular",
+    "seed_id": "comprehensive_249",
+    "capability": "cross_variable_growth_cells",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_250_glq_unitriangular",
+    "seed_id": "comprehensive_250",
+    "capability": "cross_variable_growth_cells",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_250_domain_double_negation",
+    "seed_id": "comprehensive_250",
+    "capability": "cross_variable_growth_cells",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_251_glq_unitriangular",
+    "seed_id": "comprehensive_251",
+    "capability": "cross_variable_growth_cells",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_251_negative_prerequisite",
+    "seed_id": "comprehensive_251",
+    "capability": "cross_variable_growth_cells",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_252_glq_unitriangular",
+    "seed_id": "comprehensive_252",
+    "capability": "cross_variable_growth_cells",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_252_domain_double_negation",
+    "seed_id": "comprehensive_252",
+    "capability": "cross_variable_growth_cells",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(x > 0))"
+  },
+  {
+    "id": "advmeta_comprehensive_253_glq_unitriangular",
+    "seed_id": "comprehensive_253",
+    "capability": "algebraic_multibranch_curves",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_253_domain_double_negation",
+    "seed_id": "comprehensive_253",
+    "capability": "algebraic_multibranch_curves",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_253_branch_conjugation",
+    "seed_id": "comprehensive_253",
+    "capability": "algebraic_multibranch_curves",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_254_glq_unitriangular",
+    "seed_id": "comprehensive_254",
+    "capability": "algebraic_multibranch_curves",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_254_domain_double_negation",
+    "seed_id": "comprehensive_254",
+    "capability": "algebraic_multibranch_curves",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_254_branch_conjugation",
+    "seed_id": "comprehensive_254",
+    "capability": "algebraic_multibranch_curves",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_255_glq_unitriangular",
+    "seed_id": "comprehensive_255",
+    "capability": "algebraic_multibranch_curves",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_255_domain_double_negation",
+    "seed_id": "comprehensive_255",
+    "capability": "algebraic_multibranch_curves",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**3)))"
+  },
+  {
+    "id": "advmeta_comprehensive_255_branch_conjugation",
+    "seed_id": "comprehensive_255",
+    "capability": "algebraic_multibranch_curves",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_255_negative_prerequisite",
+    "seed_id": "comprehensive_255",
+    "capability": "algebraic_multibranch_curves",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_256_glq_unitriangular",
+    "seed_id": "comprehensive_256",
+    "capability": "algebraic_multibranch_curves",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_256_domain_double_negation",
+    "seed_id": "comprehensive_256",
+    "capability": "algebraic_multibranch_curves",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**2)))"
+  },
+  {
+    "id": "advmeta_comprehensive_256_branch_conjugation",
+    "seed_id": "comprehensive_256",
+    "capability": "algebraic_multibranch_curves",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_257_glq_unitriangular",
+    "seed_id": "comprehensive_257",
+    "capability": "singular_cusps_tacnodes",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_257_domain_double_negation",
+    "seed_id": "comprehensive_257",
+    "capability": "singular_cusps_tacnodes",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**3)))"
+  },
+  {
+    "id": "advmeta_comprehensive_257_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_257",
+    "capability": "singular_cusps_tacnodes",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_258_glq_unitriangular",
+    "seed_id": "comprehensive_258",
+    "capability": "singular_cusps_tacnodes",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_258_domain_double_negation",
+    "seed_id": "comprehensive_258",
+    "capability": "singular_cusps_tacnodes",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**4)))"
+  },
+  {
+    "id": "advmeta_comprehensive_258_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_258",
+    "capability": "singular_cusps_tacnodes",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_259_glq_unitriangular",
+    "seed_id": "comprehensive_259",
+    "capability": "singular_cusps_tacnodes",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_259_domain_double_negation",
+    "seed_id": "comprehensive_259",
+    "capability": "singular_cusps_tacnodes",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**3,x**5)))"
+  },
+  {
+    "id": "advmeta_comprehensive_259_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_259",
+    "capability": "singular_cusps_tacnodes",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_259_negative_prerequisite",
+    "seed_id": "comprehensive_259",
+    "capability": "singular_cusps_tacnodes",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_260_glq_unitriangular",
+    "seed_id": "comprehensive_260",
+    "capability": "singular_cusps_tacnodes",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_260_domain_double_negation",
+    "seed_id": "comprehensive_260",
+    "capability": "singular_cusps_tacnodes",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(y**2,x**4)))"
+  },
+  {
+    "id": "advmeta_comprehensive_260_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_260",
+    "capability": "singular_cusps_tacnodes",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_261_glq_unitriangular",
+    "seed_id": "comprehensive_261",
+    "capability": "reducible_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_261_domain_double_negation",
+    "seed_id": "comprehensive_261",
+    "capability": "reducible_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_262_glq_unitriangular",
+    "seed_id": "comprehensive_262",
+    "capability": "reducible_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_262_domain_double_negation",
+    "seed_id": "comprehensive_262",
+    "capability": "reducible_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_263_glq_unitriangular",
+    "seed_id": "comprehensive_263",
+    "capability": "reducible_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_263_domain_double_negation",
+    "seed_id": "comprehensive_263",
+    "capability": "reducible_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(x*y*(x-y),0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_263_negative_prerequisite",
+    "seed_id": "comprehensive_263",
+    "capability": "reducible_varieties",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_264_glq_unitriangular",
+    "seed_id": "comprehensive_264",
+    "capability": "reducible_varieties",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_264_domain_double_negation",
+    "seed_id": "comprehensive_264",
+    "capability": "reducible_varieties",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Eq(x*y*(x-y),0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_265_projective_reciprocal",
+    "seed_id": "comprehensive_265",
+    "capability": "projective_directions_infinity",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_265_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_265",
+    "capability": "projective_directions_infinity",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_266_projective_reciprocal",
+    "seed_id": "comprehensive_266",
+    "capability": "projective_directions_infinity",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_266_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_266",
+    "capability": "projective_directions_infinity",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_267_projective_reciprocal",
+    "seed_id": "comprehensive_267",
+    "capability": "projective_directions_infinity",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_267_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_267",
+    "capability": "projective_directions_infinity",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_267_negative_prerequisite",
+    "seed_id": "comprehensive_267",
+    "capability": "projective_directions_infinity",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_268_projective_reciprocal",
+    "seed_id": "comprehensive_268",
+    "capability": "projective_directions_infinity",
+    "family": "projective_reciprocal",
+    "oracle": "PROJECTIVE_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_268_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_268",
+    "capability": "projective_directions_infinity",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_269_glq_unitriangular",
+    "seed_id": "comprehensive_269",
+    "capability": "weighted_blowup_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_269_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_269",
+    "capability": "weighted_blowup_geometry",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_270_glq_unitriangular",
+    "seed_id": "comprehensive_270",
+    "capability": "weighted_blowup_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_270_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_270",
+    "capability": "weighted_blowup_geometry",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_271_glq_unitriangular",
+    "seed_id": "comprehensive_271",
+    "capability": "weighted_blowup_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_271_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_271",
+    "capability": "weighted_blowup_geometry",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_271_negative_prerequisite",
+    "seed_id": "comprehensive_271",
+    "capability": "weighted_blowup_geometry",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_272_glq_unitriangular",
+    "seed_id": "comprehensive_272",
+    "capability": "weighted_blowup_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_272_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_272",
+    "capability": "weighted_blowup_geometry",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_273_glq_unitriangular",
+    "seed_id": "comprehensive_273",
+    "capability": "compact_angular_optimization",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_274_glq_unitriangular",
+    "seed_id": "comprehensive_274",
+    "capability": "compact_angular_optimization",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_275_glq_unitriangular",
+    "seed_id": "comprehensive_275",
+    "capability": "compact_angular_optimization",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_275_negative_prerequisite",
+    "seed_id": "comprehensive_275",
+    "capability": "compact_angular_optimization",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_276_glq_unitriangular",
+    "seed_id": "comprehensive_276",
+    "capability": "compact_angular_optimization",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_277_glq_unitriangular",
+    "seed_id": "comprehensive_277",
+    "capability": "disconnected_angular_images",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_277_domain_double_negation",
+    "seed_id": "comprehensive_277",
+    "capability": "disconnected_angular_images",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_278_glq_unitriangular",
+    "seed_id": "comprehensive_278",
+    "capability": "disconnected_angular_images",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_279_glq_unitriangular",
+    "seed_id": "comprehensive_279",
+    "capability": "disconnected_angular_images",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_279_domain_double_negation",
+    "seed_id": "comprehensive_279",
+    "capability": "disconnected_angular_images",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_279_negative_prerequisite",
+    "seed_id": "comprehensive_279",
+    "capability": "disconnected_angular_images",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_280_glq_unitriangular",
+    "seed_id": "comprehensive_280",
+    "capability": "disconnected_angular_images",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_281_glq_unitriangular",
+    "seed_id": "comprehensive_281",
+    "capability": "higher_dimensional_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_282_glq_unitriangular",
+    "seed_id": "comprehensive_282",
+    "capability": "higher_dimensional_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_283_glq_unitriangular",
+    "seed_id": "comprehensive_283",
+    "capability": "higher_dimensional_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_283_negative_prerequisite",
+    "seed_id": "comprehensive_283",
+    "capability": "higher_dimensional_geometry",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_284_glq_unitriangular",
+    "seed_id": "comprehensive_284",
+    "capability": "higher_dimensional_geometry",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_285_glq_unitriangular",
+    "seed_id": "comprehensive_285",
+    "capability": "bessel_varying_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_286_glq_unitriangular",
+    "seed_id": "comprehensive_286",
+    "capability": "bessel_varying_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_286_domain_double_negation",
+    "seed_id": "comprehensive_286",
+    "capability": "bessel_varying_order",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_287_glq_unitriangular",
+    "seed_id": "comprehensive_287",
+    "capability": "bessel_varying_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_287_negative_prerequisite",
+    "seed_id": "comprehensive_287",
+    "capability": "bessel_varying_order",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_288_glq_unitriangular",
+    "seed_id": "comprehensive_288",
+    "capability": "bessel_varying_order",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_289_glq_unitriangular",
+    "seed_id": "comprehensive_289",
+    "capability": "erf_erfi_germs",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_289_domain_double_negation",
+    "seed_id": "comprehensive_289",
+    "capability": "erf_erfi_germs",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_290_glq_unitriangular",
+    "seed_id": "comprehensive_290",
+    "capability": "erf_erfi_germs",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_290_domain_double_negation",
+    "seed_id": "comprehensive_290",
+    "capability": "erf_erfi_germs",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_291_glq_unitriangular",
+    "seed_id": "comprehensive_291",
+    "capability": "erf_erfi_germs",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_291_domain_double_negation",
+    "seed_id": "comprehensive_291",
+    "capability": "erf_erfi_germs",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_291_negative_prerequisite",
+    "seed_id": "comprehensive_291",
+    "capability": "erf_erfi_germs",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_292_glq_unitriangular",
+    "seed_id": "comprehensive_292",
+    "capability": "erf_erfi_germs",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_292_domain_double_negation",
+    "seed_id": "comprehensive_292",
+    "capability": "erf_erfi_germs",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_293_glq_unitriangular",
+    "seed_id": "comprehensive_293",
+    "capability": "gamma_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_294_glq_unitriangular",
+    "seed_id": "comprehensive_294",
+    "capability": "gamma_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_295_glq_unitriangular",
+    "seed_id": "comprehensive_295",
+    "capability": "gamma_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_295_negative_prerequisite",
+    "seed_id": "comprehensive_295",
+    "capability": "gamma_poles",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_296_glq_unitriangular",
+    "seed_id": "comprehensive_296",
+    "capability": "gamma_poles",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_297_glq_unitriangular",
+    "seed_id": "comprehensive_297",
+    "capability": "inverse_trig_branch_points",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_297_branch_conjugation",
+    "seed_id": "comprehensive_297",
+    "capability": "inverse_trig_branch_points",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_298_glq_unitriangular",
+    "seed_id": "comprehensive_298",
+    "capability": "inverse_trig_branch_points",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_298_branch_conjugation",
+    "seed_id": "comprehensive_298",
+    "capability": "inverse_trig_branch_points",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_299_glq_unitriangular",
+    "seed_id": "comprehensive_299",
+    "capability": "inverse_trig_branch_points",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_299_branch_conjugation",
+    "seed_id": "comprehensive_299",
+    "capability": "inverse_trig_branch_points",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_299_negative_prerequisite",
+    "seed_id": "comprehensive_299",
+    "capability": "inverse_trig_branch_points",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_300_glq_unitriangular",
+    "seed_id": "comprehensive_300",
+    "capability": "inverse_trig_branch_points",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_300_branch_conjugation",
+    "seed_id": "comprehensive_300",
+    "capability": "inverse_trig_branch_points",
+    "family": "branch_conjugation",
+    "oracle": "CONJUGATE_SIDE_EXCHANGE"
+  },
+  {
+    "id": "advmeta_comprehensive_301_glq_unitriangular",
+    "seed_id": "comprehensive_301",
+    "capability": "special_function_singularity_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_302_glq_unitriangular",
+    "seed_id": "comprehensive_302",
+    "capability": "special_function_singularity_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_303_glq_unitriangular",
+    "seed_id": "comprehensive_303",
+    "capability": "special_function_singularity_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_303_negative_prerequisite",
+    "seed_id": "comprehensive_303",
+    "capability": "special_function_singularity_composition",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_304_glq_unitriangular",
+    "seed_id": "comprehensive_304",
+    "capability": "special_function_singularity_composition",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_304_domain_double_negation",
+    "seed_id": "comprehensive_304",
+    "capability": "special_function_singularity_composition",
+    "family": "domain_double_negation",
+    "oracle": "SAME_RESULT",
+    "domain_rewrite": "Not(Not(Ne(x*y,0)))"
+  },
+  {
+    "id": "advmeta_comprehensive_305_glq_unitriangular",
+    "seed_id": "comprehensive_305",
+    "capability": "vector_component_disagreement",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_305_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_305",
+    "capability": "vector_component_disagreement",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_306_glq_unitriangular",
+    "seed_id": "comprehensive_306",
+    "capability": "vector_component_disagreement",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_306_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_306",
+    "capability": "vector_component_disagreement",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_307_glq_unitriangular",
+    "seed_id": "comprehensive_307",
+    "capability": "vector_component_disagreement",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_307_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_307",
+    "capability": "vector_component_disagreement",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_307_negative_prerequisite",
+    "seed_id": "comprehensive_307",
+    "capability": "vector_component_disagreement",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_308_glq_unitriangular",
+    "seed_id": "comprehensive_308",
+    "capability": "vector_component_disagreement",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_308_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_308",
+    "capability": "vector_component_disagreement",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_309_glq_unitriangular",
+    "seed_id": "comprehensive_309",
+    "capability": "noncartesian_joint_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_309_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_309",
+    "capability": "noncartesian_joint_clusters",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_310_glq_unitriangular",
+    "seed_id": "comprehensive_310",
+    "capability": "noncartesian_joint_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_310_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_310",
+    "capability": "noncartesian_joint_clusters",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_311_glq_unitriangular",
+    "seed_id": "comprehensive_311",
+    "capability": "noncartesian_joint_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_311_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_311",
+    "capability": "noncartesian_joint_clusters",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_311_negative_prerequisite",
+    "seed_id": "comprehensive_311",
+    "capability": "noncartesian_joint_clusters",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_312_glq_unitriangular",
+    "seed_id": "comprehensive_312",
+    "capability": "noncartesian_joint_clusters",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_312_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_312",
+    "capability": "noncartesian_joint_clusters",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_313_glq_unitriangular",
+    "seed_id": "comprehensive_313",
+    "capability": "sphere_norm_direction_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_313_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_313",
+    "capability": "sphere_norm_direction_maps",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_314_glq_unitriangular",
+    "seed_id": "comprehensive_314",
+    "capability": "sphere_norm_direction_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1
+      ],
+      [
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_315_glq_unitriangular",
+    "seed_id": "comprehensive_315",
+    "capability": "sphere_norm_direction_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_315_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_315",
+    "capability": "sphere_norm_direction_maps",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_315_negative_prerequisite",
+    "seed_id": "comprehensive_315",
+    "capability": "sphere_norm_direction_maps",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_316_glq_unitriangular",
+    "seed_id": "comprehensive_316",
+    "capability": "sphere_norm_direction_maps",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_316_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_316",
+    "capability": "sphere_norm_direction_maps",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_317_glq_unitriangular",
+    "seed_id": "comprehensive_317",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_317_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_317",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_317_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_317",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_318_glq_unitriangular",
+    "seed_id": "comprehensive_318",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_318_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_318",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_318_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_318",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_319_glq_unitriangular",
+    "seed_id": "comprehensive_319",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0
+      ],
+      [
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_319_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_319",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_319_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_319",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  },
+  {
+    "id": "advmeta_comprehensive_319_negative_prerequisite",
+    "seed_id": "comprehensive_319",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "negative_prerequisite",
+    "oracle": "MUST_NOT_CERTIFY",
+    "mutation": "drop_or_reverse_required_prerequisite"
+  },
+  {
+    "id": "advmeta_comprehensive_320_glq_unitriangular",
+    "seed_id": "comprehensive_320",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "glq_unitriangular",
+    "oracle": "SAME_RESULT",
+    "matrix": [
+      [
+        1,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        1
+      ]
+    ],
+    "determinant": "1"
+  },
+  {
+    "id": "advmeta_comprehensive_320_vector_unimodular_pushforward",
+    "seed_id": "comprehensive_320",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "vector_unimodular_pushforward",
+    "oracle": "PUSHFORWARD_CLUSTER",
+    "matrix": "unitriangular_det_1"
+  },
+  {
+    "id": "advmeta_comprehensive_320_weighted_blowup_conjugacy",
+    "seed_id": "comprehensive_320",
+    "capability": "higher_dimensional_anisotropic_vectors",
+    "family": "weighted_blowup_conjugacy",
+    "oracle": "BLOWUP_CONJUGATE"
+  }
+]

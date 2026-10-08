@@ -1,0 +1,797 @@
+{
+  "unknown_count": 83,
+  "counts": {
+    "proof_search_timeout": 27,
+    "intentional_capability_boundary": 5,
+    "parameter_result_protocol": 2,
+    "symbolic_exponent_dispatch": 3,
+    "other_solver_gap": 9,
+    "vector_tuple_dispatch": 9,
+    "modular_normalization": 1,
+    "function_symbol_parsing": 1,
+    "infinite_target_not_implemented": 4,
+    "growth_scale_global_integration": 11,
+    "growth_scale_intentional_scale_boundary": 7,
+    "growth_scale_one_sided_integration": 2,
+    "growth_scale_cross_variable_integration": 2
+  },
+  "cases": [
+    {
+      "id": "comprehensive_027",
+      "capability": "anisotropic_newton",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_043",
+      "capability": "domain_boundary",
+      "role": "prerequisite_fail",
+      "cause": "intentional_capability_boundary",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_044",
+      "capability": "domain_boundary",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_047",
+      "capability": "domain_equality",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_051",
+      "capability": "piecewise_accumulation",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_052",
+      "capability": "piecewise_accumulation",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_054",
+      "capability": "piecewise_priority",
+      "role": "dne_neighbor",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_057",
+      "capability": "parameter_threshold",
+      "role": "prove",
+      "cause": "parameter_result_protocol",
+      "detail": "AttributeError: 'AsymptoticStratification' object has no attribute 'status'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_059",
+      "capability": "parameter_threshold",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_060",
+      "capability": "parameter_threshold",
+      "role": "variant",
+      "cause": "parameter_result_protocol",
+      "detail": "AttributeError: 'AsymptoticStratification' object has no attribute 'status'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_063",
+      "capability": "parameter_fibers",
+      "role": "prerequisite_fail",
+      "cause": "symbolic_exponent_dispatch",
+      "detail": "PolynomialError: x**(2*a) contains an element of the set of generators.",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_065",
+      "capability": "exp_vs_power",
+      "role": "prove",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_066",
+      "capability": "exp_vs_power",
+      "role": "dne_neighbor",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_067",
+      "capability": "exp_vs_power",
+      "role": "prerequisite_fail",
+      "cause": "intentional_capability_boundary",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_070",
+      "capability": "power_vs_log",
+      "role": "dne_neighbor",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_075",
+      "capability": "nested_exp_log",
+      "role": "prerequisite_fail",
+      "cause": "intentional_capability_boundary",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_076",
+      "capability": "nested_exp_log",
+      "role": "variant",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_077",
+      "capability": "relative_growth",
+      "role": "prove",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_080",
+      "capability": "relative_growth",
+      "role": "variant",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_083",
+      "capability": "complex_argument",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_086",
+      "capability": "complex_log",
+      "role": "dne_neighbor",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_097",
+      "capability": "vector_componentwise",
+      "role": "prove",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_098",
+      "capability": "vector_componentwise",
+      "role": "dne_neighbor",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_099",
+      "capability": "vector_componentwise",
+      "role": "prerequisite_fail",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_100",
+      "capability": "vector_componentwise",
+      "role": "variant",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_101",
+      "capability": "joint_cluster",
+      "role": "prove",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_102",
+      "capability": "joint_cluster",
+      "role": "dne_neighbor",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_103",
+      "capability": "joint_cluster",
+      "role": "prerequisite_fail",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_104",
+      "capability": "joint_cluster",
+      "role": "variant",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_107",
+      "capability": "higher_dim_squeeze",
+      "role": "prerequisite_fail",
+      "cause": "symbolic_exponent_dispatch",
+      "detail": "PolynomialError: x**a contains an element of the set of generators.",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_123",
+      "capability": "absolute_value",
+      "role": "prerequisite_fail",
+      "cause": "symbolic_exponent_dispatch",
+      "detail": "PolynomialError: x**(2*a) contains an element of the set of generators.",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_131",
+      "capability": "modular_maps",
+      "role": "prerequisite_fail",
+      "cause": "modular_normalization",
+      "detail": "ZeroDivisionError: Modulo by zero",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_143",
+      "capability": "normalized_derivatives",
+      "role": "prerequisite_fail",
+      "cause": "function_symbol_parsing",
+      "detail": "TypeError: 'Symbol' object is not callable",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_145",
+      "capability": "cusp_domains",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_147",
+      "capability": "cusp_domains",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_148",
+      "capability": "cusp_domains",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_152",
+      "capability": "deleted_varieties",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_153",
+      "capability": "infinite_targets",
+      "role": "prove",
+      "cause": "infinite_target_not_implemented",
+      "detail": "NotImplementedError: simultaneous limits currently support finite real target points only",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_154",
+      "capability": "infinite_targets",
+      "role": "dne_neighbor",
+      "cause": "infinite_target_not_implemented",
+      "detail": "NotImplementedError: simultaneous limits currently support finite real target points only",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_155",
+      "capability": "infinite_targets",
+      "role": "prerequisite_fail",
+      "cause": "infinite_target_not_implemented",
+      "detail": "NotImplementedError: simultaneous limits currently support finite real target points only",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_156",
+      "capability": "infinite_targets",
+      "role": "variant",
+      "cause": "infinite_target_not_implemented",
+      "detail": "NotImplementedError: simultaneous limits currently support finite real target points only",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_164",
+      "capability": "polar_angular",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_170",
+      "capability": "independent_monodromy",
+      "role": "dne_neighbor",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_172",
+      "capability": "independent_monodromy",
+      "role": "variant",
+      "cause": "other_solver_gap",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_175",
+      "capability": "branch_point_radial_winding",
+      "role": "prerequisite_fail",
+      "cause": "intentional_capability_boundary",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_177",
+      "capability": "piecewise_boundary_intersections",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_178",
+      "capability": "piecewise_boundary_intersections",
+      "role": "dne_neighbor",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_179",
+      "capability": "piecewise_boundary_intersections",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_180",
+      "capability": "piecewise_boundary_intersections",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_181",
+      "capability": "nonaccumulating_pieces",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_184",
+      "capability": "nonaccumulating_pieces",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_185",
+      "capability": "disconnected_approach_domains",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_189",
+      "capability": "strict_weak_domains",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_191",
+      "capability": "strict_weak_domains",
+      "role": "prerequisite_fail",
+      "cause": "intentional_capability_boundary",
+      "detail": null,
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_193",
+      "capability": "singular_domain_boundaries",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_195",
+      "capability": "singular_domain_boundaries",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_196",
+      "capability": "singular_domain_boundaries",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_201",
+      "capability": "deleted_variety_cancellation",
+      "role": "prove",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_203",
+      "capability": "deleted_variety_cancellation",
+      "role": "prerequisite_fail",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_204",
+      "capability": "deleted_variety_cancellation",
+      "role": "variant",
+      "cause": "proof_search_timeout",
+      "detail": "timeout",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_212",
+      "capability": "finite_infinite_clusters",
+      "role": "variant",
+      "cause": "vector_tuple_dispatch",
+      "detail": "AttributeError: 'Tuple' object has no attribute 'is_rational_function'",
+      "growth_comparison": null
+    },
+    {
+      "id": "comprehensive_213",
+      "capability": "symbolic_power_exponents",
+      "role": "prove",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "symbolic_power_order",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_214",
+      "capability": "symbolic_power_exponents",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "greater",
+        "expected": "greater",
+        "certified": true,
+        "rule": "symbolic_power_order",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_215",
+      "capability": "symbolic_power_exponents",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "unknown",
+        "expected": "unknown",
+        "certified": false,
+        "rule": null,
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_217",
+      "capability": "symbolic_log_exponents",
+      "role": "prove",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "symbolic_log_power_order",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_218",
+      "capability": "symbolic_log_exponents",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "greater",
+        "expected": "greater",
+        "certified": true,
+        "rule": "symbolic_log_power_order",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_219",
+      "capability": "symbolic_log_exponents",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "unknown",
+        "expected": "unknown",
+        "certified": false,
+        "rule": null,
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_221",
+      "capability": "exp_power_assumptions",
+      "role": "prove",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "flat_exponential_vs_power",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_222",
+      "capability": "exp_power_assumptions",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "greater",
+        "expected": "greater",
+        "certified": true,
+        "rule": "flat_exponential_vs_power",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_223",
+      "capability": "exp_power_assumptions",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "unknown",
+        "expected": "unknown",
+        "certified": false,
+        "rule": null,
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_227",
+      "capability": "iterated_logarithms",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_231",
+      "capability": "nested_exponentials",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_232",
+      "capability": "nested_exponentials",
+      "role": "variant",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "certified_ratio",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_233",
+      "capability": "mixed_exp_log_products",
+      "role": "prove",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "flat_exp_product_dominance",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_234",
+      "capability": "mixed_exp_log_products",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "greater",
+        "expected": "greater",
+        "certified": true,
+        "rule": "flat_exp_product_dominance",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_235",
+      "capability": "mixed_exp_log_products",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_237",
+      "capability": "scale_composition",
+      "role": "prove",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "less",
+        "expected": "less",
+        "certified": true,
+        "rule": "flat_exponential_vs_power",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_238",
+      "capability": "scale_composition",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_global_integration",
+      "detail": null,
+      "growth_comparison": {
+        "actual": "greater",
+        "expected": "greater",
+        "certified": true,
+        "rule": "flat_exponential_vs_power",
+        "wrong_result": false
+      },
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_239",
+      "capability": "scale_composition",
+      "role": "prerequisite_fail",
+      "cause": "growth_scale_intentional_scale_boundary",
+      "detail": "TypeError: 'Symbol' object is not callable",
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_245",
+      "capability": "one_sided_scales",
+      "role": "prove",
+      "cause": "growth_scale_one_sided_integration",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_248",
+      "capability": "one_sided_scales",
+      "role": "variant",
+      "cause": "growth_scale_one_sided_integration",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_250",
+      "capability": "cross_variable_growth_cells",
+      "role": "dne_neighbor",
+      "cause": "growth_scale_cross_variable_integration",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    },
+    {
+      "id": "comprehensive_252",
+      "capability": "cross_variable_growth_cells",
+      "role": "variant",
+      "cause": "growth_scale_cross_variable_integration",
+      "detail": null,
+      "growth_comparison": null,
+      "suite": "growth_scale"
+    }
+  ],
+  "growth_scale_counts": {
+    "growth_scale_global_integration": 11,
+    "growth_scale_intentional_scale_boundary": 7,
+    "growth_scale_one_sided_integration": 2,
+    "growth_scale_cross_variable_integration": 2
+  },
+  "geometry_counts": {}
+}

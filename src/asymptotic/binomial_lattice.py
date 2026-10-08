@@ -8,7 +8,7 @@ import sympy as sp
 
 from ._power_simplify import analytic_powsimp
 from ._symbolic_policy import bounded_assumption_sign, bounded_limit
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 from .stirling import (
     StirlingLocalMassExpansion,
     StirlingNormalization,
@@ -90,17 +90,12 @@ class BinomialLatticeTailExpansion:
     normalization: StirlingNormalization
     local_mass: StirlingLocalMassExpansion
     certificate: BinomialLatticeTailCertificate
-    remainder: AsymptoticRemainder
+    remainder: Remainder
 
 
-def _geometric_power_sum(power: int, rho: sp.Expr) -> sp.Expr:
-    value = 1 / (1 - rho)
-    for _ in range(power):
-        value = analytic_powsimp(rho * sp.diff(value, rho)) if isinstance(rho, sp.Symbol) else value
-    return value
-
-
-def _sum_polynomial_times_geometric(polynomial: sp.Expr, index: sp.Symbol, rho: sp.Expr) -> sp.Expr:
+def _sum_polynomial_times_geometric(
+    polynomial: sp.Expr, index: sp.Symbol, rho: sp.Expr
+) -> sp.Expr:
     try:
         poly = sp.Poly(sp.expand(polynomial), index)
     except sp.PolynomialError as exc:
@@ -148,12 +143,18 @@ def _ratio_lattice_factor(
     try:
         log_relative = sp.series(sp.log(relative), h, 0, max(2, terms)).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not expand the Binomial adjacent-mass ratio") from exc
+        raise NotImplementedError(
+            "could not expand the Binomial adjacent-mass ratio"
+        ) from exc
     log_product = sp.summation(log_relative, (i, 1, j))
     try:
-        product_correction = sp.series(sp.exp(log_product), h, 0, max(2, terms)).removeO()
+        product_correction = sp.series(
+            sp.exp(log_product), h, 0, max(2, terms)
+        ).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not expand the Binomial lattice product") from exc
+        raise NotImplementedError(
+            "could not expand the Binomial lattice product"
+        ) from exc
 
     factor_h = sp.S.Zero
     expanded = sp.expand(product_correction)
@@ -221,11 +222,19 @@ def binomial_lattice_tail_expansion(
         return None
     expression = analytic_powsimp(local.expression * factor)
     certificate = BinomialLatticeTailCertificate(
-        side, a, p, rho, local.lattice_offset, parameter, terms, normalization, conditions
+        side,
+        a,
+        p,
+        rho,
+        local.lattice_offset,
+        parameter,
+        terms,
+        normalization,
+        conditions,
     )
     if certificate.replay() is not True:
         return None
-    remainder = AsymptoticRemainder.big_o(
+    remainder = Remainder.big_o(
         sp.Abs(expression) / parameter**terms,
         parameter,
         sp.oo,

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import sympy as sp
 
-from .solve import AsymptoticSolveResult, asymptotic_solve
+from .solve import SolveResult, solve
 
 
-def asymptotic_root(
+def root(
     expression: sp.Expr,
     variable: sp.Symbol,
     *,
@@ -18,15 +18,15 @@ def asymptotic_root(
     assumptions: sp.Expr | bool = sp.S.true,
     limit: sp.Expr | None = None,
     branch: int | None = None,
-) -> AsymptoticSolveResult | sp.Expr:
+) -> SolveResult | sp.Expr:
     """Find roots of ``expression == 0`` asymptotically in ``parameter``.
 
-    With ``branch=None`` the complete :class:`AsymptoticSolveResult` is
+    With ``branch=None`` the complete :class:`SolveResult` is
     returned.  Otherwise the requested branch expression is returned directly.
     ``limit`` may select roots tending to a prescribed value.
     """
     limits = None if limit is None else {variable: sp.sympify(limit)}
-    result = asymptotic_solve(
+    result = solve(
         expression,
         variable,
         parameter=parameter,
@@ -46,5 +46,7 @@ def asymptotic_root(
         raise IndexError("asymptotic root branch index out of range") from exc
     root = selected.as_dict().get(variable)
     if root is None:
-        raise ValueError("selected solution branch does not determine the requested variable")
+        raise ValueError(
+            "selected solution branch does not determine the requested variable"
+        )
     return root

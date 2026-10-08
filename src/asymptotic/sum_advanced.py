@@ -9,7 +9,7 @@ import sympy as sp
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_assumption_sign
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 
 
 @dataclass(frozen=True)
@@ -44,7 +44,7 @@ class MellinShiftCertificate:
     poles: tuple[sp.Expr, ...]
     gamma_decay: sp.Expr
     parameter_positive: bool
-    remainder: AsymptoticRemainder
+    remainder: Remainder
 
     @staticmethod
     def _proved_lt(left: sp.Expr, right: sp.Expr) -> bool:
@@ -54,9 +54,12 @@ class MellinShiftCertificate:
 
     def replay(self) -> bool:
         lo, hi = self.initial_strip
-        strip_ok = self._proved_lt(lo, self.initial_line) and self._proved_lt(self.initial_line, hi)
+        strip_ok = self._proved_lt(lo, self.initial_line) and self._proved_lt(
+            self.initial_line, hi
+        )
         crossed = bool(self.poles) and all(
-            self._proved_lt(self.shifted_line, pole) and self._proved_lt(pole, self.initial_line)
+            self._proved_lt(self.shifted_line, pole)
+            and self._proved_lt(pole, self.initial_line)
             for pole in self.poles
         )
         return bool(
@@ -143,7 +146,11 @@ def geometric_uniformity(
     k_exp = powers.get(variable, sp.S.Zero)
     q = -k_exp
     c = sp.simplify(coeff / variable**k_exp)
-    if q.is_integer is not True or q.is_positive is not True or c.is_positive is not True:
+    if (
+        q.is_integer is not True
+        or q.is_positive is not True
+        or c.is_positive is not True
+    ):
         return None
     independent = sp.simplify(summand / base**exponent)
     ipowers = independent.as_powers_dict()
@@ -155,7 +162,9 @@ def geometric_uniformity(
     if decay.is_real is not True or sp.simplify(decay > 1) is not sp.true:
         return None
     majorant = sp.Abs(amplitude) * sp.zeta(decay, lower)
-    return UniformSummationCertificate("summable-geometric-majorant", lower, upper, majorant)
+    return UniformSummationCertificate(
+        "summable-geometric-majorant", lower, upper, majorant
+    )
 
 
 def _rational_shift_ratio(expr: sp.Expr, symbol: sp.Symbol) -> sp.Expr | None:
@@ -187,7 +196,7 @@ def zeilberger_recurrence(
 
     This is a genuine creative-telescoping search: unknown polynomial recurrence
     coefficients and a rational Gosper certificate are solved simultaneously
-    from the cleared polynomial identity.  Search bounds are intentionally
+    from the cleared polynomial identity.  Search bounds are
     small and deterministic; failure returns ``None`` rather than invoking a
     general solver.
     """
@@ -291,7 +300,7 @@ def poisson_gaussian_sum(
     upper: sp.Expr,
     parameter: sp.Symbol,
     point: sp.Expr,
-) -> tuple[sp.Expr, AsymptoticRemainder] | None:
+) -> tuple[sp.Expr, Remainder] | None:
     """Poisson summation for a Gaussian lattice, including linear oscillation."""
     if (lower, upper, point) != (-sp.oo, sp.oo, sp.S.Zero):
         return None
@@ -327,11 +336,17 @@ def poisson_gaussian_sum(
     if principal != 1:
         return None
     # Fourier transform convention sum f(k)=sum fhat(2*pi*m).
-    leading = prefactor * sp.sqrt(sp.pi / (a * parameter)) * sp.exp(-(b**2) / (4 * a * parameter))
+    leading = (
+        prefactor
+        * sp.sqrt(sp.pi / (a * parameter))
+        * sp.exp(-(b**2) / (4 * a * parameter))
+    )
     # Nearest omitted dual lattice image determines an exponentially small bound.
     gap = sp.Min((2 * sp.pi - b) ** 2, (2 * sp.pi + b) ** 2)
     scale = sp.exp(-gap / (4 * a * parameter)) / sp.sqrt(parameter)
-    rem = AsymptoticRemainder.big_o(scale, parameter, 0, source="Poisson Gaussian dual-tail bound")
+    rem = Remainder.big_o(
+        scale, parameter, 0, source="Poisson Gaussian dual-tail bound"
+    )
     return analytic_powsimp(leading), rem
 
 

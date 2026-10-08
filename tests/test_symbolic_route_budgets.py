@@ -2,12 +2,12 @@
 
 import sympy as sp
 
-from asymptotic import airy_uniform_saddle_asymptotic
 from asymptotic.discrete_scale import (
     birkhoff_trjitzinsky_branches,
     linear_recurrence_data,
 )
 from asymptotic.instrumentation import symbolic_metrics
+from asymptotic.probability import airy_uniform_saddle_asymptotic
 
 
 def test_repeated_secondary_bt_avoids_general_symbolic_fallbacks():

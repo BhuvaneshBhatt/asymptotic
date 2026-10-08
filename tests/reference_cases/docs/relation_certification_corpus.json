@@ -1,0 +1,765 @@
+{
+  "backend_availability": {
+    "semialg": true,
+    "symbopt": false
+  },
+  "rows": [
+    {
+      "name": "rational_little_o",
+      "family": "rational",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "rational_equivalent",
+      "family": "rational",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "rational_big_o_angular",
+      "family": "rational",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_simplex_semialg",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "restricted_halfspace_little_o",
+      "family": "restricted-domain",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "restricted_wedge_equivalent",
+      "family": "restricted-domain",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "multi_newton_identity",
+      "family": "multi-Newton-chart",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "multi_newton_decay",
+      "family": "multi-Newton-chart",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "difficult_angular_quadratic",
+      "family": "difficult-angular-extremum",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "angular_coefficient_norm",
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "difficult_angular_quartic",
+      "family": "difficult-angular-extremum",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_simplex_semialg",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "algebraic_sqrt_equivalent",
+      "family": "algebraic",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "positive_radical_denominator",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "positive_radical_denominator"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "algebraic_radical_little_o",
+      "family": "algebraic",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "positive_radical_denominator",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "positive_radical_denominator"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "transcendental_exp_equivalent",
+      "family": "transcendental-composition",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "semialg+weighted_blowup_geometry",
+        "univariate_taylor_theorem"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "univariate_taylor_theorem"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "transcendental_sinc_equivalent",
+      "family": "transcendental-composition",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "alternating_sine_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "alternating_sine_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "newton3_identity",
+      "family": "3plus-Newton-fan",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "newton3_decay",
+      "family": "3plus-Newton-fan",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "newton3_equivalent",
+      "family": "3plus-Newton-fan",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "newton3_mixed_O",
+      "family": "3plus-Newton-fan",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_dominant_coordinate_bound",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "newton3_competing_faces",
+      "family": "3plus-Newton-fan",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_dominant_coordinate_bound",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "newton4_decay",
+      "family": "3plus-Newton-fan",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 4,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "newton4_equivalent",
+      "family": "3plus-Newton-fan",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 4,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "alg_nonradial_sqrt_equiv",
+      "family": "nonradial-algebraic",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_positive_square_root",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "positive_square_root_identity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "alg_nonradial_sqrt_decay",
+      "family": "nonradial-algebraic",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "composition_positive_square_root",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "positive_power_decay",
+        "positive_square_root_identity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "sqrt(1+h)-1=h/(sqrt(1+h)+1), denominator >=2, and h=o(rhs)"
+    },
+    {
+      "name": "alg_nonradial_nested_equiv",
+      "family": "nonradial-algebraic",
+      "relation": "~",
+      "certified": false,
+      "relation_provider": "none",
+      "certificate_backends": [],
+      "coverage_provider": "none",
+      "remainder_providers": [],
+      "charts": 0,
+      "statement": "asymptotic equivalence was not certified on every covering chart"
+    },
+    {
+      "name": "alg_nonradial_ratio_O",
+      "family": "nonradial-algebraic",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "euclidean_l1_norm_bound",
+      "certificate_backends": [
+        "exact_norm_inequality"
+      ],
+      "coverage_provider": "none",
+      "remainder_providers": [],
+      "charts": 0,
+      "statement": "sqrt(sum a_i^2) <= sum |a_i|"
+    },
+    {
+      "name": "alg3_sqrt_equiv",
+      "family": "nonradial-algebraic",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_positive_square_root",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "positive_square_root_identity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "alg3_decay",
+      "family": "nonradial-algebraic",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "composition_positive_square_root",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "positive_power_decay",
+        "positive_square_root_identity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "sqrt(1+h)-1=h/(sqrt(1+h)+1), denominator >=2, and h=o(rhs)"
+    },
+    {
+      "name": "trans_angular_exp_equiv",
+      "family": "angular-transcendental",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_exp_continuity",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "exp_continuity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "exp(h)~1 because h=o(1)"
+    },
+    {
+      "name": "trans_angular_sin_o",
+      "family": "angular-transcendental",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "composition_sine_lipschitz",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry",
+        "sine_lipschitz"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "|sin(h)| <= |h| and h=o(rhs) on the certified atlas"
+    },
+    {
+      "name": "trans_angular_cos_equiv",
+      "family": "angular-transcendental",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_cos_continuity",
+      "certificate_backends": [
+        "cos_continuity",
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "cos(h)~1 because h=o(1)"
+    },
+    {
+      "name": "trans_angular_exp3_equiv",
+      "family": "angular-transcendental",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_exp_continuity",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "exp_continuity",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "exp(h)~1 because h=o(1)"
+    },
+    {
+      "name": "trans_angular_sin3_o",
+      "family": "angular-transcendental",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "composition_sine_lipschitz",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry",
+        "sine_lipschitz"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "|sin(h)| <= |h| and h=o(rhs) on the certified atlas"
+    },
+    {
+      "name": "trans_anisotropic_sinc",
+      "family": "angular-transcendental",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "composition_sinc",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry",
+        "sinc_continuity"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "sin(h)~h because h=o(1)"
+    },
+    {
+      "name": "domain_parabolic_wedge_o",
+      "family": "mixed-restricted-domain",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "domain_cusp_equiv",
+      "family": "mixed-restricted-domain",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "domain_annular_cusp_O",
+      "family": "mixed-restricted-domain",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_simplex_semialg",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "domain3_orthant_o",
+      "family": "mixed-restricted-domain",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "domain3_ordered_equiv",
+      "family": "mixed-restricted-domain",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "domain3_cone_O",
+      "family": "mixed-restricted-domain",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "coordinate_monomial_norm_bound",
+      "certificate_backends": [
+        "exact_norm_inequality"
+      ],
+      "coverage_provider": "none",
+      "remainder_providers": [],
+      "charts": 0,
+      "statement": "|x_i| <= sqrt(sum x_j^2) bounds the coordinate monomial"
+    },
+    {
+      "name": "boundary_zero_cancelled_equiv",
+      "family": "sector-boundary-zero-pole",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "boundary_zero_cancelled_O",
+      "family": "sector-boundary-zero-pole",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "angular_coefficient_norm",
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    },
+    {
+      "name": "boundary_axis_cancelled_equiv",
+      "family": "sector-boundary-zero-pole",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "boundary_axis_cancelled_o",
+      "family": "sector-boundary-zero-pole",
+      "relation": "o",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "every covering chart has only positive radial orders and a uniformly decaying remainder"
+    },
+    {
+      "name": "boundary_cone_cancelled_equiv",
+      "family": "sector-boundary-zero-pole",
+      "relation": "~",
+      "certified": true,
+      "relation_provider": "atlas_uniform_decay",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 2,
+      "statement": "lhs/rhs - 1 is uniformly o(1) on the certified atlas"
+    },
+    {
+      "name": "boundary3_plane_cancelled_O",
+      "family": "sector-boundary-zero-pole",
+      "relation": "O",
+      "certified": true,
+      "relation_provider": "atlas_uniform_bound",
+      "certificate_backends": [
+        "exact_zero_remainder",
+        "sector_simplex_semialg",
+        "semialg+weighted_blowup_geometry"
+      ],
+      "coverage_provider": "semialg+weighted_blowup_geometry",
+      "remainder_providers": [
+        "exact_zero_remainder"
+      ],
+      "charts": 3,
+      "statement": "every covering chart has a certified finite uniform bound for |lhs/rhs|"
+    }
+  ]
+}

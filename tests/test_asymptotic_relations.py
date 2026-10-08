@@ -1,45 +1,71 @@
 from __future__ import annotations
 
+import importlib
+
 import sympy as sp
 
 from asymptotic import (
-    AsymptoticRelationResult,
-    asymptotic_big_o,
-    asymptotic_equivalent,
-    asymptotic_little_o,
-    asymptotic_relation,
+    big_o,
+    equivalent,
+    little_o,
+    relation,
 )
 from asymptotic.relations import (
-    asymptotic_equal,
-    asymptotic_greater,
-    asymptotic_greater_equal,
-    asymptotic_less,
-    asymptotic_less_equal,
-    asymptotic_same_order,
+    RelationResult,
+    equal,
+    greater,
+    greater_equal,
+    less,
+    less_equal,
+    same_order,
 )
 
+relations = importlib.import_module("asymptotic.relations")
 
-def test_named_asymptotic_relations_match_order_notation():
+
+def test_named_relations_match_order_notation():
     x = sp.symbols("x", positive=True)
-    assert asymptotic_less(x, x**2, x, sp.oo) is True
-    assert asymptotic_little_o(x, x**2, x, sp.oo) is True
-    assert asymptotic_less_equal(x, x**2, x, sp.oo) is True
-    assert asymptotic_big_o(x, x**2, x, sp.oo) is True
-    assert asymptotic_greater(x**2, x, x, sp.oo) is True
-    assert asymptotic_greater_equal(x**2, x, x, sp.oo) is True
+    assert less(x, x**2, x, sp.oo) is True
+    assert little_o(x, x**2, x, sp.oo) is True
+    assert less_equal(x, x**2, x, sp.oo) is True
+    assert big_o(x, x**2, x, sp.oo) is True
+    assert greater(x**2, x, x, sp.oo) is True
+    assert greater_equal(x**2, x, x, sp.oo) is True
 
 
 def test_equal_is_theta_while_equivalent_requires_ratio_one():
     x = sp.symbols("x", positive=True)
-    assert asymptotic_equal(2 * x, x, x, sp.oo) is True
-    assert asymptotic_same_order(2 * x, x, x, sp.oo) is True
-    assert asymptotic_equivalent(2 * x, x, x, sp.oo) is False
-    assert asymptotic_equivalent(x + 1, x, x, sp.oo) is True
+    assert equal(2 * x, x, x, sp.oo) is True
+    assert same_order(2 * x, x, x, sp.oo) is True
+    assert equivalent(2 * x, x, x, sp.oo) is False
+    assert equivalent(x + 1, x, x, sp.oo) is True
 
 
 def test_multivariate_rays_only_certify_counterexamples():
     x, y = sp.symbols("x y", real=True)
-    result = asymptotic_relation(x**2 + y**4, x**2 + y**2, (x, y), (0, 0), relation="equal")
-    assert isinstance(result, AsymptoticRelationResult)
+    result = relation(
+        x**2 + y**4, x**2 + y**2, (x, y), (0, 0), relation="equal", return_result=True
+    )
+    assert isinstance(result, RelationResult)
     assert result.value is False
     assert result.certified is True
+
+
+def test_six_predicates_share_one_univariate_fact_bundle():
+    x = sp.symbols("x", positive=True)
+    relations._univariate_relation_facts.cache_clear()
+    relations._ratio_properties.cache_clear()
+    from asymptotic.instrumentation import symbolic_metrics
+
+    with symbolic_metrics() as metrics:
+        predicates = (
+            relations.less,
+            relations.greater,
+            relations.less_equal,
+            relations.greater_equal,
+            relations.equal,
+            relations.equivalent,
+        )
+        values = tuple(predicate(x, x**2, x, sp.oo) for predicate in predicates)
+    assert values == (True, False, True, False, False, False)
+    assert metrics.growth_comparisons == 1

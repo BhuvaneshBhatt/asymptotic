@@ -9,7 +9,7 @@ def test_every_root_api_is_named_in_a_behavioral_test():
     test_dir = Path(__file__).parent
     behavioral_text = "\n".join(
         path.read_text()
-        for path in test_dir.glob("test_*.py")
+        for path in test_dir.rglob("test_*.py")
         if path.name
         not in {
             "test_public_api_contract.py",

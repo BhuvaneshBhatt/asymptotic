@@ -1,10 +1,12 @@
 import sympy as sp
 
 from asymptotic import (
-    GrowthComparison,
     discover_scale,
 )
-from asymptotic.context import AsymptoticContext
+from asymptotic.context import (
+    AsymptoticContext,
+    AsymptoticGrowthComparison,
+)
 from asymptotic.tower import ExpLogTower
 
 
@@ -19,7 +21,7 @@ def test_exp_log_tower_is_dependency_ordered():
     assert generators.index(sp.log(x)) < generators.index(sp.log(sp.log(x)))
 
 
-def test_discover_scale_deduplicates_same_exponential_comparability_class():
+def test_discover_scale_deduplicates_same_comparability_class():
     x = sp.symbols("x", positive=True)
     expr = sp.exp(-x) + sp.exp(-2 * x) + 1 / x
     scale = discover_scale(expr, x)
@@ -27,7 +29,7 @@ def test_discover_scale_deduplicates_same_exponential_comparability_class():
     exp_class_count = 0
     for elem in scale.exprs:
         relation, _ = ctx.compare_log_growth(elem, sp.exp(-x))
-        if relation is GrowthComparison.SAME_ORDER:
+        if relation is AsymptoticGrowthComparison.SAME_ORDER:
             exp_class_count += 1
     assert exp_class_count == 1
 
@@ -58,5 +60,6 @@ def test_scale_discovery_records_comparison_obligations():
     assert len(scale) >= 3
     assert discovery.obligation_history
     assert all(
-        item.kind is ObligationKind.GROWTH_COMPARISON for item in discovery.obligation_history
+        item.kind is ObligationKind.GROWTH_COMPARISON
+        for item in discovery.obligation_history
     )

@@ -37,6 +37,16 @@ def _public_docstring(obj: object) -> str:
         if not doc:
             return "No public docstring."
         return inspect.cleandoc(doc)
+    wrapped = getattr(obj, "__wrapped__", None)
+    original_doc = getattr(wrapped, "__doc__", None)
+    if original_doc and obj.__doc__.startswith(original_doc):
+        # Decorators can append unindented API notes to an indented docstring.
+        # Clean the original and supplement separately: inspect.cleandoc differs
+        # across Python versions when both indentation styles occur together.
+        supplement = inspect.cleandoc(obj.__doc__[len(original_doc) :])
+        return inspect.cleandoc(original_doc) + (
+            "\n\n" + supplement if supplement else ""
+        )
     return inspect.getdoc(obj) or "No public docstring."
 
 
@@ -59,7 +69,7 @@ def render() -> str:
 def main() -> None:
     """Regenerate ``docs/api-reference.md`` from the imported package."""
 
-    Path("docs/api-reference.md").write_text(render())
+    (Path(__file__).resolve().parents[1] / "docs/api-reference.md").write_text(render())
 
 
 if __name__ == "__main__":

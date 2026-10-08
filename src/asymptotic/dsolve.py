@@ -7,13 +7,13 @@ from typing import Any
 
 import sympy as sp
 
-from .nonlinear_ode import nonlinear_differential_transseries
-from .ode_adapter import from_formal_ode_data
+from .nonlinear_ode import differential_transseries
+from .ode_adapter import from_odeanalysis_formal_data
 
 
 @dataclass(frozen=True)
-class AsymptoticDSolveResult:
-    """Structured result returned by :func:`asymptotic_dsolve`.
+class DSolveResult:
+    """Structured result returned by :func:`dsolve`.
 
     ``solutions`` contains ordinary SymPy expressions for the finite prefixes.
     ``branches`` retains the richer transseries or nonlinear-lifting objects so
@@ -30,6 +30,7 @@ class AsymptoticDSolveResult:
     branches: tuple[Any, ...]
     complete: bool
     limitation: str | None = None
+    interchange: Any | None = None
 
     def residuals(self, equation: sp.Expr | sp.Equality) -> tuple[sp.Expr, ...]:
         """Return equation residuals after substituting each reported prefix."""
@@ -37,7 +38,8 @@ class AsymptoticDSolveResult:
         expression = _equation_expression(equation)
         dependent = self.function(self.variable)
         return tuple(
-            sp.expand(expression.subs(dependent, solution).doit()) for solution in self.solutions
+            sp.expand(expression.subs(dependent, solution).doit())
+            for solution in self.solutions
         )
 
 
@@ -55,7 +57,7 @@ def _formal_linear_route(
     *,
     point: sp.Expr,
     terms: int,
-) -> AsymptoticDSolveResult | None:
+) -> DSolveResult | None:
     """Try the optional odeanalysis formal-data interface."""
 
     try:
@@ -72,7 +74,8 @@ def _formal_linear_route(
             terms=max(terms, 2),
             include_stokes=True,
         )
-        converted = from_formal_ode_data(data, variable)
+        interchange = from_odeanalysis_formal_data(data, variable)
+        converted = interchange.formal_data
     except (TypeError, ValueError, NotImplementedError, sp.PolynomialError):
         return None
 
@@ -80,7 +83,7 @@ def _formal_linear_route(
     solutions = tuple(sp.sympify(branch.truncate()) for branch in branches)
     if not solutions:
         return None
-    return AsymptoticDSolveResult(
+    return DSolveResult(
         solutions=solutions,
         function=function,
         variable=variable,
@@ -90,10 +93,11 @@ def _formal_linear_route(
         branches=branches,
         complete=converted.complete,
         limitation=converted.limitation,
+        interchange=interchange,
     )
 
 
-def asymptotic_dsolve(
+def dsolve(
     equation: sp.Expr | sp.Equality,
     function: sp.FunctionClass,
     variable: sp.Symbol,
@@ -102,16 +106,16 @@ def asymptotic_dsolve(
     terms: int = 6,
     assumptions: sp.Expr | bool = sp.S.true,
     method: str = "auto",
-) -> AsymptoticDSolveResult:
+) -> DSolveResult:
     """Solve an ODE asymptotically near a finite point or infinity.
 
     In ``auto`` mode linear equations are first sent through the stable
     :mod:`odeanalysis` formal-data interface, which can expose Frobenius,
     ramification, exponential blocks, monodromy, and Stokes metadata.  If that
     route does not apply, differential-polynomial nonlinear equations are
-    handled by recursive Newton/transseries lifting.  The function is
-    conservative: unsupported equations raise ``NotImplementedError`` rather
-    than being mislabeled as complete asymptotic solutions.
+    handled by recursive Newton/transseries lifting. Unsupported equations raise
+    ``NotImplementedError`` when no supported method can justify a complete
+    asymptotic solution.
     """
 
     if not isinstance(variable, sp.Symbol):
@@ -127,14 +131,18 @@ def asymptotic_dsolve(
     point = sp.sympify(point)
 
     if method in {"auto", "linear"}:
-        linear = _formal_linear_route(expression, function, variable, point=point, terms=terms)
+        linear = _formal_linear_route(
+            expression, function, variable, point=point, terms=terms
+        )
         if linear is not None:
             return linear
         if method == "linear":
-            raise NotImplementedError("odeanalysis could not construct formal linear ODE data")
+            raise NotImplementedError(
+                "odeanalysis could not construct formal linear ODE data"
+            )
 
     try:
-        lifted = nonlinear_differential_transseries(
+        lifted = differential_transseries(
             expression,
             function,
             variable,
@@ -154,10 +162,12 @@ def asymptotic_dsolve(
     limitation = (
         None
         if complete
-        else "; ".join(sorted({branch.limitation for branch in lifted if branch.limitation}))
+        else "; ".join(
+            sorted({branch.limitation for branch in lifted if branch.limitation})
+        )
         or "one or more nonlinear branches are incomplete"
     )
-    return AsymptoticDSolveResult(
+    return DSolveResult(
         solutions=tuple(sp.sympify(branch.series) for branch in lifted),
         function=function,
         variable=variable,

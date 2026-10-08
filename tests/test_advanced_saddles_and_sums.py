@@ -1,14 +1,16 @@
 import sympy as sp
 
 from asymptotic import (
-    AsymptoticSumResult,
     RemainderKind,
+    SumResult,
+    sum,
+)
+from asymptotic.probability import (
+    LaplaceRemainderCertificate,
     airy_uniform_saddle_asymptotic,
-    asymptotic_sum,
     coalescing_saddle_asymptotic,
     laplace_asymptotic_integral,
 )
-from asymptotic.probability import LaplaceRemainderCertificate
 
 
 def test_quartic_degenerate_saddle_has_gamma_scale_and_certificate():
@@ -22,7 +24,10 @@ def test_quartic_degenerate_saddle_has_gamma_scale_and_certificate():
     assert result.method == "laplace-degenerate-saddle-order-4"
     assert result.status == "CERTIFIED"
     assert (
-        sp.simplify(result.expression - sp.gamma(sp.Rational(1, 4)) / (2 * n ** sp.Rational(1, 4)))
+        sp.simplify(
+            result.expression
+            - sp.gamma(sp.Rational(1, 4)) / (2 * n ** sp.Rational(1, 4))
+        )
         == 0
     )
     assert isinstance(result.certificate, LaplaceRemainderCertificate)
@@ -49,7 +54,9 @@ def test_stationary_quartic_endpoint_is_not_double_counted():
     n = sp.symbols("n", positive=True)
     x = sp.symbols("x", real=True)
 
-    result = laplace_asymptotic_integral(sp.exp(-n * x**4), x, (0, sp.oo), parameter=n, terms=2)
+    result = laplace_asymptotic_integral(
+        sp.exp(-n * x**4), x, (0, sp.oo), parameter=n, terms=2
+    )
 
     expected = sp.gamma(sp.Rational(1, 4)) / (4 * n ** sp.Rational(1, 4))
     assert result.method == "laplace-lower-degenerate-endpoint-order-4"
@@ -100,7 +107,7 @@ def test_euler_maclaurin_tail_has_certified_remainder():
     n = sp.symbols("n", positive=True, integer=True)
     k = sp.symbols("k", positive=True, integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         1 / k**2,
         k,
         n,
@@ -108,9 +115,10 @@ def test_euler_maclaurin_tail_has_certified_remainder():
         parameter=n,
         terms=3,
         method="euler-maclaurin",
+        return_result=True,
     )
 
-    assert isinstance(result, AsymptoticSumResult)
+    assert isinstance(result, SumResult)
     assert result.method == "euler-maclaurin"
     assert result.status == "CERTIFIED"
     expected = 1 / n + 1 / (2 * n**2) + 1 / (6 * n**3)
@@ -122,7 +130,7 @@ def test_discrete_gaussian_lattice_saddle():
     n = sp.symbols("n", positive=True)
     k = sp.symbols("k", integer=True)
 
-    result = asymptotic_sum(
+    result = sum(
         sp.exp(-n * (k / n) ** 2 / 2),
         k,
         -sp.oo,
@@ -130,6 +138,7 @@ def test_discrete_gaussian_lattice_saddle():
         parameter=n,
         terms=2,
         method="saddle",
+        return_result=True,
     )
 
     assert result.method == "discrete-laplace-interior-saddle"
@@ -143,7 +152,9 @@ def test_exact_geometric_sum_is_preferred():
     k = sp.symbols("k", integer=True)
     q = sp.symbols("q", positive=True)
 
-    result = asymptotic_sum(q**k, k, n, sp.oo, parameter=n, terms=2, method="exact")
+    result = sum(
+        q**k, k, n, sp.oo, parameter=n, terms=2, method="exact", return_result=True
+    )
 
     # Without q<1 SymPy correctly keeps convergence conditions/unevaluated
     # behavior rather than the asymptotics layer inventing a geometric tail.
@@ -163,7 +174,9 @@ def test_cubic_turning_point_has_uniform_airy_scaling():
         control_parameter=mu,
     )
 
-    expected = 2 * sp.pi * sp.airyai(mu * n ** sp.Rational(2, 3)) / n ** sp.Rational(1, 3)
+    expected = (
+        2 * sp.pi * sp.airyai(mu * n ** sp.Rational(2, 3)) / n ** sp.Rational(1, 3)
+    )
     assert result.method == "oscillatory-airy-uniform-saddle"
     assert result.status == "FORMAL"
     assert sp.simplify(result.expression - expected) == 0

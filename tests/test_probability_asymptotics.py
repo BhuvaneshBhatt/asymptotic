@@ -2,9 +2,11 @@ import sympy as sp
 from sympy.stats import Normal, Poisson, Uniform
 
 from asymptotic import (
-    StatisticalAsymptoticResult,
-    asymptotic_expectation,
-    asymptotic_probability,
+    StatisticalResult,
+    expectation,
+    probability,
+)
+from asymptotic.probability import (
     laplace_asymptotic_integral,
 )
 
@@ -13,9 +15,9 @@ def test_exact_expectation_is_first_route_and_keeps_exact_expression():
     n = sp.symbols("n", positive=True)
     x = Normal("X_exact", 0, 1 / sp.sqrt(n))
 
-    result = asymptotic_expectation(sp.exp(x), x, parameter=n, terms=3)
+    result = expectation(sp.exp(x), x, parameter=n, terms=3, return_result=True)
 
-    assert isinstance(result, StatisticalAsymptoticResult)
+    assert isinstance(result, StatisticalResult)
     assert result.method == "exact-expectation"
     assert result.status == "EXACT"
     assert sp.simplify(result.expression - sp.exp(1 / (2 * n))) == 0
@@ -26,7 +28,9 @@ def test_density_reduction_can_be_requested_directly():
     n = sp.symbols("n", positive=True)
     x = Uniform("X_density", 0, n)
 
-    result = asymptotic_expectation(x**2, x, parameter=n, terms=2, method="density")
+    result = expectation(
+        x**2, x, parameter=n, terms=2, method="density", return_result=True
+    )
 
     assert result.method == "density-exact-integral"
     assert result.status == "EXACT"
@@ -39,7 +43,9 @@ def test_pmf_reduction_handles_exact_point_probability():
     lam = sp.symbols("lam", positive=True)
     k = Poisson("K_point", lam)
 
-    result = asymptotic_probability(sp.Eq(k, 0), k, parameter=lam, method="pmf")
+    result = probability(
+        sp.Eq(k, 0), k, parameter=lam, method="pmf", return_result=True
+    )
 
     assert result.method == "pmf-exact-sum"
     assert result.status == "EXACT"
@@ -51,7 +57,9 @@ def test_moving_domain_normal_tail_uses_endpoint_laplace_scale():
     n, a = sp.symbols("n a", positive=True)
     x = Normal("X_tail", 0, sp.sqrt(n))
 
-    result = asymptotic_probability(x > a * n, x, parameter=n, terms=3, method="laplace")
+    result = probability(
+        x > a * n, x, parameter=n, terms=3, method="laplace", return_result=True
+    )
 
     expected = (
         sp.exp(-(a**2) * n / 2)
@@ -70,7 +78,9 @@ def test_interior_saddle_expectation_recovers_gaussian_mgf_expansion():
     n = sp.symbols("n", positive=True)
     x = Normal("X_saddle", 0, 1 / sp.sqrt(n))
 
-    result = asymptotic_expectation(sp.exp(x), x, parameter=n, terms=3, method="laplace")
+    result = expectation(
+        sp.exp(x), x, parameter=n, terms=3, method="laplace", return_result=True
+    )
 
     expected = 1 + 1 / (2 * n) + 1 / (8 * n**2)
     assert result.method == "laplace-interior-saddle"
@@ -93,18 +103,22 @@ def test_generic_interior_laplace_integral():
 def test_generic_endpoint_laplace_integral_has_watson_coefficients():
     n, a, x = sp.symbols("n a x", positive=True)
 
-    result = laplace_asymptotic_integral(sp.exp(-n * x**2 / 2), x, (a, sp.oo), parameter=n, terms=3)
+    result = laplace_asymptotic_integral(
+        sp.exp(-n * x**2 / 2), x, (a, sp.oo), parameter=n, terms=3
+    )
 
-    expected = sp.exp(-(a**2) * n / 2) * (1 / (a * n) - 1 / (a**3 * n**2) + 3 / (a**5 * n**3))
+    expected = sp.exp(-(a**2) * n / 2) * (
+        1 / (a * n) - 1 / (a**3 * n**2) + 3 / (a**5 * n**3)
+    )
     assert result.method == "laplace-lower-endpoint"
     assert sp.simplify(result.expression - expected) == 0
 
 
-def test_laplace_route_returns_unknown_reduction_when_no_laplace_scale_exists():
+def test_laplace_route_returns_unknown_scale_exists():
     n = sp.symbols("n", positive=True)
     x = Uniform("X_unknown", 0, n)
 
-    result = asymptotic_expectation(x, x, parameter=n, method="laplace")
+    result = expectation(x, x, parameter=n, method="laplace", return_result=True)
 
     assert result.status == "UNKNOWN"
     assert result.method == "density-reduction"
@@ -115,7 +129,9 @@ def test_continuous_point_event_is_exactly_zero_without_integration():
     n = sp.symbols("n", positive=True)
     x = Normal("X_point", 0, n)
 
-    result = asymptotic_probability(sp.Eq(x, 0), x, parameter=n, method="density")
+    result = probability(
+        sp.Eq(x, 0), x, parameter=n, method="density", return_result=True
+    )
 
     assert result.status == "EXACT"
     assert result.expression == 0
@@ -127,7 +143,7 @@ def test_method_type_mismatch_is_rejected():
     x = Normal("X_method", 0, 1)
 
     try:
-        asymptotic_expectation(x, x, parameter=n, method="pmf")
+        expectation(x, x, parameter=n, method="pmf", return_result=True)
     except TypeError as exc:
         assert "discrete" in str(exc)
     else:

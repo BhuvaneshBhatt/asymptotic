@@ -4,8 +4,10 @@ import sympy as sp
 from hypothesis import given, settings
 from hypothesis import strategies as st
 
-from asymptotic import multiseries, series_reversion, transseries_from_expression
+from asymptotic import multiseries
 from asymptotic.canonical import canonical_equal, canonical_expr
+from asymptotic.reversion import series_reversion
+from asymptotic.transseries import transseries_from_expression
 
 FAST = settings(max_examples=16, deadline=None, derandomize=True)
 
@@ -26,14 +28,14 @@ def test_multiseries_is_invariant_to_expanded_or_factored_input(a, b):
     x = sp.symbols("x", positive=True)
     factored = (1 + a / x) * (1 + b / x)
     expanded = sp.expand(factored)
-    lhs = multiseries(factored, x, scale=[1 / x], terms=3).terms(3)
-    rhs = multiseries(expanded, x, scale=[1 / x], terms=3).terms(3)
+    lhs = multiseries(factored, x, scale=[1 / x], terms=3, return_result=True).terms(3)
+    rhs = multiseries(expanded, x, scale=[1 / x], terms=3, return_result=True).terms(3)
     assert lhs == rhs
 
 
 @FAST
 @given(st.integers(-3, 3).filter(bool))
-def test_series_reversion_round_trip_is_stable_under_small_integer_coefficients(a):
+def test_series_reversion_round_trip_integer_coefficients(a):
     x, y = sp.symbols("x y")
     f = x + a * x**2
     inverse = series_reversion(f, x, y, terms=5, branch=0).truncate()
@@ -43,7 +45,7 @@ def test_series_reversion_round_trip_is_stable_under_small_integer_coefficients(
 
 @FAST
 @given(st.integers(-4, 4), st.integers(-4, 4))
-def test_transseries_conversion_is_invariant_to_additive_reassociation(a, b):
+def test_transseries_conversion_is_invariant_additive_reassociation(a, b):
     x = sp.symbols("x", positive=True)
     left = sp.Add(1 / x, a / x**2, b / x**3, evaluate=False)
     right = sp.Add(b / x**3, sp.Add(a / x**2, 1 / x, evaluate=False), evaluate=False)
@@ -60,8 +62,12 @@ def test_dummy_symbol_renaming_preserves_multiseries(power, coeff):
     t = sp.symbols("t", positive=True)
     expr_x = sp.exp(1 / x) + coeff / x**power
     expr_t = expr_x.xreplace({x: t})
-    lhs = multiseries(expr_x, x, scale=[1 / x], terms=5).truncate(5)
-    rhs = multiseries(expr_t, t, scale=[1 / t], terms=5).truncate(5).xreplace({t: x})
+    lhs = multiseries(expr_x, x, scale=[1 / x], terms=5, return_result=True).truncate(5)
+    rhs = (
+        multiseries(expr_t, t, scale=[1 / t], terms=5, return_result=True)
+        .truncate(5)
+        .xreplace({t: x})
+    )
     assert sp.expand(lhs - rhs) == 0
 
 
@@ -70,8 +76,12 @@ def test_dummy_symbol_renaming_preserves_multiseries(power, coeff):
 def test_positive_rescaling_of_independent_variable_is_consistent(scale):
     x, t = sp.symbols("x t", positive=True)
     expr = sp.exp(1 / x)
-    direct = multiseries(expr, x, scale=[1 / x], terms=5).truncate(5)
-    changed = multiseries(expr.subs(x, scale * t), t, scale=[1 / t], terms=5).truncate(5)
+    direct = multiseries(expr, x, scale=[1 / x], terms=5, return_result=True).truncate(
+        5
+    )
+    changed = multiseries(
+        expr.subs(x, scale * t), t, scale=[1 / t], terms=5, return_result=True
+    ).truncate(5)
     restored = sp.expand(changed.subs(t, x / scale))
     assert sp.simplify(direct - restored) == 0
 
@@ -85,8 +95,12 @@ def test_larger_multiseries_budget_preserves_previous_prefix(short_terms, long_t
         long_terms = short_terms + 1
     x = sp.symbols("x", positive=True)
     expr = sp.exp(1 / x)
-    short = multiseries(expr, x, scale=[1 / x], terms=short_terms).truncate(short_terms)
-    long = multiseries(expr, x, scale=[1 / x], terms=long_terms).truncate(short_terms)
+    short = multiseries(
+        expr, x, scale=[1 / x], terms=short_terms, return_result=True
+    ).truncate(short_terms)
+    long = multiseries(
+        expr, x, scale=[1 / x], terms=long_terms, return_result=True
+    ).truncate(short_terms)
     assert canonical_equal(short, long)
 
 
@@ -103,17 +117,23 @@ def test_transseries_differentiation_reconstructs_exact_finite_derivative(a, b):
 
 def test_reciprocal_coordinate_change_matches_local_zero_expansion():
     x, h = sp.symbols("x h", positive=True)
-    at_infinity = multiseries(sp.exp(1 / x), x, scale=[1 / x], terms=5).truncate(5)
-    at_zero = multiseries(sp.exp(h), h, scale=[h], point=0, terms=5).truncate(5)
+    at_infinity = multiseries(
+        sp.exp(1 / x), x, scale=[1 / x], terms=5, return_result=True
+    ).truncate(5)
+    at_zero = multiseries(
+        sp.exp(h), h, scale=[h], point=0, terms=5, return_result=True
+    ).truncate(5)
     assert sp.simplify(at_infinity - at_zero.subs(h, 1 / x)) == 0
 
 
 def test_asymptotic_integration_then_differentiation_reconstructs_input():
-    from asymptotic import asymptotic_integrate
+    from asymptotic import integrate
 
     x = sp.symbols("x", positive=True)
-    source = multiseries(1 / x + 1 / x**2, x, scale=[1 / x], terms=4)
-    primitive = asymptotic_integrate(source, terms=4)
+    source = multiseries(
+        1 / x + 1 / x**2, x, scale=[1 / x], terms=4, return_result=True
+    )
+    primitive = integrate(source, terms=4, return_result=True)
     assert sp.simplify(sp.diff(primitive.truncate(), x) - source.expr) == 0
 
 

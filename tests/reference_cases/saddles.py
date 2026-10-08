@@ -4,6 +4,8 @@ import sympy as sp
 
 from asymptotic import (
     RemainderKind,
+)
+from asymptotic.probability import (
     airy_uniform_saddle_asymptotic,
     coalescing_saddle_asymptotic,
     laplace_asymptotic_integral,
@@ -23,7 +25,9 @@ def _canonical_airy() -> bool:
         parameter=n,
         control_parameter=mu,
     )
-    expected = 2 * sp.pi * n ** (-sp.Rational(1, 3)) * sp.airyai(mu * n ** sp.Rational(2, 3))
+    expected = (
+        2 * sp.pi * n ** (-sp.Rational(1, 3)) * sp.airyai(mu * n ** sp.Rational(2, 3))
+    )
     return result.status == "FORMAL" and sp.simplify(result.expression - expected) == 0
 
 
@@ -73,13 +77,22 @@ def _unsupported_non_cubic_turning_point() -> bool:
 
 CASES = (
     ReferenceCase(
-        "canonical-airy-turning-point", "uniform-saddle", CapabilityStatus.FORMAL, _canonical_airy
+        "canonical-airy-turning-point",
+        "uniform-saddle",
+        CapabilityStatus.FORMAL,
+        _canonical_airy,
     ),
     ReferenceCase(
-        "quartic-coalescence", "uniform-saddle", CapabilityStatus.FORMAL, _quartic_coalescence
+        "quartic-coalescence",
+        "uniform-saddle",
+        CapabilityStatus.FORMAL,
+        _quartic_coalescence,
     ),
     ReferenceCase(
-        "quartic-laplace", "laplace", CapabilityStatus.CERTIFIED, _certified_quartic_laplace
+        "quartic-laplace",
+        "laplace",
+        CapabilityStatus.CERTIFIED,
+        _certified_quartic_laplace,
     ),
     ReferenceCase(
         "non-cubic-airy-refusal",

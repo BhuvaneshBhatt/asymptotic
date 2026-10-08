@@ -12,7 +12,7 @@ from ._symbolic_policy import (
     bounded_solve_system,
 )
 from .context import AsymptoticContext
-from .implicit import implicit_asymptotic
+from .implicit import implicit
 
 
 @dataclass(frozen=True)
@@ -29,7 +29,7 @@ class AsymptoticSolutionBranch:
 
 
 @dataclass(frozen=True)
-class AsymptoticSolveResult:
+class SolveResult:
     branches: tuple[AsymptoticSolutionBranch, ...]
     parameter: sp.Symbol
     point: sp.Expr
@@ -69,7 +69,9 @@ def _assumption_query(predicate: sp.Expr, assumptions: sp.Expr) -> bool | None:
     return bounded_assumption_entails(predicate, assumptions)
 
 
-def _domain_decision(value: sp.Expr, domain: sp.Set, assumptions: sp.Expr) -> bool | None:
+def _domain_decision(
+    value: sp.Expr, domain: sp.Set, assumptions: sp.Expr
+) -> bool | None:
     value = sp.sympify(value)
     domain = sp.sympify(domain)
     predicate = None
@@ -169,8 +171,10 @@ def _inequality_decision(rel, sol, ctx, assumptions=sp.S.true):
     return None
 
 
-def _prefer_mrv_hardy(polynomial: sp.Expr, dependent: sp.Symbol, parameter: sp.Symbol) -> bool:
-    """Prefer Newton--MRV over exact radicals for transcendental coefficients."""
+def _prefer_mrv_hardy(
+    polynomial: sp.Expr, dependent: sp.Symbol, parameter: sp.Symbol
+) -> bool:
+    """Prefer Newton–MRV over exact radicals for transcendental coefficients."""
 
     try:
         coefficients = sp.Poly(polynomial, dependent).all_coeffs()
@@ -242,7 +246,9 @@ def _mrv_hardy_solve_result(
             if limit_decision is False:
                 continue
             if limit_decision is None:
-                conditions.append(sp.Eq(limit_value, sp.sympify(limits[dependent]), evaluate=False))
+                conditions.append(
+                    sp.Eq(limit_value, sp.sympify(limits[dependent]), evaluate=False)
+                )
 
         for relation in inequalities:
             decision = _inequality_decision(relation, solution, context, assumptions)
@@ -265,8 +271,10 @@ def _mrv_hardy_solve_result(
             )
         )
 
-    status = "EXACT" if all(branch.status == "EXACT" for branch in branches) else "FORMAL"
-    return AsymptoticSolveResult(
+    status = (
+        "EXACT" if all(branch.status == "EXACT" for branch in branches) else "FORMAL"
+    )
+    return SolveResult(
         tuple(branches),
         parameter,
         point,
@@ -276,7 +284,7 @@ def _mrv_hardy_solve_result(
     )
 
 
-def asymptotic_solve(
+def solve(
     system,
     variables,
     *,
@@ -286,18 +294,22 @@ def asymptotic_solve(
     limits: dict[sp.Symbol, sp.Expr] | None = None,
     domain=sp.S.Complexes,
     assumptions: sp.Expr = sp.S.true,
-) -> AsymptoticSolveResult:
+) -> SolveResult:
     """Solve algebraic equations/inequalities asymptotically in ``parameter``.
 
     For a univariate polynomial with transcendental Hardy/log-exp
-    coefficients, a Newton--MRV backend is tried before exact algebraic solving.
+    coefficients, a Newton–MRV backend is tried before exact algebraic solving.
     It values coefficient scales, lifts smaller Newton corrections recursively,
     and uses an asymptotic Sturm sequence to certify completeness of real roots.
     Rational/algebraic systems retain the exact-solve route.  A supplied branch
     limit still enables the implicit/Puiseux backend when neither route settles
     the problem. Undecidable predicates remain symbolic branch conditions.
     """
-    variables = tuple(variables) if isinstance(variables, (list, tuple, sp.Tuple)) else (variables,)
+    variables = (
+        tuple(variables)
+        if isinstance(variables, (list, tuple, sp.Tuple))
+        else (variables,)
+    )
     equations, inequalities = _split_relations(system)
     ctx = AsymptoticContext(parameter, point=point)
     branches = []
@@ -325,7 +337,11 @@ def asymptotic_solve(
             return mrv_solution
 
     try:
-        if len(equations) == 1 and len(variables) == 1 and equations[0].is_polynomial(variables[0]):
+        if (
+            len(equations) == 1
+            and len(variables) == 1
+            and equations[0].is_polynomial(variables[0])
+        ):
             y = variables[0]
             _, factors = sp.factor_list(equations[0], y)
             sols = []
@@ -337,7 +353,9 @@ def asymptotic_solve(
                     multiplicities[key] = multiplicities.get(key, 0) + multiplicity
                     sols.append(sol)
         else:
-            sols = list(bounded_solve_system(equations, variables, allow_general=True) or ())
+            sols = list(
+                bounded_solve_system(equations, variables, allow_general=True) or ()
+            )
     except (ValueError, TypeError, NotImplementedError, sp.PolynomialError):
         sols = []
     if sols:
@@ -366,7 +384,9 @@ def asymptotic_solve(
                         rejected = True
                         break
                     if limit_decision is None:
-                        cond.append(sp.Eq(limit_value, sp.sympify(limits[v]), evaluate=False))
+                        cond.append(
+                            sp.Eq(limit_value, sp.sympify(limits[v]), evaluate=False)
+                        )
             if rejected:
                 continue
             for rel in inequalities:
@@ -393,25 +413,40 @@ def asymptotic_solve(
                     multiplicities.get(key, 1),
                 )
             )
-        status = "EXACT" if not branches or all(b.status == "EXACT" for b in branches) else "FORMAL"
-        return AsymptoticSolveResult(
-            tuple(branches), parameter, point, status, "exact-algebraic+asymptotic-filter"
+        status = (
+            "EXACT"
+            if not branches or all(b.status == "EXACT" for b in branches)
+            else "FORMAL"
+        )
+        return SolveResult(
+            tuple(branches),
+            parameter,
+            point,
+            status,
+            "exact-algebraic+asymptotic-filter",
         )
 
     # Single-equation implicit fallback. Infinity is localized by u=1/p.
-    if len(equations) == 1 and len(variables) == 1 and limits and variables[0] in limits:
+    if (
+        len(equations) == 1
+        and len(variables) == 1
+        and limits
+        and variables[0] in limits
+    ):
         y = variables[0]
         b = limits[y]
         dep_inverse = b in (sp.oo, -sp.oo)
         local_y = sp.Dummy("z") if dep_inverse else y
         local_b = sp.S.Zero if dep_inverse else b
-        y_sub = (1 / local_y if b is sp.oo else -1 / local_y) if dep_inverse else local_y
+        y_sub = (
+            (1 / local_y if b is sp.oo else -1 / local_y) if dep_inverse else local_y
+        )
         if point in (sp.oo, -sp.oo):
             u = sp.Dummy("u", positive=True)
             p_sub = 1 / u if point is sp.oo else -1 / u
             eq = sp.together(equations[0].subs({parameter: p_sub, y: y_sub}))
             eq = sp.fraction(eq)[0]
-            found = implicit_asymptotic(
+            found = implicit(
                 eq,
                 local_y,
                 u,
@@ -446,13 +481,16 @@ def asymptotic_solve(
                 if not rejected:
                     branches.append(
                         AsymptoticSolutionBranch(
-                            ((y, value),), tuple(cond), "FORMAL", method="implicit-puiseux"
+                            ((y, value),),
+                            tuple(cond),
+                            "FORMAL",
+                            method="implicit-puiseux",
                         )
                     )
         else:
             eq = sp.together(equations[0].subs(y, y_sub))
             eq = sp.fraction(eq)[0]
-            found = implicit_asymptotic(
+            found = implicit(
                 eq,
                 local_y,
                 parameter,
@@ -485,14 +523,17 @@ def asymptotic_solve(
                 if not rejected:
                     branches.append(
                         AsymptoticSolutionBranch(
-                            ((y, value),), tuple(cond), "FORMAL", method="implicit-puiseux"
+                            ((y, value),),
+                            tuple(cond),
+                            "FORMAL",
+                            method="implicit-puiseux",
                         )
                     )
-        return AsymptoticSolveResult(
+        return SolveResult(
             tuple(branches),
             parameter,
             point,
             "FORMAL" if branches else "UNKNOWN",
             "implicit-puiseux",
         )
-    return AsymptoticSolveResult((), parameter, point, "UNKNOWN", "unsupported")
+    return SolveResult((), parameter, point, "UNKNOWN", "unsupported")

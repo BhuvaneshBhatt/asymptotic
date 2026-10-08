@@ -21,7 +21,9 @@ CASES = (
 
 @pytest.mark.parametrize("case", CASES, ids=lambda case: case.name)
 def test_reference_case(case):
-    assert case.check(), f"reference case failed: {case.area}/{case.name} ({case.status.value})"
+    assert case.check(), (
+        f"reference case failed: {case.area}/{case.name} ({case.status.value})"
+    )
 
 
 def test_reference_corpus_contains_all_capability_statuses():

@@ -1,20 +1,24 @@
 import sympy as sp
 
 from asymptotic import (
-    AsymptoticRemainder,
+    Remainder,
     RemainderKind,
-    multivariate_implicit_asymptotics,
-    transseries_from_expression,
+)
+from asymptotic.multivariate_implicit import (
+    multivariate_implicit,
 )
 from asymptotic.remainder_theorems import (
     certify_differentiation_remainder,
     certify_inverse_remainder,
 )
+from asymptotic.transseries import (
+    transseries_from_expression,
+)
 
 
 def test_differentiation_remainder_upgrades_by_exact_replay():
     x = sp.symbols("x", positive=True)
-    r = AsymptoticRemainder.big_o(x**-2, x, sp.oo, exact_expression=x**-3)
+    r = Remainder.big_o(x**-2, x, sp.oo, exact_expression=x**-3)
     cert = certify_differentiation_remainder(r)
     assert cert.certified
     assert cert.conclusion.kind is RemainderKind.LITTLE_O
@@ -27,7 +31,7 @@ def test_nested_exp_log_remainder_theorems_propagate_certified_error():
         1 / x,
         x,
         point=sp.oo,
-        remainder=AsymptoticRemainder.big_o(x**-2, x, sp.oo, exact_expression=x**-3),
+        remainder=Remainder.big_o(x**-2, x, sp.oo, exact_expression=x**-3),
     )
     exp_result = source.exp()
     assert exp_result.remainder.kind in {RemainderKind.BIG_O, RemainderKind.LITTLE_O}
@@ -37,7 +41,7 @@ def test_nested_exp_log_remainder_theorems_propagate_certified_error():
         x,
         x,
         point=sp.oo,
-        remainder=AsymptoticRemainder.big_o(1, x, sp.oo, exact_expression=1 / x),
+        remainder=Remainder.big_o(1, x, sp.oo, exact_expression=1 / x),
     )
     log_result = source2.log()
     assert log_result.remainder.kind is RemainderKind.LITTLE_O
@@ -55,7 +59,7 @@ def test_inverse_remainder_uses_nondegenerate_mean_value_theorem():
 def test_multivariate_implicit_discovers_joint_dependent_weights():
     u, v = sp.symbols("u v", positive=True)
     y, z = sp.symbols("y z")
-    regimes = multivariate_implicit_asymptotics(
+    regimes = multivariate_implicit(
         (y**2 - u, z - y - v),
         (y, z),
         (u, v),
@@ -65,7 +69,9 @@ def test_multivariate_implicit_discovers_joint_dependent_weights():
     assert regimes
     # There is a chamber where u and v have equal representative weights and
     # both dependent variables acquire rho = w_u/2.
-    chamber = next(r for r in regimes if r.cone.representative[0] == r.cone.representative[1])
+    chamber = next(
+        r for r in regimes if r.cone.representative[0] == r.cone.representative[1]
+    )
     assert sp.simplify(chamber.dependent_weights[0] - chamber.dependent_weights[1]) == 0
     assert chamber.branches
     assert any(branch.complete for branch in chamber.branches)
@@ -78,7 +84,7 @@ def test_multivariate_implicit_parameter_stratifies_support_changes():
     a = sp.symbols("a")
     u, v = sp.symbols("u v", positive=True)
     y, z = sp.symbols("y z")
-    result = multivariate_implicit_asymptotics(
+    result = multivariate_implicit(
         (y**2 - a * u, z - y - v),
         (y, z),
         (u, v),

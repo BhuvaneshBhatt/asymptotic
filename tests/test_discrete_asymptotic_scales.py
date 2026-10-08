@@ -5,18 +5,19 @@ from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from asymptotic.discrete_scale import (
-    DiscreteAsymptoticScale,
+    DiscreteScale,
+    _complete_polynomial_roots,
     birkhoff_trjitzinsky_branches,
     discrete_newton_edges,
     linear_recurrence_data,
 )
 from asymptotic.mrv import mrv_decomposition
-from asymptotic.rsolve import asymptotic_rsolve
+from asymptotic.rsolve import rsolve
 
 
 def test_factorial_scale_has_exact_shift_ratio():
     n = sp.symbols("n", positive=True, integer=True)
-    scale = DiscreteAsymptoticScale(n, factorial_power=1, power=-1)
+    scale = DiscreteScale(n, factorial_power=1, power=-1)
     assert sp.simplify(scale.expression - sp.gamma(n)) == 0
     assert sp.simplify(scale.ratio(1) - n) == 0
 
@@ -28,13 +29,15 @@ def test_discrete_newton_edge_finds_factorial_balance():
     edges = discrete_newton_edges(data)
     assert len(edges) == 1
     assert edges[0].factorial_power == 1
-    assert sp.expand(edges[0].characteristic).subs(edges[0].characteristic_symbol, 1) == 0
+    assert (
+        sp.expand(edges[0].characteristic).subs(edges[0].characteristic_symbol, 1) == 0
+    )
 
 
 def test_native_birkhoff_trjitzinsky_lifts_factorial_recurrence():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
-    result = asymptotic_rsolve(a(n + 1) - n * a(n), a(n), n, terms=4, method="native")
+    result = rsolve(a(n + 1) - n * a(n), a(n), n, terms=4, method="native")
     assert result.method == "discrete-newton-birkhoff-trjitzinsky"
     assert len(result.branches) == 1
     branch = result.branches[0]
@@ -93,7 +96,8 @@ def test_generated_first_order_recurrences_recover_discrete_scale(
     matching = next(
         branch
         for branch in branches
-        if _branch_signature(branch) == (sp.Integer(factorial_power), base, sp.Integer(power))
+        if _branch_signature(branch)
+        == (sp.Integer(factorial_power), base, sp.Integer(power))
     )
     assert matching.replay_residual(data) is True
 
@@ -119,7 +123,7 @@ def test_recurrence_normalization_metamorphics_preserve_native_scale():
     assert all(signature == signatures[0] for signature in signatures[1:])
 
 
-def test_measured_residual_order_is_replayable_and_not_requested_term_count():
+def test_measured_residual_order_is_term_count():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
     recurrence = a(n + 2) - (n + 1) * a(n + 1) - a(n)
@@ -131,19 +135,12 @@ def test_measured_residual_order_is_replayable_and_not_requested_term_count():
     assert all(branch.replay_residual(data) is True for branch in branches)
 
 
-def test_characteristic_root_multiplicity_handles_sympy_integer_degree():
-    from asymptotic.discrete_scale import _root_multiplicity
-
-    z = sp.symbols("z")
-    assert _root_multiplicity((z - 1) ** 3 * (z + 2), z, sp.S.One) == 3
-
-
 def test_mrv_unknown_comparisons_do_not_choose_a_false_maximum():
-    from asymptotic.context import AsymptoticContext, GrowthComparison
+    from asymptotic.context import AsymptoticContext, AsymptoticGrowthComparison
 
     class UnknownGrowthContext(AsymptoticContext):
         def compare_growth(self, f, g):
-            return GrowthComparison.UNKNOWN, None
+            return AsymptoticGrowthComparison.UNKNOWN, None
 
     n = sp.symbols("n", positive=True)
     context = UnknownGrowthContext(n, sp.oo)
@@ -202,12 +199,14 @@ def test_simple_bt_lift_uses_linear_coefficient_extraction():
 
     source = inspect.getsource(asymptotic.discrete_scale._solve_lift_equations)
     assert "sp.solve(" not in source
-    linear_source = inspect.getsource(asymptotic.discrete_scale._linear_equation_solution)
+    linear_source = inspect.getsource(
+        asymptotic.discrete_scale._linear_equation_solution
+    )
     assert "sp.Poly" in linear_source
     assert "degree() != 1" in linear_source
 
 
-def test_constant_coefficient_repeated_root_returns_exact_jordan_chain():
+def test_constant_coefficient_repeated_root_jordan_chain():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
     recurrence = a(n + 2) - 2 * a(n + 1) + a(n)
@@ -220,7 +219,7 @@ def test_constant_coefficient_repeated_root_returns_exact_jordan_chain():
     assert all(branch.replay_residual(data) is True for branch in branches)
 
 
-def test_constant_coefficient_triple_root_returns_three_polynomial_modes():
+def test_constant_coefficient_triple_root_polynomial_modes():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
     recurrence = a(n + 3) - 3 * a(n + 2) + 3 * a(n + 1) - a(n)
@@ -235,7 +234,7 @@ def test_constant_coefficient_triple_root_returns_three_polynomial_modes():
     assert all(branch.residual_order is sp.oo for branch in branches)
 
 
-def test_secondary_newton_lift_finds_stretched_exponentials_and_half_lattice():
+def test_secondary_newton_lift_finds_half_lattice():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
     recurrence = n * a(n + 2) - 2 * n * a(n + 1) + (n - 1) * a(n)
@@ -256,10 +255,10 @@ def test_secondary_newton_lift_finds_stretched_exponentials_and_half_lattice():
     assert all(branch.replay_residual(data) is True for branch in branches)
 
 
-def test_asymptotic_rsolve_uses_repeated_root_native_modes():
+def test_rsolve_uses_repeated_root_native_modes():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
-    result = asymptotic_rsolve(
+    result = rsolve(
         a(n + 2) - 2 * a(n + 1) + a(n),
         a(n),
         n,
@@ -294,3 +293,13 @@ def test_bt_internal_symbols_are_reused_across_repeated_lifts():
         tuple(map(id, asymptotic.discrete_scale._BT_COEFFICIENTS[:4])),
     )
     assert second_ids == first_ids
+
+
+def test_complete_polynomial_roots_uses_for_quintic():
+    z = sp.symbols("z")
+    roots = _complete_polynomial_roots(z**5 - z + 1, z)
+
+    assert len(roots) == 5
+    assert sum(multiplicity for _, multiplicity in roots) == 5
+    assert all(multiplicity == 1 for _, multiplicity in roots)
+    assert all(isinstance(root, sp.CRootOf) for root, _ in roots)

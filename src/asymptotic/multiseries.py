@@ -6,11 +6,12 @@ from dataclasses import dataclass
 from itertools import count
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._ordering import exponent_sort_key as _exp_key
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
-from .context import AsymptoticContext, GrowthComparison, context_for
+from .context import AsymptoticContext, AsymptoticGrowthComparison, context_for
 from .obligations import (
     AsymptoticKnowledge,
     AsymptoticObligation,
@@ -21,7 +22,7 @@ from .obligations import (
     LogarithmicScaleObligation,
     ZeroTestObligation,
 )
-from .scale import AsymptoticScale, ScaleDiscovery
+from .scale import Scale, ScaleDiscovery
 from .sparse import LazySparseSeries
 from .tower import ExpLogTower
 
@@ -35,7 +36,9 @@ class MultiseriesTerm:
         return self.coefficient * scale_element**self.exponent
 
 
-def _combine_terms(terms: Iterable[MultiseriesTerm], n: int | None = None) -> list[MultiseriesTerm]:
+def _combine_terms(
+    terms: Iterable[MultiseriesTerm], n: int | None = None
+) -> list[MultiseriesTerm]:
     grouped = {}
     for term in terms:
         exponent = sp.simplify(term.exponent)
@@ -62,7 +65,7 @@ class Multiseries:
     def __init__(
         self,
         expr: sp.Expr,
-        scale: AsymptoticScale,
+        scale: Scale,
         *,
         level: int | None = None,
         context: AsymptoticContext | None = None,
@@ -82,7 +85,9 @@ class Multiseries:
         self._dynamic_extensions = 0
         self.max_dynamic_extensions = 12
         self.obligation_history: list[AsymptoticObligation] = []
-        self.tower = ExpLogTower.from_expr(sp.Tuple(self.expr, *self.scale.exprs), scale.variable)
+        self.tower = ExpLogTower.from_expr(
+            sp.Tuple(self.expr, *self.scale.exprs), scale.variable
+        )
 
     @property
     def scale_element(self) -> sp.Expr:
@@ -125,7 +130,9 @@ class Multiseries:
         if self._dynamic_extensions >= self.max_dynamic_extensions:
             return False
         reverse = {sym: elem.expr for sym, elem in zip(syms, self.scale.elements)}
-        divergent = analytic_powsimp(sp.simplify(request.divergent_part.xreplace(reverse)))
+        divergent = analytic_powsimp(
+            sp.simplify(request.divergent_part.xreplace(reverse))
+        )
         sign = self.context.eventual_sign(divergent)
         if sign not in (-1, 1):
             limit = self.context.limit(divergent)
@@ -257,7 +264,7 @@ class Multiseries:
             result = self.context.compare_log_growth(left, right)
         else:
             result = self.context.compare_growth(left, right)
-        if result[0] is GrowthComparison.UNKNOWN:
+        if result[0] is AsymptoticGrowthComparison.UNKNOWN:
             return False
         self.knowledge.set(obligation, result)
         return True
@@ -294,7 +301,7 @@ class Multiseries:
         for formal_candidate in obligation.candidates:
             candidate = self._deformalize_expr(formal_candidate, syms)
             relation, ratio = self.context.compare_growth(expression, candidate)
-            if relation is GrowthComparison.SAME_ORDER and ratio is not None:
+            if relation is AsymptoticGrowthComparison.SAME_ORDER and ratio is not None:
                 residual = sp.simplify(expression - ratio * candidate)
                 self.knowledge.set(obligation, (candidate, ratio, residual))
                 return True
@@ -347,7 +354,9 @@ class Multiseries:
         reverse = {sym: elem.expr for sym, elem in zip(syms, self.scale.elements)}
         output = []
         for term in terms:
-            coefficient = analytic_powsimp(sp.simplify(term.coefficient.xreplace(reverse)))
+            coefficient = analytic_powsimp(
+                sp.simplify(term.coefficient.xreplace(reverse))
+            )
             zero = self.context.is_zero(coefficient)
             if zero is True:
                 continue
@@ -383,11 +392,13 @@ class Multiseries:
 
         log_z = None
         if self.level > 0:
-            lower_scale = AsymptoticScale(
+            lower_scale = Scale(
                 self.scale.variable, self.scale.elements[: self.level], self.scale.point
             )
             try:
-                lower_formal, lower_syms = lower_scale.formalize(sp.log(self.scale_element))
+                lower_formal, lower_syms = lower_scale.formalize(
+                    sp.log(self.scale_element)
+                )
                 lower_to_full = {a: b for a, b in zip(lower_syms, syms[: self.level])}
                 candidate = analytic_powsimp(lower_formal.xreplace(lower_to_full))
                 if not candidate.has(z):
@@ -397,7 +408,9 @@ class Multiseries:
 
         native = None
         filtered = []
-        sparse = LazySparseSeries(formal, z, self.context, log_z=log_z, knowledge=self.knowledge)
+        sparse = LazySparseSeries(
+            formal, z, self.context, log_z=log_z, knowledge=self.knowledge
+        )
         sparse_request = 1
 
         # Pull exactly one additional formal term at a time.  If deformalized
@@ -424,7 +437,9 @@ class Multiseries:
                 self._terms = filtered
                 return tuple(filtered[:n])
 
-            root_state = next((st for st in sparse.node_states if st.expr == formal), None)
+            root_state = next(
+                (st for st in sparse.node_states if st.expr == formal), None
+            )
             if root_state is not None and root_state.exhausted:
                 self._terms = filtered
                 return tuple(filtered[:n])
@@ -497,33 +512,43 @@ class Multiseries:
         result = sp.S.Zero
         for i, term in enumerate(self.terms(n)):
             coeff = term.coefficient
-            if recursive_coefficients and self.level > 0 and coeff.has(self.scale.variable):
+            if (
+                recursive_coefficients
+                and self.level > 0
+                and coeff.has(self.scale.variable)
+            ):
                 coeff = self.coefficient_series(i).truncate(recursive_coefficients)
             result += coeff * self.scale_element**term.exponent
         return analytic_powsimp(result)
 
-    def truncation(self, n: int | None = None, *, recursive_coefficients: int | None = None):
+    def truncation(
+        self, n: int | None = None, *, recursive_coefficients: int | None = None
+    ):
         """Return a finite prefix with conservative remainder semantics.
 
         The first omitted active-scale term certifies a big-O tail.  Coefficients
         are retained exactly unless recursive coefficient truncation is requested.
         """
-        from .remainder import AsymptoticRemainder, AsymptoticTruncation
+        from .remainder import Remainder, Truncation
 
         count = self.default_terms if n is None else max(0, int(n))
         prefix = self.truncate(count, recursive_coefficients=recursive_coefficients)
         exact_error = analytic_powsimp(sp.expand(self.expr - prefix))
         if self.context.is_zero(exact_error) is True:
-            remainder = AsymptoticRemainder.exact_zero(
-                self.scale.variable, self.scale.point, source="exact multiseries truncation"
+            remainder = Remainder.exact_zero(
+                self.scale.variable,
+                self.scale.point,
+                source="exact multiseries truncation",
             )
-            return AsymptoticTruncation(prefix, remainder, count, count)
+            return Truncation(prefix, remainder, count, count)
 
         known = self.terms(count + 1)
         if len(known) > count:
             omitted = known[count]
-            scale = analytic_powsimp(omitted.coefficient * self.scale_element**omitted.exponent)
-            candidate = AsymptoticRemainder.big_o(
+            scale = analytic_powsimp(
+                omitted.coefficient * self.scale_element**omitted.exponent
+            )
+            candidate = Remainder.big_o(
                 scale,
                 self.scale.variable,
                 self.scale.point,
@@ -531,28 +556,28 @@ class Multiseries:
                 source="first omitted multiseries term",
             )
             if candidate.check(context=self.context) is True:
-                return AsymptoticTruncation(prefix, candidate, count, len(known))
-            remainder = AsymptoticRemainder.unknown(
+                return Truncation(prefix, candidate, count, len(known))
+            remainder = Remainder.unknown(
                 self.scale.variable,
                 self.scale.point,
                 exact_expression=exact_error,
                 source="first omitted multiseries term did not certify the complete tail",
             )
-            return AsymptoticTruncation(prefix, remainder, count, len(known))
+            return Truncation(prefix, remainder, count, len(known))
 
-        remainder = AsymptoticRemainder.unknown(
+        remainder = Remainder.unknown(
             self.scale.variable,
             self.scale.point,
             exact_expression=exact_error,
             source="multiseries tail scale not resolved",
         )
-        return AsymptoticTruncation(prefix, remainder, count, len(known))
+        return Truncation(prefix, remainder, count, len(known))
 
-    def asymptotic_element(self):
+    def as_element(self):
         """View this multiseries through the common asymptotic-field protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self)
+        return as_element(self)
 
     def differentiate(self, order: int = 1) -> Multiseries:
         """Differentiate the represented exact expression.
@@ -592,7 +617,7 @@ class Multiseries:
 
         Scale discovery is rerun on the primitive, so logarithms and other new
         scale classes introduced by integration are represented explicitly.
-        The fallback is intentionally marked by its finite lazy prefix: it is
+        The fallback is marked by its finite lazy prefix: it is
         used only when SymPy cannot express an elementary antiderivative.
         """
         x = self.scale.variable
@@ -606,11 +631,13 @@ class Multiseries:
                     f"Could not integrate {self.expr} or its {n}-term asymptotic prefix"
                 )
         primitive = analytic_powsimp(sp.simplify(primitive + sp.sympify(constant)))
-        result = multiseries(primitive, x, point=self.scale.point, terms=self.default_terms)
+        result = multiseries(
+            primitive, x, point=self.scale.point, terms=self.default_terms
+        )
         result.knowledge = self.knowledge
         return result
 
-    def inverse_asymptotic(
+    def inverse(
         self,
         inverse_variable: sp.Symbol | None = None,
         *,
@@ -623,9 +650,9 @@ class Multiseries:
         than a truncation, and therefore keeps cancellation/zero decisions in
         the same certified context as the multiseries itself.
         """
-        from .reversion import inverse_asymptotic
+        from .reversion import inverse
 
-        return inverse_asymptotic(
+        return inverse(
             self.expr,
             self.scale.variable,
             inverse_variable,
@@ -656,10 +683,11 @@ def add_term_streams(
             yield ta
             ta = next(ia, None)
             continue
-        if _exp_key(ta.exponent) < _exp_key(tb.exponent):
+        key_a, key_b = _exp_key(ta.exponent), _exp_key(tb.exponent)
+        if key_a < key_b:
             yield ta
             ta = next(ia, None)
-        elif _exp_key(tb.exponent) < _exp_key(ta.exponent):
+        elif key_b < key_a:
             yield tb
             tb = next(ib, None)
         else:
@@ -673,7 +701,11 @@ def add_term_streams(
 def multiply_term_lists(
     a: list[MultiseriesTerm], b: list[MultiseriesTerm], n: int
 ) -> list[MultiseriesTerm]:
-    """First ``n`` product terms by a heap frontier over index pairs."""
+    """First ``n`` product terms by a heap frontier over index pairs.
+
+    Each heap entry retains its simplified exponent and ordering key so popping
+    or deferring a candidate does not repeat symbolic simplification.
+    """
 
     if not a or not b or n <= 0:
         return []
@@ -686,27 +718,32 @@ def multiply_term_lists(
             return
         seen.add((i, j))
         exponent = sp.simplify(a[i].exponent + b[j].exponent)
-        heapq.heappush(heap, (_exp_key(exponent), next(ticket), i, j))
+        heapq.heappush(heap, (_exp_key(exponent), next(ticket), i, j, exponent))
 
     push(0, 0)
     result = []
     while heap and len(result) < n:
-        key, _, i, j = heapq.heappop(heap)
-        exponent = sp.simplify(a[i].exponent + b[j].exponent)
+        key, _, i, j, exponent = heapq.heappop(heap)
         coeff = sp.simplify(a[i].coefficient * b[j].coefficient)
         batch = [(i, j)]
         deferred = []
         while heap and heap[0][0] == key:
-            _, _, ii, jj = heapq.heappop(heap)
-            ee = sp.simplify(a[ii].exponent + b[jj].exponent)
+            candidate_key, _, ii, jj, ee = heapq.heappop(heap)
             if ee == exponent or (ee - exponent).is_zero is True:
                 coeff += a[ii].coefficient * b[jj].coefficient
                 batch.append((ii, jj))
             else:
-                deferred.append((ii, jj))
-        for ii, jj in deferred:
+                deferred.append((candidate_key, ii, jj, ee))
+        for candidate_key, ii, jj, ee in deferred:
             heapq.heappush(
-                heap, (_exp_key(sp.simplify(a[ii].exponent + b[jj].exponent)), next(ticket), ii, jj)
+                heap,
+                (
+                    candidate_key,
+                    next(ticket),
+                    ii,
+                    jj,
+                    ee,
+                ),
             )
         coeff = sp.simplify(coeff)
         if coeff != 0:
@@ -721,22 +758,28 @@ def multiseries(
     expr: sp.Expr,
     variable: sp.Symbol,
     *,
-    scale: AsymptoticScale | Iterable[sp.Expr] | None = None,
+    scale: Scale | Iterable[sp.Expr] | None = None,
     point: sp.Expr = sp.oo,
     terms: int = 6,
     allow_series_fallback: bool = True,
+    assumptions: sp.Expr = sp.S.true,
+    context: AsymptoticContext | None = None,
 ) -> Multiseries:
     """Create a lazy multiseries, discovering an asymptotic scale when omitted."""
+    assumptions = normalize_assumptions(assumptions)
+    expr = sp.refine(sp.sympify(expr), assumptions)
     discovery: ScaleDiscovery | None = None
     knowledge: AsymptoticKnowledge | None = None
     if scale is None:
         knowledge = AsymptoticKnowledge()
-        discovery = ScaleDiscovery(expr, variable, point, knowledge=knowledge)
+        discovery = ScaleDiscovery(
+            expr, variable, point, context=context, knowledge=knowledge
+        )
         scale_obj = discovery.discover()
-    elif isinstance(scale, AsymptoticScale):
+    elif isinstance(scale, Scale):
         scale_obj = scale
     else:
-        scale_obj = AsymptoticScale.from_exprs(variable, tuple(scale), point)
+        scale_obj = Scale.from_exprs(variable, tuple(scale), point)
     result = Multiseries(
         expr,
         scale_obj,

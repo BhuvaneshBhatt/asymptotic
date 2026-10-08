@@ -3,7 +3,7 @@
 The machinery in this module makes parameter case splits explicit.  A stratum
 contains both its logical condition and the provenance/certification supporting
 that condition; algorithms may therefore return several mathematically distinct
-asymptotic answers instead of silently choosing a generic parameter regime.
+asymptotic answers instead of choosing a generic parameter regime.
 """
 
 from __future__ import annotations
@@ -13,17 +13,18 @@ from dataclasses import dataclass
 from typing import Generic, TypeVar
 
 import sympy as sp
+from funcprops import (
+    PropertyDecision,
+    PropertyKnowledge,
+    PropertyProvenance,
+    entails,
+    normalize_assumptions,
+)
 from sympy.core.relational import Relational
 from sympy.logic.boolalg import BooleanAtom
 
 from ._symbolic_policy import bounded_assumption_entails
 from .canonical import canonical_equal, canonical_expr, canonical_key
-from .function_properties.semantics import (
-    PropertyDecision,
-    PropertyKnowledge,
-    PropertyProvenance,
-    entails,
-)
 from .instrumentation import record_symbolic_event
 
 T = TypeVar("T")
@@ -37,7 +38,9 @@ def _polynomial_parameters(
     return tuple(sorted(condition.free_symbols, key=sp.default_sort_key))
 
 
-def _normalized_polynomial(expr: sp.Expr, parameters: tuple[sp.Symbol, ...]) -> sp.Expr | None:
+def _normalized_polynomial(
+    expr: sp.Expr, parameters: tuple[sp.Symbol, ...]
+) -> sp.Expr | None:
     """Canonical square-free representative of a polynomial zero set.
 
     Multiplication by a nonzero rational scalar and repeated irreducible factors
@@ -70,13 +73,20 @@ def _normalized_polynomial(expr: sp.Expr, parameters: tuple[sp.Symbol, ...]) -> 
     return sp.expand(poly.as_expr())
 
 
-def _normalize_relational_atom(atom: sp.Expr, parameters: tuple[sp.Symbol, ...]) -> sp.Expr:
+def _normalize_relational_atom(
+    atom: sp.Expr, parameters: tuple[sp.Symbol, ...]
+) -> sp.Expr:
     atom = sp.sympify(atom)
     if isinstance(atom, (sp.Equality, sp.Unequality)):
         polynomial = _normalized_polynomial(atom.lhs - atom.rhs, parameters)
         if polynomial is not None:
             if polynomial == 0:
                 return sp.S.true if isinstance(atom, sp.Equality) else sp.S.false
+            if not polynomial.free_symbols:
+                is_zero = sp.simplify(polynomial) == 0
+                if isinstance(atom, sp.Equality):
+                    return sp.S.true if is_zero else sp.S.false
+                return sp.S.false if is_zero else sp.S.true
             relation = sp.Eq if isinstance(atom, sp.Equality) else sp.Ne
             return relation(polynomial, 0, evaluate=False)
     if atom.func is sp.Not and len(atom.args) == 1:
@@ -105,19 +115,27 @@ def _groebner_equalities(
         if normalized is None:
             return equalities, None
         polynomial_exprs.append(normalized)
-    # Keep Gröbner canonicalization deliberately bounded.  Generated parameter
+    # Keep Gröbner canonicalization bounded.  Generated parameter
     # strata are normally tiny; larger systems should remain merely structural.
-    if len(polynomial_exprs) > 8 or sum(int(sp.count_ops(p)) for p in polynomial_exprs) > 120:
+    if (
+        len(polynomial_exprs) > 8
+        or sum(int(sp.count_ops(p)) for p in polynomial_exprs) > 120
+    ):
         return equalities, None
     try:
-        basis = sp.groebner(polynomial_exprs, *parameters, order="grevlex", domain=sp.QQ)
+        basis = sp.groebner(
+            polynomial_exprs, *parameters, order="grevlex", domain=sp.QQ
+        )
     except (sp.PolynomialError, TypeError, ValueError, NotImplementedError):
         return equalities, None
     normalized_basis = []
     for polynomial in basis.polys:
         expr = _normalized_polynomial(polynomial.as_expr(), parameters)
-        if expr not in (None, 0):
-            normalized_basis.append(sp.Eq(expr, 0, evaluate=False))
+        if expr is None or expr == 0:
+            continue
+        if not expr.free_symbols:
+            return [sp.S.false], basis
+        normalized_basis.append(sp.Eq(expr, 0, evaluate=False))
     normalized_basis.sort(key=lambda item: repr(canonical_key(item)))
     return normalized_basis, basis
 
@@ -152,6 +170,8 @@ def _canonicalize_conjunction(
     ]
     other = [a for a in normalized if a not in polynomial_equalities]
     equality_basis, groebner = _groebner_equalities(polynomial_equalities, parameters)
+    if any(atom is sp.S.false for atom in equality_basis):
+        return sp.S.false
 
     reduced_other = []
     for atom in other:
@@ -176,7 +196,9 @@ def _canonicalize_conjunction(
         by_key[key] = atom
     atoms_out = sorted(by_key.values(), key=lambda item: repr(canonical_key(item)))
 
-    equality_keys = {canonical_key(a.lhs - a.rhs) for a in atoms_out if isinstance(a, sp.Equality)}
+    equality_keys = {
+        canonical_key(a.lhs - a.rhs) for a in atoms_out if isinstance(a, sp.Equality)
+    }
     inequality_keys = {
         canonical_key(a.lhs - a.rhs) for a in atoms_out if isinstance(a, sp.Unequality)
     }
@@ -211,7 +233,8 @@ def normalize_parameter_condition(
         return canonical_expr(_canonicalize_conjunction(condition.args, params))
     if condition.func is sp.Or:
         branches = [
-            normalize_parameter_condition(branch, parameters=params) for branch in condition.args
+            normalize_parameter_condition(branch, parameters=params)
+            for branch in condition.args
         ]
         if any(branch is sp.S.true for branch in branches):
             return sp.S.true
@@ -237,7 +260,10 @@ def normalize_parameter_condition(
 
 
 def parameter_conditions_equivalent(
-    left: sp.Expr | bool, right: sp.Expr | bool, *, parameters: Iterable[sp.Symbol] | None = None
+    left: sp.Expr | bool,
+    right: sp.Expr | bool,
+    *,
+    parameters: Iterable[sp.Symbol] | None = None,
 ) -> bool:
     """Return whether two generated parameter conditions share a canonical form."""
 
@@ -247,9 +273,9 @@ def parameter_conditions_equivalent(
         if parameters is not None
         else tuple(sorted(symbols, key=sp.default_sort_key))
     )
-    return canonical_key(normalize_parameter_condition(left, parameters=params)) == canonical_key(
-        normalize_parameter_condition(right, parameters=params)
-    )
+    return canonical_key(
+        normalize_parameter_condition(left, parameters=params)
+    ) == canonical_key(normalize_parameter_condition(right, parameters=params))
 
 
 @dataclass(frozen=True)
@@ -265,7 +291,9 @@ class ParameterStratum(Generic[T]):
     limitations: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "condition", normalize_parameter_condition(self.condition))
+        object.__setattr__(
+            self, "condition", normalize_parameter_condition(self.condition)
+        )
 
 
 @dataclass(frozen=True)
@@ -286,18 +314,31 @@ class AsymptoticStratification(Generic[T]):
             "strata",
             tuple(sorted(self.strata, key=lambda s: repr(canonical_key(s.condition)))),
         )
-        object.__setattr__(self, "assumptions", sp.sympify(self.assumptions))
+        object.__setattr__(self, "assumptions", normalize_assumptions(self.assumptions))
 
-    def select(self, assumptions: sp.Expr | bool = sp.S.true) -> ParameterStratum[T] | None:
+    def select(
+        self, assumptions: sp.Expr | bool = sp.S.true
+    ) -> ParameterStratum[T] | None:
         """Return the unique certified applicable stratum, if one exists."""
 
-        combined = sp.And(self.assumptions, sp.sympify(assumptions))
+        combined = normalize_assumptions(
+            sp.And(self.assumptions, normalize_assumptions(assumptions))
+        )
+        if combined is sp.S.false:
+            return None
         matches = [s for s in self.strata if entails(s.condition, combined) is True]
         return matches[0] if len(matches) == 1 else None
 
     @property
     def conditions(self) -> tuple[sp.Expr, ...]:
         return tuple(s.condition for s in self.strata)
+
+    @property
+    def mathematical_value(self):
+        """Project certified strata to ConditionalExpression/Piecewise value mode."""
+        from .conditional import stratification_expression
+
+        return stratification_expression(self)
 
 
 def _parameters_in(conditions: Iterable[sp.Expr]) -> tuple[sp.Symbol, ...]:
@@ -375,7 +416,9 @@ def simplify_parameter_strata(
     stratification: AsymptoticStratification[T],
 ) -> AsymptoticStratification[T]:
     """Return a logically simplified stratification with equal-result overlaps merged."""
-    strata = _coalesce_equivalent_strata(list(stratification.strata), stratification.assumptions)
+    strata = _coalesce_equivalent_strata(
+        list(stratification.strata), stratification.assumptions
+    )
     return AsymptoticStratification(
         stratification.parameters,
         tuple(strata),
@@ -404,7 +447,11 @@ def stratify_parameter_cases(
     base = normalize_parameter_condition(assumptions)
     strata = []
     for case in cases:
-        stratum = case if isinstance(case, ParameterStratum) else ParameterStratum(case[0], case[1])
+        stratum = (
+            case
+            if isinstance(case, ParameterStratum)
+            else ParameterStratum(case[0], case[1])
+        )
         if entails(sp.Not(stratum.condition), base) is True:
             continue
         strata.append(stratum)
@@ -421,16 +468,22 @@ def stratify_parameter_cases(
                     )
 
     union = sp.Or(*(s.condition for s in strata)) if strata else sp.S.false
-    exhaustive = entails(union, base) is True or _unsatisfiable(sp.And(base, sp.Not(union)))
+    exhaustive = entails(union, base) is True or _unsatisfiable(
+        sp.And(base, sp.Not(union))
+    )
     if require_exhaustive and not exhaustive:
         raise ValueError(
             "parameter strata are not certified exhaustive under the supplied assumptions"
         )
 
     params = (
-        tuple(parameters) if parameters is not None else _parameters_in(s.condition for s in strata)
+        tuple(parameters)
+        if parameters is not None
+        else _parameters_in(s.condition for s in strata)
     )
-    return AsymptoticStratification(params, tuple(strata), base, exhaustive, tuple(provenance))
+    return AsymptoticStratification(
+        params, tuple(strata), base, exhaustive, tuple(provenance)
+    )
 
 
 def evaluate_parameter_strata(
@@ -474,7 +527,9 @@ def zero_nonzero_stratification(
         e = sp.sympify(expr)
         next_conditions = []
         for condition in conditions:
-            next_conditions.extend((sp.And(condition, sp.Eq(e, 0)), sp.And(condition, sp.Ne(e, 0))))
+            next_conditions.extend(
+                (sp.And(condition, sp.Eq(e, 0)), sp.And(condition, sp.Ne(e, 0)))
+            )
         conditions = next_conditions
     return evaluate_parameter_strata(
         conditions,
@@ -483,6 +538,8 @@ def zero_nonzero_stratification(
         parameters=parameters,
         require_exhaustive=True,
         provenance=(
-            PropertyProvenance("asymptotic.parameter_stratification", note="zero/nonzero split"),
+            PropertyProvenance(
+                "asymptotic.parameter_stratification", note="zero/nonzero split"
+            ),
         ),
     )

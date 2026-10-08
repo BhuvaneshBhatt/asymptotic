@@ -7,7 +7,7 @@ The native recurrence backend represents a scalar sequence on scales of the form
 
 For polynomial-coefficient linear recurrences, the upper Newton polygon fixes
 ``kappa`` and the edge characteristic polynomial fixes ``lambda_``. Simple
-roots use ordinary Birkhoff--Trjitzinsky lifting. Repeated constant-coefficient
+roots use ordinary Birkhoff–Trjitzinsky lifting. Repeated constant-coefficient
 roots use exact polynomial Jordan chains, while supported repeated
 variable-coefficient roots use a secondary Newton polygon to discover
 stretched-exponential phases and ramified correction lattices.
@@ -19,8 +19,6 @@ from dataclasses import dataclass
 from itertools import combinations
 
 import sympy as sp
-
-from ._symbolic_policy import bounded_solve_one
 
 # Reuse internal asymptotic coordinates across calls.  Fresh ``Dummy`` objects
 # become distinct keys in SymPy's process-global expression caches; creating
@@ -46,7 +44,7 @@ def _bt_coefficients(count: int) -> tuple[sp.Symbol, ...]:
 
 
 @dataclass(frozen=True)
-class DiscreteAsymptoticScale:
+class DiscreteScale:
     """One factorial/exponential/power scale for a sequence at ``n -> +oo``."""
 
     index: sp.Symbol
@@ -59,7 +57,13 @@ class DiscreteAsymptoticScale:
     def __post_init__(self) -> None:
         if not isinstance(self.index, sp.Symbol):
             raise TypeError("index must be a Symbol")
-        for name in ("factorial_power", "exponential_base", "power", "phase", "log_power"):
+        for name in (
+            "factorial_power",
+            "exponential_base",
+            "power",
+            "phase",
+            "log_power",
+        ):
             object.__setattr__(self, name, sp.sympify(getattr(self, name)))
 
     @property
@@ -100,9 +104,9 @@ class DiscreteNewtonEdge:
 
 @dataclass(frozen=True)
 class DiscreteAsymptoticBranch:
-    """A finite Birkhoff--Trjitzinsky branch attached to one Newton edge root."""
+    """A finite Birkhoff–Trjitzinsky branch attached to one Newton edge root."""
 
-    scale: DiscreteAsymptoticScale
+    scale: DiscreteScale
     coefficients: tuple[sp.Expr, ...]
     expression: sp.Expr
     edge: DiscreteNewtonEdge
@@ -116,7 +120,9 @@ class DiscreteAsymptoticBranch:
 
     def replay_characteristic(self) -> bool | None:
         value = sp.expand(
-            self.edge.characteristic.subs(self.edge.characteristic_symbol, self.characteristic_root)
+            self.edge.characteristic.subs(
+                self.edge.characteristic_symbol, self.characteristic_root
+            )
         )
         if value == 0 or value.is_zero is True:
             return True
@@ -204,7 +210,11 @@ def linear_recurrence_data(
     expr = sp.expand(expr)
     sequence = sp.sympify(sequence)
     atoms = sorted(
-        (atom for atom in expr.atoms(sp.Function) if getattr(atom, "func", None) == sequence.func),
+        (
+            atom
+            for atom in expr.atoms(sp.Function)
+            if getattr(atom, "func", None) == sequence.func
+        ),
         key=str,
     )
     if not atoms:
@@ -218,7 +228,9 @@ def linear_recurrence_data(
             raise NotImplementedError("native discrete lifting requires integer shifts")
         coefficient = sp.diff(expr, atom)
         if coefficient.has(sequence.func):
-            raise NotImplementedError("native discrete lifting requires a linear recurrence")
+            raise NotImplementedError(
+                "native discrete lifting requires a linear recurrence"
+            )
         raw[shift] = sp.expand(raw.get(shift, 0) + coefficient)
         rebuilt += coefficient * atom
     forcing = sp.expand(expr - rebuilt)
@@ -253,7 +265,9 @@ def linear_recurrence_data(
                 leading_coefficient=poly.LC(),
             )
     if len(polynomial) < 2:
-        raise NotImplementedError("recurrence has fewer than two nonzero shift coefficients")
+        raise NotImplementedError(
+            "recurrence has fewer than two nonzero shift coefficients"
+        )
     order = max(polynomial)
     coefficients = tuple(sorted(polynomial.items()))
     terms = tuple(metadata[shift] for shift, _ in coefficients)
@@ -264,7 +278,10 @@ def linear_recurrence_data(
 def discrete_newton_edges(data: LinearRecurrenceData) -> tuple[DiscreteNewtonEdge, ...]:
     """Construct all balanced upper Newton edges of a recurrence."""
 
-    points = [(term.shift, term.degree, term.leading_coefficient) for term in data.polynomial_terms]
+    points = [
+        (term.shift, term.degree, term.leading_coefficient)
+        for term in data.polynomial_terms
+    ]
 
     candidates: set[sp.Expr] = set()
     for (i, di, _), (j, dj, _) in combinations(points, 2):
@@ -274,7 +291,10 @@ def discrete_newton_edges(data: LinearRecurrenceData) -> tuple[DiscreteNewtonEdg
     z = _EDGE_LAMBDA
     edges: list[DiscreteNewtonEdge] = []
     for kappa in sorted(candidates, key=sp.default_sort_key):
-        heights = [(sp.Rational(degree) + kappa * shift, shift, lc) for shift, degree, lc in points]
+        heights = [
+            (sp.Rational(degree) + kappa * shift, shift, lc)
+            for shift, degree, lc in points
+        ]
         height = max(item[0] for item in heights)
         active = [(shift, lc) for value, shift, lc in heights if value == height]
         if len(active) < 2:
@@ -292,34 +312,52 @@ def discrete_newton_edges(data: LinearRecurrenceData) -> tuple[DiscreteNewtonEdg
     return tuple(edges)
 
 
-def _root_multiplicity(polynomial: sp.Expr, symbol: sp.Symbol, root: sp.Expr) -> int:
+def _complete_polynomial_roots(
+    polynomial: sp.Expr | sp.Poly, symbol: sp.Symbol
+) -> tuple[tuple[sp.Expr, int], ...]:
+    """Return every exact root with multiplicity, or an empty tuple if unavailable."""
+
     try:
-        degree = int(sp.Poly(polynomial, symbol).degree())
+        poly = (
+            polynomial
+            if isinstance(polynomial, sp.Poly)
+            else sp.Poly(polynomial, symbol)
+        )
     except (sp.PolynomialError, TypeError, ValueError):
-        return 1
-    derivative = sp.expand(polynomial)
-    for multiplicity in range(1, degree + 1):
-        derivative = sp.diff(derivative, symbol)
-        value = sp.expand(derivative.subs(symbol, root))
-        if value != 0 and value.is_zero is not True:
-            return multiplicity
-    return max(1, degree)
+        return ()
+    degree = int(poly.degree())
+    if degree < 1:
+        return ()
+    try:
+        roots = sp.roots(poly.as_expr(), symbol)
+    except (sp.PolynomialError, TypeError, ValueError):
+        roots = {}
+    if roots and sum(int(mult) for mult in roots.values()) == degree:
+        return tuple((sp.sympify(root), int(mult)) for root, mult in roots.items())
+    try:
+        exact = poly.all_roots(radicals=False)
+    except (NotImplementedError, sp.PolynomialError, TypeError, ValueError):
+        return ()
+    if len(exact) != degree:
+        return ()
+    counted: dict[sp.Expr, int] = {}
+    order: list[sp.Expr] = []
+    for root in exact:
+        root = sp.sympify(root)
+        if root not in counted:
+            counted[root] = 0
+            order.append(root)
+        counted[root] += 1
+    return tuple((root, counted[root]) for root in order)
 
 
 def _edge_roots(edge: DiscreteNewtonEdge) -> tuple[tuple[sp.Expr, int], ...]:
     z = edge.characteristic_symbol
-    try:
-        roots = sp.roots(edge.characteristic, z)
-    except (sp.PolynomialError, TypeError, ValueError):
-        roots = {}
-    if roots and sum(int(mult) for mult in roots.values()) == sp.degree(edge.characteristic, z):
-        return tuple((sp.sympify(root), int(mult)) for root, mult in roots.items() if root != 0)
-    solved = bounded_solve_one(edge.characteristic, z, allow_general=True) or ()
-    out = []
-    for root in solved:
-        if root != 0:
-            out.append((sp.sympify(root), _root_multiplicity(edge.characteristic, z, root)))
-    return tuple(out)
+    return tuple(
+        (root, multiplicity)
+        for root, multiplicity in _complete_polynomial_roots(edge.characteristic, z)
+        if root != 0
+    )
 
 
 def _coefficient_equations(
@@ -346,10 +384,13 @@ def _coefficient_equations(
             raise NotImplementedError(
                 "fractionally spaced Newton levels require a ramified discrete lift"
             )
-        factorial_ratio = sp.prod(1 + q * t for q in range(1, shift + 1)) ** edge.factorial_power
+        factorial_ratio = (
+            sp.prod(1 + q * t for q in range(1, shift + 1)) ** edge.factorial_power
+        )
         power_ratio = (1 + shift * t) ** theta
         shifted_series = sum(
-            series_coeffs[m] * t**m * (1 + shift * t) ** (-m) for m in range(len(series_coeffs))
+            series_coeffs[m] * t**m * (1 + shift * t) ** (-m)
+            for m in range(len(series_coeffs))
         )
         term = (
             t ** int(gap)
@@ -404,7 +445,11 @@ def _solve_lift_equations(
         current = sp.expand(equation.subs(solved))
         if current == 0 or current.is_zero is True:
             continue
-        pending = [symbol for symbol in unknowns if symbol not in solved and current.has(symbol)]
+        pending = [
+            symbol
+            for symbol in unknowns
+            if symbol not in solved and current.has(symbol)
+        ]
         if not pending:
             if current.is_zero is False:
                 return None
@@ -418,7 +463,9 @@ def _solve_lift_equations(
             break
     if theta not in solved:
         return None
-    values = tuple(sp.cancel(solved.get(symbol, 0)) for symbol in coeffs[: max(0, terms - 1)])
+    values = tuple(
+        sp.cancel(solved.get(symbol, 0)) for symbol in coeffs[: max(0, terms - 1)]
+    )
     return sp.cancel(solved[theta]), values
 
 
@@ -454,12 +501,11 @@ def _solve_ramified_transport_branches(
         return ()
     if polynomial.degree() < 1 or polynomial.degree() > 8:
         return ()
-    roots = sp.roots(polynomial.as_expr(), theta)
-    if not roots or sum(int(mult) for mult in roots.values()) != polynomial.degree():
-        solved = bounded_solve_one(polynomial.as_expr(), theta, allow_general=True) or ()
-        roots = {sp.sympify(value): 1 for value in solved}
+    roots = _complete_polynomial_roots(polynomial, theta)
+    if not roots:
+        return ()
     out = []
-    for theta_value, multiplicity in roots.items():
+    for theta_value, multiplicity in roots:
         substituted = [sp.expand(eq.subs(theta, theta_value)) for eq in equations]
         unknowns = list(coeffs[: max(0, terms - 1)])
         solved_coeffs: dict[sp.Symbol, sp.Expr] = {}
@@ -469,7 +515,9 @@ def _solve_ramified_transport_branches(
             if current == 0 or current.is_zero is True:
                 continue
             pending = [
-                symbol for symbol in unknowns if symbol not in solved_coeffs and current.has(symbol)
+                symbol
+                for symbol in unknowns
+                if symbol not in solved_coeffs and current.has(symbol)
             ]
             if not pending:
                 if current.is_zero is False:
@@ -484,7 +532,9 @@ def _solve_ramified_transport_branches(
             solved_coeffs[target] = sp.cancel(value.subs(solved_coeffs))
         if failed:
             continue
-        corrections = tuple(sp.cancel(solved_coeffs.get(symbol, 0)) for symbol in unknowns)
+        corrections = tuple(
+            sp.cancel(solved_coeffs.get(symbol, 0)) for symbol in unknowns
+        )
         out.append((sp.cancel(theta_value), corrections, int(multiplicity)))
     return tuple(out)
 
@@ -496,7 +546,9 @@ def _gap_for_term(
     return sp.cancel(edge.height - term.degree - edge.factorial_power * term.shift)
 
 
-def _phase_monomial(phase: sp.Expr, index: sp.Symbol) -> tuple[sp.Expr, sp.Rational] | None:
+def _phase_monomial(
+    phase: sp.Expr, index: sp.Symbol
+) -> tuple[sp.Expr, sp.Rational] | None:
     """Return ``(coefficient, exponent)`` for a single power phase ``c*n**alpha``."""
 
     phase = sp.expand_power_base(sp.sympify(phase), force=False)
@@ -546,7 +598,7 @@ def _normalized_residual_series(
 
     The local variable is ``s = n**(-1/D)`` where ``1/D`` is the branch's
     correction-lattice step.  This covers ordinary inverse powers and ramified
-    Birkhoff--Trjitzinsky lattices with the same replay code.
+    Birkhoff–Trjitzinsky lattices with the same replay code.
     """
 
     n = data.index
@@ -568,7 +620,9 @@ def _normalized_residual_series(
         gap = _gap_for_term(edge, term_data)
         gap_power = sp.cancel(denominator * gap)
         if gap_power.is_integer is not True or gap_power.is_nonnegative is not True:
-            raise NotImplementedError("branch lattice does not resolve the Newton level spacing")
+            raise NotImplementedError(
+                "branch lattice does not resolve the Newton level spacing"
+            )
 
         factorial_ratio = sp.series(
             sp.prod(1 + q * local**denominator for q in range(1, shift + 1))
@@ -583,12 +637,17 @@ def _normalized_residual_series(
             0,
             series_order,
         ).removeO()
-        phase_ratio = _phase_ratio_series(scale.phase, n, shift, local, denominator, series_order)
+        phase_ratio = _phase_ratio_series(
+            scale.phase, n, shift, local, denominator, series_order
+        )
         if scale.log_power == 0:
             log_ratio = sp.S.One
         else:
             log_ratio = sp.series(
-                (sp.log(local ** (-denominator) + shift) / sp.log(local ** (-denominator)))
+                (
+                    sp.log(local ** (-denominator) + shift)
+                    / sp.log(local ** (-denominator))
+                )
                 ** scale.log_power,
                 local,
                 0,
@@ -600,7 +659,8 @@ def _normalized_residual_series(
             if m >= series_order:
                 break
             shifted_factor = sum(
-                sp.binomial(-sp.Rational(m, denominator), k) * (shift * local**denominator) ** k
+                sp.binomial(-sp.Rational(m, denominator), k)
+                * (shift * local**denominator) ** k
                 for k in range((series_order - m - 1) // denominator + 1)
             )
             shifted_correction += coefficient * local**m * shifted_factor
@@ -668,12 +728,14 @@ def _constant_coefficient_repeated_branches(
 ) -> tuple[DiscreteAsymptoticBranch, ...]:
     """Return the exact Jordan-chain branches for a repeated constant root."""
 
-    if edge.factorial_power != 0 or not all(term.degree == 0 for term in data.polynomial_terms):
+    if edge.factorial_power != 0 or not all(
+        term.degree == 0 for term in data.polynomial_terms
+    ):
         return ()
     n = data.index
     branches = []
     for power in range(multiplicity):
-        scale = DiscreteAsymptoticScale(
+        scale = DiscreteScale(
             n,
             exponential_base=root,
             power=sp.Integer(power),
@@ -709,7 +771,7 @@ def _tertiary_phase_by_residual(
     n = data.index
     d0 = int(q.q)
     base_step = sp.Rational(1, d0)
-    base_scale = DiscreteAsymptoticScale(
+    base_scale = DiscreteScale(
         n, factorial_power=edge.factorial_power, exponential_base=root, phase=phase
     )
     base = DiscreteAsymptoticBranch(
@@ -730,7 +792,11 @@ def _tertiary_phase_by_residual(
     for term in sp.Add.make_args(sp.expand(residual)):
         exponent = term.as_powers_dict().get(_BT_LOCAL, sp.S.Zero)
         coefficient = sp.expand(term / _BT_LOCAL**exponent)
-        if exponent.is_integer is True and coefficient != 0 and coefficient.is_zero is not True:
+        if (
+            exponent.is_integer is True
+            and coefficient != 0
+            and coefficient.is_zero is not True
+        ):
             orders.append(int(exponent))
     if not orders:
         return ()
@@ -747,8 +813,11 @@ def _tertiary_phase_by_residual(
     denominator = int(sp.ilcm(d0, int(beta.q)))
     c = sp.Dummy("tertiary_c")
     candidate_phase = sp.expand(phase + c * n**beta)
-    scale = DiscreteAsymptoticScale(
-        n, factorial_power=edge.factorial_power, exponential_base=root, phase=candidate_phase
+    scale = DiscreteScale(
+        n,
+        factorial_power=edge.factorial_power,
+        exponential_base=root,
+        phase=candidate_phase,
     )
     probe = DiscreteAsymptoticBranch(
         scale=scale,
@@ -781,12 +850,12 @@ def _tertiary_phase_by_residual(
             polynomial = sp.Poly(coefficient, c)
         except sp.PolynomialError:
             return ()
-        roots = sp.roots(polynomial.as_expr(), c)
+        roots = _complete_polynomial_roots(polynomial, c)
         if not roots:
             return ()
         return tuple(
             (sp.expand(phase + value * n**beta), int(mult))
-            for value, mult in roots.items()
+            for value, mult in roots
             if value != 0 and value.is_zero is not True
         )
     return ()
@@ -811,21 +880,33 @@ def _secondary_newton_phases(
 
     for term_data in data.polynomial_terms:
         shift = term_data.shift
-        normalized_coeff = sp.expand(term_data.expression.subs(n, 1 / t) * t**term_data.degree)
+        normalized_coeff = sp.expand(
+            term_data.expression.subs(n, 1 / t) * t**term_data.degree
+        )
         gap = _gap_for_term(edge, term_data)
         if gap.is_nonnegative is not True:
             return ()
-        factorial_ratio = sp.prod(1 + j * t for j in range(1, shift + 1)) ** edge.factorial_power
+        factorial_ratio = (
+            sp.prod(1 + j * t for j in range(1, shift + 1)) ** edge.factorial_power
+        )
         factorial_ratio = sp.series(factorial_ratio, t, 0, max_t_order).removeO()
-        shift_phase = sum((shift * u) ** b / sp.factorial(b) for b in range(max_u_order + 1))
-        residual += t**gap * normalized_coeff * root**shift * factorial_ratio * shift_phase
+        shift_phase = sum(
+            (shift * u) ** b / sp.factorial(b) for b in range(max_u_order + 1)
+        )
+        residual += (
+            t**gap * normalized_coeff * root**shift * factorial_ratio * shift_phase
+        )
 
     monomials: dict[tuple[sp.Rational, int], sp.Expr] = {}
     for term in sp.Add.make_args(sp.expand(residual)):
         powers = term.as_powers_dict()
         a = powers.get(t, sp.S.Zero)
         b = powers.get(u, sp.S.Zero)
-        if a.is_Rational is not True or b.is_integer is not True or b.is_nonnegative is not True:
+        if (
+            a.is_Rational is not True
+            or b.is_integer is not True
+            or b.is_nonnegative is not True
+        ):
             continue
         a = sp.Rational(a)
         b_int = int(b)
@@ -856,16 +937,18 @@ def _secondary_newton_phases(
         edge_terms = [
             coefficient * v**b
             for (a, b), coefficient in monomials.items()
-            if coefficient != 0 and coefficient.is_zero is not True and a + b * q == target_weight
+            if coefficient != 0
+            and coefficient.is_zero is not True
+            and a + b * q == target_weight
         ]
         if len(edge_terms) < 2:
             continue
         polynomial = sp.Poly(sp.expand(sum(edge_terms)), v)
-        roots = sp.roots(polynomial.as_expr(), v)
+        roots = _complete_polynomial_roots(polynomial, v)
         if not roots:
             continue
         alpha = sp.S.One - q
-        for value, root_mult in roots.items():
+        for value, root_mult in roots:
             if value == 0:
                 continue
             phase = sp.cancel(value / alpha) * n**alpha
@@ -938,7 +1021,9 @@ def _ramified_coefficient_equations(
         gap = _gap_for_term(edge, term_data)
         gap_power = sp.cancel(denominator * gap)
         if gap_power.is_integer is not True or gap_power.is_nonnegative is not True:
-            raise NotImplementedError("secondary lattice does not resolve the primary Newton gaps")
+            raise NotImplementedError(
+                "secondary lattice does not resolve the primary Newton gaps"
+            )
         factorial_ratio = sp.series(
             sp.prod(1 + q * local**denominator for q in range(1, shift + 1))
             ** edge.factorial_power,
@@ -946,7 +1031,9 @@ def _ramified_coefficient_equations(
             0,
             expansion_order,
         ).removeO()
-        phase_ratio = _phase_ratio_series(phase, n, shift, local, denominator, expansion_order)
+        phase_ratio = _phase_ratio_series(
+            phase, n, shift, local, denominator, expansion_order
+        )
         power_ratio = sum(
             sp.binomial(theta, k) * (shift * local**denominator) ** k
             for k in range((expansion_order - 1) // denominator + 1)
@@ -954,7 +1041,8 @@ def _ramified_coefficient_equations(
         shifted_series = sp.S.Zero
         for m, series_coefficient in enumerate(series_coeffs):
             shifted_factor = sum(
-                sp.binomial(-sp.Rational(m, denominator), k) * (shift * local**denominator) ** k
+                sp.binomial(-sp.Rational(m, denominator), k)
+                * (shift * local**denominator) ** k
                 for k in range((expansion_order - m - 1) // denominator + 1)
             )
             shifted_series += series_coefficient * local**m * shifted_factor
@@ -981,7 +1069,9 @@ def _ramified_coefficient_equations(
             continue
         coefficient = sp.expand(term / local**exponent)
         exponent_int = int(exponent)
-        equations[exponent_int] = sp.expand(equations.get(exponent_int, 0) + coefficient)
+        equations[exponent_int] = sp.expand(
+            equations.get(exponent_int, 0) + coefficient
+        )
     ordered = [equations[key] for key in sorted(equations)]
     return theta, coeffs, ordered
 
@@ -997,9 +1087,12 @@ def _ramified_branches(
 
     n = data.index
     branches: list[DiscreteAsymptoticBranch] = []
-    for phase, q, secondary_multiplicity, tertiary_multiplicity in _secondary_newton_phases(
-        data, edge, root, multiplicity
-    ):
+    for (
+        phase,
+        q,
+        secondary_multiplicity,
+        tertiary_multiplicity,
+    ) in _secondary_newton_phases(data, edge, root, multiplicity):
         denominators = [int(q.q)]
         for term_data in data.polynomial_terms:
             gap = sp.Rational(_gap_for_term(edge, term_data))
@@ -1015,8 +1108,10 @@ def _ramified_branches(
         if True:
             denominator = int(sp.Rational(lattice_step).q)
             try:
-                theta_symbol, coeff_symbols, equations = _ramified_coefficient_equations(
-                    data, edge, root, active_phase, lattice_step, terms
+                theta_symbol, coeff_symbols, equations = (
+                    _ramified_coefficient_equations(
+                        data, edge, root, active_phase, lattice_step, terms
+                    )
                 )
             except (NotImplementedError, ValueError, TypeError):
                 continue
@@ -1024,13 +1119,15 @@ def _ramified_branches(
                 theta_symbol, coeff_symbols, equations, terms
             )
             if not transport:
-                solved = _solve_lift_equations(theta_symbol, coeff_symbols, equations, terms)
+                solved = _solve_lift_equations(
+                    theta_symbol, coeff_symbols, equations, terms
+                )
                 if solved is None:
                     continue
                 transport = ((solved[0], solved[1], 1),)
 
             for theta, corrections, transport_multiplicity in transport:
-                scale = DiscreteAsymptoticScale(
+                scale = DiscreteScale(
                     n,
                     factorial_power=edge.factorial_power,
                     exponential_base=root,
@@ -1073,7 +1170,7 @@ def _ramified_branches(
                 )
                 if transport_multiplicity > 1 and measured is not None:
                     for log_power in range(1, transport_multiplicity):
-                        log_scale = DiscreteAsymptoticScale(
+                        log_scale = DiscreteScale(
                             n,
                             factorial_power=edge.factorial_power,
                             exponential_base=root,
@@ -1081,7 +1178,9 @@ def _ramified_branches(
                             phase=active_phase,
                             log_power=log_power,
                         )
-                        log_expression = sp.powsimp(log_scale.expression * correction, force=False)
+                        log_expression = sp.powsimp(
+                            log_scale.expression * correction, force=False
+                        )
                         log_branch = DiscreteAsymptoticBranch(
                             scale=log_scale,
                             coefficients=(sp.S.One, *corrections),
@@ -1115,12 +1214,17 @@ def _ramified_branches(
     return tuple(branches)
 
 
-def _apply_recurrence_operator(data: LinearRecurrenceData, expression: sp.Expr) -> sp.Expr:
+def _apply_recurrence_operator(
+    data: LinearRecurrenceData, expression: sp.Expr
+) -> sp.Expr:
     """Apply the normalized homogeneous recurrence operator to an expression."""
 
     n = data.index
     return sp.expand(
-        sum(coefficient * expression.subs(n, n + shift) for shift, coefficient in data.coefficients)
+        sum(
+            coefficient * expression.subs(n, n + shift)
+            for shift, coefficient in data.coefficients
+        )
     )
 
 
@@ -1189,7 +1293,9 @@ def _log_resonant_multiplier(
         )
         try:
             transformed = sp.expand(op(multiplier).subs(n, 1 / local) - 1)
-            expansion = sp.series(transformed, local, 0, max(terms + abs(power) + 8, 12)).removeO()
+            expansion = sp.series(
+                transformed, local, 0, max(terms + abs(power) + 8, 12)
+            ).removeO()
             expansion = sp.expand(expansion)
         except (TypeError, ValueError, NotImplementedError, sp.PolynomialError):
             continue
@@ -1234,7 +1340,7 @@ def _log_resonant_multiplier(
         # Free ansatz coefficients represent homogeneous additions; set them to
         # zero to select a particular solution deterministically.
         free = set().union(*(value.free_symbols for value in row)) & set(unknowns)
-        substitutions = {symbol: sp.S.Zero for symbol in free}
+        substitutions = dict.fromkeys(free, sp.S.Zero)
         values = tuple(sp.simplify(value.subs(substitutions)) for value in row)
         result = sp.expand(multiplier.subs(dict(zip(unknowns, values))))
         if result.free_symbols & set(unknowns):
@@ -1242,7 +1348,9 @@ def _log_resonant_multiplier(
         # Reject a candidate that failed to match the requested reduced RHS to
         # the computed truncation order.
         try:
-            defect = sp.series(op(result).subs(n, 1 / local) - 1, local, 0, max(terms, 2)).removeO()
+            defect = sp.series(
+                op(result).subs(n, 1 / local) - 1, local, 0, max(terms, 2)
+            ).removeO()
         except (TypeError, ValueError, NotImplementedError, sp.PolynomialError):
             continue
         if sp.expand(defect) != 0:
@@ -1298,7 +1406,9 @@ def inhomogeneous_particular_solution(
 
     try:
         base_num, base_den = sp.fraction(sp.cancel(base))
-        base_degree = int(sp.Poly(base_num, n).degree()) - int(sp.Poly(base_den, n).degree())
+        base_degree = int(sp.Poly(base_num, n).degree()) - int(
+            sp.Poly(base_den, n).degree()
+        )
     except (sp.PolynomialError, TypeError, ValueError):
         return None
     leading_power = -base_degree
@@ -1322,7 +1432,9 @@ def inhomogeneous_particular_solution(
         current = sp.expand(equations[exponent].subs(solved))
         if current == 0 or current.is_zero is True:
             continue
-        pending = [symbol for symbol in coeffs if symbol not in solved and current.has(symbol)]
+        pending = [
+            symbol for symbol in coeffs if symbol not in solved and current.has(symbol)
+        ]
         if not pending:
             if current.is_zero is False:
                 break
@@ -1357,7 +1469,7 @@ def birkhoff_trjitzinsky_branches(
 ) -> tuple[DiscreteAsymptoticBranch, ...]:
     """Lift Newton-edge roots to discrete asymptotic branches.
 
-    Simple roots use ordinary inverse-power Birkhoff--Trjitzinsky lifting.
+    Simple roots use ordinary inverse-power Birkhoff–Trjitzinsky lifting.
     Repeated constant-coefficient roots are expanded into their exact polynomial
     Jordan chain. Repeated variable-coefficient roots are passed to a secondary
     Newton analysis that can discover stretched-exponential phases and ramified
@@ -1371,11 +1483,15 @@ def birkhoff_trjitzinsky_branches(
     for edge in discrete_newton_edges(data):
         for root, multiplicity in _edge_roots(edge):
             if multiplicity > 1:
-                constant = _constant_coefficient_repeated_branches(data, edge, root, multiplicity)
+                constant = _constant_coefficient_repeated_branches(
+                    data, edge, root, multiplicity
+                )
                 if constant:
                     branches.extend(constant)
                     continue
-                branches.extend(_ramified_branches(data, edge, root, multiplicity, terms))
+                branches.extend(
+                    _ramified_branches(data, edge, root, multiplicity, terms)
+                )
                 continue
 
             try:
@@ -1384,11 +1500,13 @@ def birkhoff_trjitzinsky_branches(
                 )
             except NotImplementedError:
                 continue
-            solved = _solve_lift_equations(theta_symbol, coeff_symbols, equations, terms)
+            solved = _solve_lift_equations(
+                theta_symbol, coeff_symbols, equations, terms
+            )
             if solved is None:
                 continue
             theta, corrections = solved
-            scale = DiscreteAsymptoticScale(
+            scale = DiscreteScale(
                 n,
                 factorial_power=edge.factorial_power,
                 exponential_base=root,

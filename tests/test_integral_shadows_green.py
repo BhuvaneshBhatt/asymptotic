@@ -12,7 +12,7 @@ from asymptotic.remainder_theorems import (
 )
 
 
-def test_shackell_integral_shadow_formula_replays_for_unevaluated_integral():
+def test_shackell_integral_shadow_formula_unevaluated_integral():
     x = sp.symbols("x", positive=True)
     field = asymptotic_differential_field(x, (1 / sp.log(x), 1 / x))
     extension = field.add_integral_extension(
@@ -90,7 +90,7 @@ def test_second_order_green_dichotomy_certifies_slow_forcing():
     assert len(green.dichotomy.unstable_modes) == 1
 
 
-def test_second_order_green_refuses_uncontrolled_slower_homogeneous_mode():
+def test_second_order_green_refuses_homogeneous_mode():
     x = sp.symbols("x", positive=True)
     delta = sp.Function("delta")
     operator = sp.diff(delta(x), x, 2) - delta(x)
@@ -100,7 +100,9 @@ def test_second_order_green_refuses_uncontrolled_slower_homogeneous_mode():
     assert not cert.certified
     assert cert.conclusion.kind is RemainderKind.UNKNOWN
     controls = [
-        h for h in cert.hypotheses if str(h.predicate) == "green_homogeneous_modes_controlled"
+        h
+        for h in cert.hypotheses
+        if str(h.predicate) == "green_homogeneous_modes_controlled"
     ]
     assert controls and controls[0].verdict is not True
 
@@ -109,12 +111,14 @@ def test_frechet_wrapper_dispatches_higher_order_green_theorem():
     x = sp.symbols("x", positive=True)
     delta = sp.Function("delta")
     operator = sp.diff(delta(x), x, 2) - delta(x)
-    cert = certify_frechet_inverse_operator_remainder(sp.exp(-x / 2), operator, delta, x, sp.oo)
+    cert = certify_frechet_inverse_operator_remainder(
+        sp.exp(-x / 2), operator, delta, x, sp.oo
+    )
     assert cert.certified
     assert "Green" in cert.theorem
 
 
-def test_asymptotically_constant_green_certifies_small_coefficient_perturbation():
+def test_asymptotically_constant_green_certifies_coefficient_perturbation():
     x = sp.symbols("x", positive=True)
     delta = sp.Function("delta")
     operator = sp.diff(delta(x), x, 2) + sp.diff(delta(x), x) / x - delta(x)
@@ -139,7 +143,7 @@ def test_asymptotically_constant_green_certifies_small_coefficient_perturbation(
     assert "green_full_operator_defect_small" in predicates
 
 
-def test_asymptotically_constant_green_normalizes_variable_leading_coefficient():
+def test_asymptotically_constant_green_normalizes_leading_coefficient():
     x = sp.symbols("x", positive=True)
     delta = sp.Function("delta")
     operator = (1 + 1 / x) * sp.diff(delta(x), x, 2) - delta(x)
@@ -164,6 +168,8 @@ def test_asymptotically_constant_green_refuses_nonconvergent_coefficients():
     assert cert.conclusion.kind is RemainderKind.UNKNOWN
     assert green is not None and green.asymptotically_constant
     convergence = [
-        h for h in cert.hypotheses if str(h.predicate) == "green_normalized_coefficients_converge"
+        h
+        for h in cert.hypotheses
+        if str(h.predicate) == "green_normalized_coefficients_converge"
     ]
     assert convergence and convergence[0].verdict is not True

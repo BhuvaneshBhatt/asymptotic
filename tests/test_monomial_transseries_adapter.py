@@ -3,8 +3,10 @@ from types import SimpleNamespace
 import sympy as sp
 
 from asymptotic import (
-    GrowthComparison,
     TransseriesExpansion,
+)
+from asymptotic.context import (
+    AsymptoticGrowthComparison,
 )
 from asymptotic.monomial import (
     AsymptoticMonomial,
@@ -24,27 +26,36 @@ def test_ramification_model_and_common_cover_are_canonical():
     x = sp.symbols("x", positive=True)
     assert ramification_index(2, 3, 4) == 12
 
-    _, square = canonical_asymptotic_monomial(sp.sqrt(x), x, point=0, ramification_index=2)
+    _, square = canonical_asymptotic_monomial(
+        sp.sqrt(x), x, point=0, ramification_index=2
+    )
     _, cube = canonical_asymptotic_monomial(
         x ** sp.Rational(1, 3), x, point=0, ramification_index=3
     )
     assert square.power == 1
     assert cube.power == 1
-    assert compare_asymptotic_monomials(square, cube) is GrowthComparison.SMALLER
+    assert (
+        compare_asymptotic_monomials(square, cube) is AsymptoticGrowthComparison.SMALLER
+    )
 
 
 def test_hierarchy_cancels_common_exponential_levels_before_ordering():
     x = sp.symbols("x", positive=True)
     _, plus = canonical_asymptotic_monomial(sp.exp(x**2 + x), x, point=sp.oo)
     _, minus = canonical_asymptotic_monomial(sp.exp(x**2 - x), x, point=sp.oo)
-    assert compare_asymptotic_monomials(plus, minus) is GrowthComparison.LARGER
+    assert (
+        compare_asymptotic_monomials(plus, minus) is AsymptoticGrowthComparison.LARGER
+    )
 
-    assert compare_monomials(sp.exp(-x), x**-100, x, point=sp.oo) is GrowthComparison.SMALLER
+    assert (
+        compare_monomials(sp.exp(-x), x**-100, x, point=sp.oo)
+        is AsymptoticGrowthComparison.SMALLER
+    )
     assert (
         compare_monomials(
             x ** sp.Rational(3, 2) * sp.log(x), x ** sp.Rational(3, 2), x, point=sp.oo
         )
-        is GrowthComparison.LARGER
+        is AsymptoticGrowthComparison.LARGER
     )
     assert (
         compare_monomials(
@@ -53,7 +64,7 @@ def test_hierarchy_cancels_common_exponential_levels_before_ordering():
             x,
             point=sp.oo,
         )
-        is GrowthComparison.LARGER
+        is AsymptoticGrowthComparison.LARGER
     )
 
 
@@ -95,7 +106,7 @@ def test_term_division_uses_monomial_group():
     assert sp.simplify(quotient.expression - 3 * sp.exp(-x) / x**2) == 0
 
 
-def test_formal_ode_adapter_consumes_schema_without_importing_odeanalysis():
+def test_formal_ode_adapter_consumes_importing_odeanalysis():
     x = sp.symbols("x", positive=True)
     h = sp.Dummy("h", positive=True)
     t = sp.Dummy("t", positive=True)
@@ -106,7 +117,8 @@ def test_formal_ode_adapter_consumes_schema_without_importing_odeanalysis():
         logarithmic_degree=0,
         local_parameter=t,
         amplitude_parameter=sp.sqrt(t) * (1 + sp.Rational(5, 48) * t**3),
-        expression=sp.exp(sp.Rational(2, 3) * x ** sp.Rational(3, 2)) / x ** sp.Rational(1, 4),
+        expression=sp.exp(sp.Rational(2, 3) * x ** sp.Rational(3, 2))
+        / x ** sp.Rational(1, 4),
     )
     block = SimpleNamespace(
         index=0,
@@ -134,7 +146,9 @@ def test_formal_ode_adapter_consumes_schema_without_importing_odeanalysis():
     )
 
     converted = from_formal_ode_data(data, x)
+    assert converted.schema_version == 1
     assert converted.dimension == 1
+    assert converted.ramification_index == 2
     solution = converted.solutions[0]
     assert len(solution.terms) == 2
     first = solution.terms[0]
@@ -153,4 +167,7 @@ def test_ramified_logarithm_is_structural_not_opaque():
     monomial = AsymptoticMonomial(ram, sp.S.Zero, sp.Rational(1, 2), 2)
     assert monomial.power == sp.Rational(1, 2)
     assert monomial.log_power == 2
-    assert sp.simplify(monomial.parameter_expression - 4 * sp.sqrt(t) * sp.log(t) ** 2) == 0
+    assert (
+        sp.simplify(monomial.parameter_expression - 4 * sp.sqrt(t) * sp.log(t) ** 2)
+        == 0
+    )

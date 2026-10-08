@@ -1,12 +1,15 @@
 import sympy as sp
 
 from asymptotic import (
-    asymptotic_integrate,
-    compose_transseries,
-    inverse_asymptotic,
-    transseries_from_expression,
+    integrate,
+    inverse,
 )
-from asymptotic.general_ops import LogExpInverseResult, inverse_logexp
+from asymptotic.general_ops import (
+    LogExpInverseResult,
+    compose_transseries,
+    inverse_logexp,
+)
+from asymptotic.transseries import transseries_from_expression
 
 
 def test_general_meromorphic_composition_uses_native_small_scale():
@@ -25,7 +28,12 @@ def test_nested_logexp_composition_raises_and_lowers_height():
     exponential = compose_transseries(sp.exp(z), inner, argument=z, terms=4)
     assert sp.simplify(exponential.truncate() - x * sp.exp(x)) == 0
     logarithm = compose_transseries(sp.log(z), inner, argument=z, terms=4)
-    expected = sp.log(x) + sp.log(x) / x - sp.log(x) ** 2 / (2 * x**2) + sp.log(x) ** 3 / (3 * x**3)
+    expected = (
+        sp.log(x)
+        + sp.log(x) / x
+        - sp.log(x) ** 2 / (2 * x**2)
+        + sp.log(x) ** 3 / (3 * x**3)
+    )
     assert sp.simplify(logarithm.truncate() - expected) == 0
 
 
@@ -48,7 +56,7 @@ def test_ecalle_inverse_iteration_for_x_plus_log_x():
 
 def test_log_height_reduction_inverts_x_exp_x():
     x, y = sp.symbols("x y", positive=True)
-    result = inverse_asymptotic(x * sp.exp(x), x, y, terms=4)
+    result = inverse(x * sp.exp(x), x, y, terms=4, return_result=True)
     assert isinstance(result, LogExpInverseResult)
     expected = (
         sp.log(y)
@@ -62,9 +70,12 @@ def test_log_height_reduction_inverts_x_exp_x():
 
 def test_asymptotic_integration_exponential_by_parts():
     x = sp.symbols("x", positive=True)
-    primitive = asymptotic_integrate(sp.exp(-(x**2)), x, point=sp.oo, terms=4)
+    primitive = integrate(sp.exp(-(x**2)), x, point=sp.oo, terms=4, return_result=True)
     expected = sp.exp(-(x**2)) * (
-        -1 / (2 * x) + 1 / (4 * x**3) - sp.Rational(3, 8) / x**5 + sp.Rational(15, 16) / x**7
+        -1 / (2 * x)
+        + 1 / (4 * x**3)
+        - sp.Rational(3, 8) / x**5
+        + sp.Rational(15, 16) / x**7
     )
     assert sp.simplify(primitive.truncate() - expected) == 0
     residual = sp.simplify(sp.diff(primitive.truncate(), x) - sp.exp(-(x**2)))
@@ -75,11 +86,16 @@ def test_asymptotic_integration_power_log_scale_transitions():
     x = sp.symbols("x", positive=True)
     assert (
         sp.simplify(
-            asymptotic_integrate(1 / (x * sp.log(x)), x, point=sp.oo).truncate() - sp.log(sp.log(x))
+            integrate(
+                1 / (x * sp.log(x)), x, point=sp.oo, return_result=True
+            ).truncate()
+            - sp.log(sp.log(x))
         )
         == 0
     )
-    primitive = asymptotic_integrate(x**2 * sp.log(x) ** 3, x, point=sp.oo, terms=4)
+    primitive = integrate(
+        x**2 * sp.log(x) ** 3, x, point=sp.oo, terms=4, return_result=True
+    )
     expected = x**3 * (
         sp.log(x) ** 3 / 3 - sp.log(x) ** 2 / 3 + 2 * sp.log(x) / 9 - sp.Rational(2, 27)
     )

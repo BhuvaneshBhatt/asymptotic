@@ -4,10 +4,10 @@ from dataclasses import dataclass
 from functools import reduce
 
 import sympy as sp
+from funcprops import normalize_assumptions
 
 from ._integer_utils import integer_lcm as _lcm
-from ._symbolic_errors import SYMBOLIC_ERRORS
-from ._symbolic_policy import bounded_solve_one
+from ._symbolic_policy import bounded_limit, bounded_solve_one
 from .dominant import dominant_balance_candidates, lift_dominant_balance_branches
 
 
@@ -53,13 +53,15 @@ class PuiseuxSeries:
 
     def differentiate(self, order: int = 1) -> PuiseuxSeries:
         expr = sp.diff(self.truncate(), self.variable, order)
-        return puiseux_series(expr, self.variable, point=self.point, terms=max(1, len(self.terms)))
+        return puiseux_series(
+            expr, self.variable, point=self.point, terms=max(1, len(self.terms))
+        )
 
-    def asymptotic_element(self):
+    def as_element(self):
         """View this Puiseux series through the common asymptotic algebra."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(self, self.variable, point=self.point)
+        return as_element(self, self.variable, point=self.point)
 
 
 @dataclass(frozen=True)
@@ -88,7 +90,9 @@ def _extract_puiseux_terms(
     for term in sp.Add.make_args(expanded):
         exponent = sp.sympify(term.as_powers_dict().get(x, 0))
         if not exponent.is_Rational:
-            raise NotImplementedError(f"non-rational {error_context} exponent {exponent}")
+            raise NotImplementedError(
+                f"non-rational {error_context} exponent {exponent}"
+            )
         exponent = sp.Rational(exponent)
         coefficient = sp.simplify(term / x**exponent)
         if constant_coefficients and x in coefficient.free_symbols:
@@ -108,10 +112,12 @@ def puiseux_series(
     point: sp.Expr = 0,
     terms: int = 6,
     branch: BranchChoice | None = None,
+    assumptions: sp.Expr = sp.S.true,
 ) -> PuiseuxSeries:
     """Construct a rational-exponent local series with explicit ramification."""
 
-    expr = sp.sympify(expr)
+    assumptions = normalize_assumptions(assumptions)
+    expr = sp.refine(sp.sympify(expr), assumptions)
     if point in (sp.oo, -sp.oo):
         z = sp.Dummy("z", positive=True)
         sign = 1 if point is sp.oo else -1
@@ -121,10 +127,12 @@ def puiseux_series(
         raw = sp.series(expr, variable, point, terms).removeO()
         if point != 0:
             # Represent in powers of (x-point) using a local dummy, then map
-            # back. PuiseuxTerm is intentionally for zero/infinity coordinates;
+            # back. PuiseuxTerm is defined for zero/infinity coordinates;
             # nonzero centers return the shifted expression as coefficients.
             u = sp.Dummy("u")
-            local = sp.series(expr.xreplace({variable: u + point}), u, 0, terms).removeO()
+            local = sp.series(
+                expr.xreplace({variable: u + point}), u, 0, terms
+            ).removeO()
             local_terms = _extract_puiseux_terms(local, u)
             den = reduce(_lcm, (int(t.exponent.q) for t in local_terms), 1)
             shifted = tuple(PuiseuxTerm(t.exponent, t.coefficient) for t in local_terms)
@@ -132,21 +140,6 @@ def puiseux_series(
     extracted = _extract_puiseux_terms(raw, variable)
     ramification = reduce(_lcm, (int(t.exponent.q) for t in extracted), 1)
     return PuiseuxSeries(expr, variable, point, extracted, ramification, branch)
-
-
-def _valuation_and_lead(expr: sp.Expr, x: sp.Symbol) -> tuple[sp.Rational, sp.Expr] | None:
-    if expr == 0:
-        return None
-    try:
-        lead = sp.expand(expr).as_leading_term(x)
-        powers = lead.as_powers_dict()
-        exponent = sp.sympify(powers.get(x, 0))
-        if not exponent.is_Rational:
-            return None
-        coeff = sp.simplify(lead / x**exponent)
-        return sp.Rational(exponent), coeff
-    except SYMBOLIC_ERRORS:
-        return None
 
 
 def newton_polygon_candidates(
@@ -184,34 +177,45 @@ def algebraic_branches(
     """
 
     polynomial = sp.expand(sp.sympify(polynomial))
-    candidates = newton_polygon_candidates(polynomial, dependent, variable) if point == 0 else ()
+    candidates = (
+        newton_polygon_candidates(polynomial, dependent, variable) if point == 0 else ()
+    )
     explicit_roots = bounded_solve_one(polynomial, dependent, allow_general=True) or ()
 
     if explicit_roots:
         branches = []
         for index, root in enumerate(explicit_roots):
             choice = BranchChoice(index=index, label=f"branch-{index}")
-            series = puiseux_series(root, variable, point=point, terms=terms, branch=choice)
+            series = puiseux_series(
+                root, variable, point=point, terms=terms, branch=choice
+            )
             nr = None
             nc = None
             lead = series.leading_term
             if lead is not None:
                 for candidate in candidates:
                     if candidate.exponent == lead.exponent and any(
-                        sp.simplify(lead.coefficient - c) == 0 for c in candidate.coefficients
+                        sp.simplify(lead.coefficient - c) == 0
+                        for c in candidate.coefficients
                     ):
                         nr = candidate.exponent
                         nc = lead.coefficient
                         break
             branches.append(
-                AlgebraicBranch(polynomial, dependent, variable, root, series, nr, nc, choice)
+                AlgebraicBranch(
+                    polynomial, dependent, variable, root, series, nr, nc, choice
+                )
             )
         return tuple(branches)
 
     if point != 0 or not candidates:
-        raise NotImplementedError("Could not isolate an algebraic branch at this expansion point")
+        raise NotImplementedError(
+            "Could not isolate an algebraic branch at this expansion point"
+        )
 
-    lifted = lift_dominant_balance_branches(polynomial, dependent, variable, terms=terms)
+    lifted = lift_dominant_balance_branches(
+        polynomial, dependent, variable, terms=terms
+    )
     branches = []
     for index, item in enumerate(lifted):
         if not item.path or not item.leading_coefficients:
@@ -219,7 +223,9 @@ def algebraic_branches(
         formal_terms = _extract_puiseux_terms(item.series, variable)[:terms]
         ramification = reduce(_lcm, (int(t.exponent.q) for t in formal_terms), 1)
         choice = BranchChoice(index=index, label=f"branch-{index}")
-        series = PuiseuxSeries(item.series, variable, sp.S.Zero, formal_terms, ramification, choice)
+        series = PuiseuxSeries(
+            item.series, variable, sp.S.Zero, formal_terms, ramification, choice
+        )
         branches.append(
             AlgebraicBranch(
                 polynomial,
@@ -233,5 +239,98 @@ def algebraic_branches(
             )
         )
     if not branches:
-        raise NotImplementedError("Newton polygon produced no liftable nonzero branches")
+        raise NotImplementedError(
+            "Newton polygon produced no liftable nonzero branches"
+        )
     return tuple(branches)
+
+
+@dataclass(frozen=True)
+class NormalizedAlgebraicApproach:
+    """One exact local algebraic approach written in a ramified parameter."""
+
+    branch: AlgebraicBranch
+    parameter: sp.Symbol
+    substitutions: tuple[tuple[sp.Symbol, sp.Expr], ...]
+    transformed_domain: sp.Expr
+    ramification_index: int
+    exact: bool = False
+    coverage: object | None = None
+
+
+def normalize_algebraic_approaches(
+    polynomial,
+    dependent,
+    variable,
+    *,
+    point=0,
+    dependent_point=0,
+    domain=sp.S.true,
+    terms=8,
+):
+    """Return exact ramified parametrizations of certified local components.
+
+    Truncated Newton/Puiseux branches remain useful elsewhere, but are not
+    advertised here as theorem-level coverage.  Completeness is certified only
+    when every algebraic root in the dependent variable is explicitly isolated.
+    """
+    from .coverage import CoverageCertificate
+
+    polynomial = sp.sympify(polynomial)
+    point = sp.sympify(point)
+    dependent_point = sp.sympify(dependent_point)
+    branches = algebraic_branches(
+        polynomial, dependent, variable, point=point, terms=terms
+    )
+    try:
+        degree = sp.Poly(polynomial, dependent).degree()
+    except sp.PolynomialError:
+        degree = None
+    exact_all = (
+        bool(branches)
+        and all(b.exact_root is not None for b in branches)
+        and degree is not None
+        and len(branches) == degree
+    )
+    local = []
+    for branch in branches:
+        root = branch.exact_root
+        if root is None:
+            continue
+        try:
+            if (
+                sp.simplify(
+                    bounded_limit(root, variable, point, allow_general=True)
+                    - dependent_point
+                )
+                != 0
+            ):
+                continue
+        except (TypeError, ValueError, NotImplementedError):
+            continue
+        m = max(1, branch.series.ramification_index)
+        t = sp.Dummy("_puiseux_t", positive=True)
+        xsub = point + t**m
+        ysub = sp.simplify(root.xreplace({variable: xsub}))
+        pulled = sp.simplify(sp.sympify(domain).subs({variable: xsub, dependent: ysub}))
+        local.append((branch, t, xsub, ysub, pulled, m))
+    cov = (
+        CoverageCertificate.complete(
+            "exact_algebraic_branch_cover",
+            "all dependent-variable algebraic roots were isolated exactly and local components selected by their exact limit",
+            tuple(b.choice.index for b, *_ in local),
+        )
+        if exact_all
+        else CoverageCertificate.partial(
+            "exact_algebraic_branch_cover",
+            "one or more algebraic components lack an exact isolated root",
+            tuple(b.choice.index for b, *_ in local),
+            ("unisolated_component",),
+        )
+    )
+    return tuple(
+        NormalizedAlgebraicApproach(
+            b, t, ((variable, xs), (dependent, ys)), d, m, True, cov
+        )
+        for b, t, xs, ys, d, m in local
+    )

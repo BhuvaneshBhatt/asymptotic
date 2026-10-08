@@ -2,8 +2,8 @@
 
 This module implements the executable part of Shackell's Definitions 18--22:
 R_t, I_t, shadow fields/projections, ghosts, and compatible projection maps.
-It is intentionally certificate-driven: undecidable growth or zero tests do not
-silently become field membership assertions.
+It is certificate-driven: undecidable growth or zero tests do not
+become field membership assertions.
 """
 
 from __future__ import annotations
@@ -13,11 +13,11 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 import sympy as sp
+from funcprops import PropertyDecision, PropertyKnowledge, PropertyProvenance
 
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_primitive
 from .context import AsymptoticContext
-from .function_properties import PropertyDecision, PropertyKnowledge, PropertyProvenance
 
 
 @dataclass(frozen=True)
@@ -79,7 +79,10 @@ class IntegralShadowExtension:
 
     def verify_differential_equation(self) -> bool | None:
         try:
-            return sp.simplify(sp.diff(self.primitive, self.variable) - self.integrand) == 0
+            return (
+                sp.simplify(sp.diff(self.primitive, self.variable) - self.integrand)
+                == 0
+            )
         except SYMBOLIC_ERRORS:
             return None
 
@@ -109,7 +112,11 @@ class IntegralShadowProjection:
 
     def replay(self) -> bool | None:
         if (
-            sp.simplify(self.normalized_expression - self.normalized_shadow - self.normalized_ghost)
+            sp.simplify(
+                self.normalized_expression
+                - self.normalized_shadow
+                - self.normalized_ghost
+            )
             != 0
         ):
             return False
@@ -192,9 +199,9 @@ class ShadowField:
 
     def element(self, expr: sp.Expr):
         """View a field expression through the common asymptotic-element protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(sp.sympify(expr), self.variable, point=self.point)
+        return as_element(sp.sympify(expr), self.variable, point=self.point)
 
     def _zero(self, expr: sp.Expr) -> bool | None:
         expr = sp.simplify(expr)
@@ -206,7 +213,9 @@ class ShadowField:
             return self.zero_test(expr)
         return None
 
-    def project(self, expr: sp.Expr, *, strict: bool = True) -> ShadowGhostDecomposition:
+    def project(
+        self, expr: sp.Expr, *, strict: bool = True
+    ) -> ShadowGhostDecomposition:
         """Compute the shadow homomorphism on the supported exp-log field.
 
         The map is recursive on field operations.  In particular eta(exp f)=
@@ -214,7 +223,9 @@ class ShadowField:
         extension rule; the ghost is always retained in exact closed form.
         """
         expr = sp.sympify(expr)
-        moderate = moderate_growth_decision(expr, self.scale, self.variable, point=self.point)
+        moderate = moderate_growth_decision(
+            expr, self.scale, self.variable, point=self.point
+        )
         if moderate.verdict is False:
             raise ValueError("shadow projection is defined only on R_t")
         decisions: list[GrowthIdealDecision] = [moderate]
@@ -223,7 +234,9 @@ class ShadowField:
             node = sp.sympify(node)
             if not node.has(self.variable):
                 return node
-            d = infinitesimal_ideal_decision(node, self.scale, self.variable, point=self.point)
+            d = infinitesimal_ideal_decision(
+                node, self.scale, self.variable, point=self.point
+            )
             decisions.append(d)
             if d.verdict is True:
                 return sp.S.Zero
@@ -251,7 +264,9 @@ class ShadowField:
 
         shadow = sp.simplify(eta(sp.expand(expr)))
         ghost = sp.simplify(expr - shadow)
-        gd = infinitesimal_ideal_decision(ghost, self.scale, self.variable, point=self.point)
+        gd = infinitesimal_ideal_decision(
+            ghost, self.scale, self.variable, point=self.point
+        )
         decisions.append(gd)
         certified = moderate.verdict is True and (ghost == 0 or gd.verdict is True)
         if strict and not certified:
@@ -269,7 +284,9 @@ class ShadowField:
     def relative_derivative(self, a: sp.Expr, b: sp.Expr) -> sp.Expr:
         bd = sp.diff(b, self.variable)
         if self._zero(bd) is True:
-            raise ZeroDivisionError("relative derivative denominator has zero derivative")
+            raise ZeroDivisionError(
+                "relative derivative denominator has zero derivative"
+            )
         return sp.simplify(sp.diff(a, self.variable) / bd)
 
     def verify_sfii(self, elements: tuple[sp.Expr, ...]) -> PropertyDecision:
@@ -277,7 +294,9 @@ class ShadowField:
         verdict: bool | None = True
         reasons = []
         for element in elements:
-            d = infinitesimal_ideal_decision(element, self.scale, self.variable, point=self.point)
+            d = infinitesimal_ideal_decision(
+                element, self.scale, self.variable, point=self.point
+            )
             z = self._zero(element)
             if d.verdict is True and z is False:
                 verdict = False
@@ -290,8 +309,13 @@ class ShadowField:
             verdict,
             sp.S.true,
             PropertyKnowledge.SUFFICIENT,
-            (PropertyProvenance("asymptotic.shadow_field", note="finite SF(ii) replay"),),
-            tuple(reasons) or ("no supplied nonzero shadow element was certified infinitesimal",),
+            (
+                PropertyProvenance(
+                    "asymptotic.shadow_field", note="finite SF(ii) replay"
+                ),
+            ),
+            tuple(reasons)
+            or ("no supplied nonzero shadow element was certified infinitesimal",),
         )
 
 
@@ -303,7 +327,9 @@ class AsymptoticDifferentialField:
     scales: tuple[sp.Expr, ...]
     point: sp.Expr = sp.oo
     shadow_fields: tuple[ShadowField, ...] = field(init=False)
-    integral_extensions: list[IntegralShadowExtension] = field(default_factory=list, init=False)
+    integral_extensions: list[IntegralShadowExtension] = field(
+        default_factory=list, init=False
+    )
 
     def __post_init__(self) -> None:
         self.scales = tuple(map(sp.sympify, self.scales))
@@ -314,9 +340,9 @@ class AsymptoticDifferentialField:
 
     def element(self, expr: sp.Expr):
         """View an expression in this differential field through the common protocol."""
-        from .algebra import asymptotic_element
+        from .algebra import as_element
 
-        return asymptotic_element(sp.sympify(expr), self.variable, point=self.point)
+        return as_element(sp.sympify(expr), self.variable, point=self.point)
 
     def add_integral_extension(
         self,
@@ -330,7 +356,9 @@ class AsymptoticDifferentialField:
         """Adjoin g with g'=integrand while retaining its arbitrary constant."""
         f = sp.sympify(integrand)
         if primitive is None:
-            primitive = bounded_primitive(f, self.variable, allow_general=True, risch=True)
+            primitive = bounded_primitive(
+                f, self.variable, allow_general=True, risch=True
+            )
             if primitive is None:
                 primitive = sp.Integral(f, self.variable)
         ext = IntegralShadowExtension(
@@ -347,7 +375,9 @@ class AsymptoticDifferentialField:
         self.integral_extensions.append(ext)
         return ext
 
-    def _integral_leading_monomial(self, ext: IntegralShadowExtension) -> sp.Expr | None:
+    def _integral_leading_monomial(
+        self, ext: IntegralShadowExtension
+    ) -> sp.Expr | None:
         if ext.leading_monomial is not None:
             return ext.leading_monomial
         if not ext.primitive.has(sp.Integral):
@@ -364,9 +394,9 @@ class AsymptoticDifferentialField:
             except SYMBOLIC_ERRORS:
                 pass
         try:
-            from .general_ops import asymptotic_integrate
+            from .general_ops import _integrate_expression
 
-            norm = asymptotic_integrate(
+            norm = _integrate_expression(
                 ext.integrand, self.variable, point=self.point, terms=1
             ).normalized()
             if norm.terms:
@@ -426,7 +456,9 @@ class AsymptoticDifferentialField:
         T = self._integral_leading_monomial(extension)
         if T is None or T == 0:
             if strict:
-                raise ValueError("could not certify a leading monomial for the integral extension")
+                raise ValueError(
+                    "could not certify a leading monomial for the integral extension"
+                )
             T = sp.S.One
         Td = sp.simplify(sp.diff(T, self.variable))
         if Td == 0:
@@ -457,12 +489,16 @@ class AsymptoticDifferentialField:
         if extension.constant != 0:
             c_over_t = sp.simplify(extension.constant / T)
             md = moderate_growth_decision(c_over_t, t, self.variable, point=self.point)
-            iid = infinitesimal_ideal_decision(c_over_t, t, self.variable, point=self.point)
+            iid = infinitesimal_ideal_decision(
+                c_over_t, t, self.variable, point=self.point
+            )
             decisions.extend((md, iid))
             if md.verdict is False:
                 loc = IntegrationConstantLocation.CHANGES_LEADING_SCALE
                 if strict:
-                    raise ValueError("integration constant changes the leading monomial")
+                    raise ValueError(
+                        "integration constant changes the leading monomial"
+                    )
             elif iid.verdict is True:
                 loc = IntegrationConstantLocation.GHOST
             elif md.verdict is True and iid.verdict is False:
@@ -472,18 +508,24 @@ class AsymptoticDifferentialField:
                 loc = IntegrationConstantLocation.UNRESOLVED
                 if strict:
                     raise ValueError("integration-constant location is unresolved")
-        normalized_expression = sp.simplify(extension.expression / T)
-        normalized_ghost = sp.simplify(normalized_expression - normalized_shadow)
-        gd = infinitesimal_ideal_decision(normalized_ghost, t, self.variable, point=self.point)
+        normalized = sp.simplify(extension.expression / T)
+        normalized_ghost = sp.simplify(normalized - normalized_shadow)
+        gd = infinitesimal_ideal_decision(
+            normalized_ghost, t, self.variable, point=self.point
+        )
         decisions.append(gd)
-        certified = projected_ratio.certified and (normalized_ghost == 0 or gd.verdict is True)
+        certified = projected_ratio.certified and (
+            normalized_ghost == 0 or gd.verdict is True
+        )
         if strict and not certified:
-            raise ValueError("integral shadow formula did not certify an I_t normalized ghost")
+            raise ValueError(
+                "integral shadow formula did not certify an I_t normalized ghost"
+            )
         return IntegralShadowProjection(
             extension,
             t,
             T,
-            normalized_expression,
+            normalized,
             normalized_shadow,
             normalized_ghost,
             loc,
@@ -493,19 +535,31 @@ class AsymptoticDifferentialField:
         )
 
     def projection(
-        self, index: int, expr: sp.Expr | IntegralShadowExtension, *, strict: bool = True
+        self,
+        index: int,
+        expr: sp.Expr | IntegralShadowExtension,
+        *,
+        strict: bool = True,
     ) -> ShadowGhostDecomposition | IntegralShadowProjection:
         if isinstance(expr, IntegralShadowExtension):
             return self.project_integral(index, expr, strict=strict)
         return self.shadow_fields[index].project(expr, strict=strict)
 
     def shadow(
-        self, index: int, expr: sp.Expr | IntegralShadowExtension, *, strict: bool = True
+        self,
+        index: int,
+        expr: sp.Expr | IntegralShadowExtension,
+        *,
+        strict: bool = True,
     ) -> sp.Expr:
         return self.projection(index, expr, strict=strict).shadow
 
     def ghost(
-        self, index: int, expr: sp.Expr | IntegralShadowExtension, *, strict: bool = True
+        self,
+        index: int,
+        expr: sp.Expr | IntegralShadowExtension,
+        *,
+        strict: bool = True,
     ) -> sp.Expr:
         return self.projection(index, expr, strict=strict).ghost
 
@@ -520,7 +574,9 @@ class AsymptoticDifferentialField:
             return None
         return sp.simplify(direct - nested) == 0
 
-    def shadow_expansion(self, expr: sp.Expr, *, max_terms: int = 8) -> tuple[sp.Expr, ...]:
+    def shadow_expansion(
+        self, expr: sp.Expr, *, max_terms: int = 8
+    ) -> tuple[sp.Expr, ...]:
         """Extract a finite recursive shadow expansion, finest scale first."""
         if not self.scales:
             return (sp.sympify(expr),)

@@ -11,14 +11,14 @@ from asymptotic.discrete_scale import (
     linear_recurrence_data,
 )
 from asymptotic.multivariate import multivariate_dominant_balance_candidates
-from asymptotic.rsolve import asymptotic_rsolve
+from asymptotic.rsolve import rsolve
 from asymptotic.transseries import transseries_from_expression
 
 
 def test_native_first_order_constant_forcing_particular_is_exact():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
-    result = asymptotic_rsolve(a(n + 1) - 2 * a(n) - 1, a(n), n, method="native")
+    result = rsolve(a(n + 1) - 2 * a(n) - 1, a(n), n, method="native")
     assert result.particular_expression == -1
     assert result.particular_residual == 0
     assert sp.simplify(result.residual(a(n + 1) - 2 * a(n) - 1)) == 0
@@ -40,11 +40,11 @@ def test_simple_first_order_resonance_produces_logarithmic_correction():
     n = sp.symbols("n", positive=True, integer=True)
     a = sp.Function("a")
     recurrence = a(n + 1) - a(n) - 1 / n
-    result = asymptotic_rsolve(recurrence, a(n), n, method="native", terms=4)
+    result = rsolve(recurrence, a(n), n, method="native", terms=4)
     particular = result.particular_expression
     assert particular is not None
     assert particular.has(sp.log(n))
-    # The finite Euler--Maclaurin-like antidifference has residual smaller than n^-4.
+    # The finite Euler–Maclaurin-like antidifference has residual smaller than n^-4.
     residual = sp.simplify(result.particular_residual)
     assert sp.limit(n**4 * residual, n, sp.oo) == 0
 
@@ -61,7 +61,9 @@ def test_automatic_weight_cones_feed_public_dominant_balance_api():
 
 def test_transseries_records_sector_and_branch_metadata():
     z = sp.symbols("z")
-    sector = ComplexSector(center_angle=0, opening=sp.pi / 2, excluded_rays=(sp.pi / 4,))
+    sector = ComplexSector(
+        center_angle=0, opening=sp.pi / 2, excluded_rays=(sp.pi / 4,)
+    )
     branch = ComplexBranchMetadata(
         logarithm_branch=1,
         power_branch=-1,

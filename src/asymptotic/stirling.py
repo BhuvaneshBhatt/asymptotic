@@ -9,7 +9,7 @@ import sympy as sp
 from ._power_simplify import analytic_powsimp, power_expand_exact
 from ._symbolic_policy import bounded_ask, bounded_limit
 from .instrumentation import record_symbolic_event
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 
 
 @dataclass(frozen=True)
@@ -17,7 +17,7 @@ class StirlingNormalization:
     """A finite Stirling normalization with an explicit positive-real remainder."""
 
     expression: sp.Expr
-    remainder: AsymptoticRemainder
+    remainder: Remainder
     argument: sp.Expr
     terms: int
     kind: str
@@ -38,7 +38,11 @@ class StirlingNormalization:
             return None
         if self.argument.is_positive is False:
             return False
-        bounds = (self.absolute_error_bound, self.log_error_bound, self.relative_error_bound)
+        bounds = (
+            self.absolute_error_bound,
+            self.log_error_bound,
+            self.relative_error_bound,
+        )
         return any(bound is not None for bound in bounds)
 
 
@@ -51,7 +55,9 @@ def _positive_argument(z: sp.Expr, assumptions: sp.Expr = sp.S.true) -> bool:
         for term in z.args:
             if term.is_Integer and term > 0:
                 rest = z - term
-                if rest.is_nonnegative is True or bounded_ask(sp.Q.nonnegative(rest), assumptions):
+                if rest.is_nonnegative is True or bounded_ask(
+                    sp.Q.nonnegative(rest), assumptions
+                ):
                     return True
     return False
 
@@ -86,10 +92,15 @@ def certified_loggamma(
     if terms < 1:
         raise ValueError("terms must be positive")
     if not _positive_argument(z, assumptions):
-        raise ValueError("Stirling certification requires a provably positive real argument")
+        raise ValueError(
+            "Stirling certification requires a provably positive real argument"
+        )
     expression, bound = _loggamma_series(z, terms)
-    remainder = AsymptoticRemainder.big_o(
-        bound, parameter, point, source="positive-real Stieltjes log-Gamma remainder bound"
+    remainder = Remainder.big_o(
+        bound,
+        parameter,
+        point,
+        source="positive-real Stieltjes log-Gamma remainder bound",
     )
     record_symbolic_event("loggamma_normalizations")
     return StirlingNormalization(
@@ -146,7 +157,7 @@ def normalize_positive_pmf(
 
     The input must be provably positive. Factorials and binomial coefficients
     are converted through log-Gamma. The returned exponential uses only
-    positive-real logarithms; no PowerExpand-like branch assumptions are made.
+    positive-real logarithms; no branch-insensitive formal assumptions are made.
     """
 
     expr = sp.sympify(pmf)
@@ -172,7 +183,11 @@ def normalize_positive_pmf(
         base, exponent = factor.as_base_exp()
         if base.func == sp.gamma:
             norm = certified_loggamma(
-                base.args[0], parameter=parameter, point=point, terms=terms, assumptions=assumptions
+                base.args[0],
+                parameter=parameter,
+                point=point,
+                terms=terms,
+                assumptions=assumptions,
             )
             log_terms.append(exponent * norm.expression)
             bounds.append(abs(exponent) * norm.remainder.scale)
@@ -201,11 +216,11 @@ def normalize_positive_pmf(
     log_bound = analytic_powsimp(sp.Add(*bounds)) if bounds else sp.S.Zero
     relative_bound = analytic_powsimp(sp.exp(log_bound) - 1)
     if relative_bound.is_zero is True:
-        remainder = AsymptoticRemainder.exact_zero(
+        remainder = Remainder.exact_zero(
             parameter, point, source="exact positive PMF logarithmic normalization"
         )
     else:
-        remainder = AsymptoticRemainder.big_o(
+        remainder = Remainder.big_o(
             relative_bound,
             parameter,
             point,
@@ -282,11 +297,15 @@ def scaled_stirling_lattice_form(
     try:
         log_series = sp.series(scaled_log, h, 0, max(3, terms + 2)).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not expand the scaled logarithmic PMF") from exc
+        raise NotImplementedError(
+            "could not expand the scaled logarithmic PMF"
+        ) from exc
     log_series = sp.expand(log_series)
     slope = analytic_powsimp(log_series.coeff(h, -1))
     if slope == 0 or h in slope.free_symbols:
-        raise NotImplementedError("scaled PMF does not expose a nonzero order-parameter phase")
+        raise NotImplementedError(
+            "scaled PMF does not expose a nonzero order-parameter phase"
+        )
     phase = analytic_powsimp(-slope)
     offset = analytic_powsimp(log_series - slope / h)
 
@@ -299,7 +318,9 @@ def scaled_stirling_lattice_form(
     try:
         raw_regular_exp = sp.series(sp.exp(regular), h, 0, max(2, terms + 1)).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not expand the scaled Stirling amplitude") from exc
+        raise NotImplementedError(
+            "could not expand the scaled Stirling amplitude"
+        ) from exc
     regular_exp = sp.S.Zero
     for power in range(max(2, terms + 1)):
         coefficient = sp.expand(raw_regular_exp).coeff(h, power)
@@ -312,7 +333,9 @@ def scaled_stirling_lattice_form(
         regular_exp += coefficient * h**power
     amplitude_h = analytic_powsimp(h**log_power * regular_exp / h)
     amplitude = analytic_powsimp(amplitude_h.xreplace({h: 1 / parameter}))
-    return ScaledStirlingLatticeForm(x, phase, amplitude, log_series, assumptions, normalization)
+    return ScaledStirlingLatticeForm(
+        x, phase, amplitude, log_series, assumptions, normalization
+    )
 
 
 @dataclass(frozen=True)
@@ -329,7 +352,9 @@ class StirlingLocalMassExpansion:
     normalization: StirlingNormalization
 
 
-def _bounded_lattice_offset(location: sp.Expr, scale: sp.Expr, parameter: sp.Symbol) -> bool:
+def _bounded_lattice_offset(
+    location: sp.Expr, scale: sp.Expr, parameter: sp.Symbol
+) -> bool:
     offset = analytic_powsimp(location - parameter * scale)
     if parameter not in offset.free_symbols:
         return not offset.has(sp.oo, -sp.oo, sp.zoo, sp.nan)
@@ -338,13 +363,17 @@ def _bounded_lattice_offset(location: sp.Expr, scale: sp.Expr, parameter: sp.Sym
         if parameter not in base_offset.free_symbols:
             return True
         try:
-            base_limit = bounded_limit(sp.Abs(base_offset), parameter, sp.oo, allow_general=True)
+            base_limit = bounded_limit(
+                sp.Abs(base_offset), parameter, sp.oo, allow_general=True
+            )
         except (ValueError, TypeError, NotImplementedError):
             base_limit = None
         if base_limit is not None and getattr(base_limit, "is_finite", None) is True:
             return True
     try:
-        offset_limit = bounded_limit(sp.Abs(offset), parameter, sp.oo, allow_general=True)
+        offset_limit = bounded_limit(
+            sp.Abs(offset), parameter, sp.oo, allow_general=True
+        )
     except (ValueError, TypeError, NotImplementedError):
         return False
     return getattr(offset_limit, "is_finite", None) is True
@@ -370,9 +399,13 @@ def stirling_local_mass_expansion(
         raise ValueError("Stirling normalization does not retain its logarithmic form")
     location = sp.sympify(location)
     try:
-        scale = bounded_limit(location / parameter, parameter, sp.oo, allow_general=True)
+        scale = bounded_limit(
+            location / parameter, parameter, sp.oo, allow_general=True
+        )
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not determine the moving lattice scale") from exc
+        raise NotImplementedError(
+            "could not determine the moving lattice scale"
+        ) from exc
     if isinstance(scale, sp.Limit) or scale in (sp.oo, -sp.oo, sp.zoo, sp.nan):
         raise NotImplementedError("moving lattice point is not linear-scale")
     offset = analytic_powsimp(location - parameter * scale)
@@ -388,7 +421,9 @@ def stirling_local_mass_expansion(
     try:
         log_series = sp.expand(sp.series(local_log, h, 0, max(3, terms + 2)).removeO())
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not form the local Stirling log-mass expansion") from exc
+        raise NotImplementedError(
+            "could not form the local Stirling log-mass expansion"
+        ) from exc
     slope = analytic_powsimp(log_series.coeff(h, -1))
     rest = analytic_powsimp(sp.expand(log_series - slope / h))
     log_h = sp.log(h)
@@ -397,7 +432,9 @@ def stirling_local_mass_expansion(
     try:
         regular_exp = sp.series(sp.exp(regular), h, 0, max(2, terms + 1)).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not exponentiate the local Stirling correction") from exc
+        raise NotImplementedError(
+            "could not exponentiate the local Stirling correction"
+        ) from exc
     regular_exp = sp.Add(
         *(
             sp.factor(sp.cancel(sp.expand(regular_exp).coeff(h, power))) * h**power
@@ -454,23 +491,38 @@ def stirling_sqrt_local_mass_expansion(
         smooth_location = location
         rounding = sp.S.Zero
     try:
-        scale = bounded_limit(smooth_location / parameter, parameter, sp.oo, allow_general=True)
+        scale = bounded_limit(
+            smooth_location / parameter, parameter, sp.oo, allow_general=True
+        )
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not determine the moving lattice scale") from exc
+        raise NotImplementedError(
+            "could not determine the moving lattice scale"
+        ) from exc
     if isinstance(scale, sp.Limit) or scale in (sp.oo, -sp.oo, sp.zoo, sp.nan):
         raise NotImplementedError("moving lattice point is not linear-scale")
     smooth_offset = analytic_powsimp(smooth_location - parameter * scale)
     offset = analytic_powsimp(location - parameter * scale)
     if rounding == 0 and _bounded_lattice_offset(location, scale, parameter):
-        raise NotImplementedError("bounded shifts belong to stirling_local_mass_expansion")
+        raise NotImplementedError(
+            "bounded shifts belong to stirling_local_mass_expansion"
+        )
     try:
         sqrt_shift = bounded_limit(
             smooth_offset / sp.sqrt(parameter), parameter, sp.oo, allow_general=True
         )
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not determine square-root displacement") from exc
-    if isinstance(sqrt_shift, sp.Limit) or sqrt_shift in (sp.oo, -sp.oo, sp.zoo, sp.nan):
-        raise NotImplementedError("local displacement grows faster than sqrt(parameter)")
+        raise NotImplementedError(
+            "could not determine square-root displacement"
+        ) from exc
+    if isinstance(sqrt_shift, sp.Limit) or sqrt_shift in (
+        sp.oo,
+        -sp.oo,
+        sp.zoo,
+        sp.nan,
+    ):
+        raise NotImplementedError(
+            "local displacement grows faster than sqrt(parameter)"
+        )
     eps = sp.Dummy("_local_mass_eps", positive=True)
     delta = sp.Dummy("_lattice_rounding", real=True)
     smooth_eps = smooth_location.xreplace({parameter: eps**-2})
@@ -482,7 +534,9 @@ def stirling_sqrt_local_mass_expansion(
     try:
         log_series = sp.expand(sp.series(local_log, eps, 0, expansion_order).removeO())
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not form square-root local Stirling expansion") from exc
+        raise NotImplementedError(
+            "could not form square-root local Stirling expansion"
+        ) from exc
 
     slope = analytic_powsimp(log_series.coeff(eps, -2))
     rest = analytic_powsimp(sp.expand(log_series - slope / eps**2))
@@ -492,9 +546,13 @@ def stirling_sqrt_local_mass_expansion(
     log_power = analytic_powsimp(sp.expand(regular_with_log).coeff(log_eps))
     regular = analytic_powsimp(regular_with_log - log_power * log_eps)
     try:
-        raw_regular_exp = sp.series(sp.exp(regular), eps, 0, max(3, 2 * terms + 1)).removeO()
+        raw_regular_exp = sp.series(
+            sp.exp(regular), eps, 0, max(3, 2 * terms + 1)
+        ).removeO()
     except (ValueError, TypeError, NotImplementedError) as exc:
-        raise NotImplementedError("could not exponentiate square-root local correction") from exc
+        raise NotImplementedError(
+            "could not exponentiate square-root local correction"
+        ) from exc
     regular_exp = sp.S.Zero
     expanded_exp = sp.expand(raw_regular_exp)
     for power in range(max(3, 2 * terms + 1)):

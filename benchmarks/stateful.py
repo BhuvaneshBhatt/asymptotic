@@ -53,7 +53,7 @@ def run_stateful_benchmark(
     """Run heterogeneous workloads repeatedly in one interpreter.
 
     The ratio compares the median of the last two cycles to the median of the
-    first two.  Absolute timings are intentionally left as observations rather
+    first two.  Absolute timings are left as observations rather
     than correctness assertions because benchmark hosts vary substantially.
     """
 

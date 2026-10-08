@@ -1,0 +1,402 @@
+[
+  {
+    "id": "lim_frontier_001",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(2*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_002",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(3*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_003",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(4*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_004",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(5*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_005",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(6*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_006",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(7*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_007",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(8*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_008",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(9*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_009",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(10*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_010",
+    "category": "oscillatory_multifrequency",
+    "expression": "sin(x)+cos(11*x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "interval",
+    "behavior": "multi-frequency periodic exact optimization",
+    "reference_group": "683-695"
+  },
+  {
+    "id": "lim_frontier_011",
+    "category": "special_function_infinity_frontier",
+    "expression": "zeta(x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_012",
+    "category": "special_function_infinity_frontier",
+    "expression": "primepi(x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_013",
+    "category": "special_function_infinity_frontier",
+    "expression": "polygamma(0,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_014",
+    "category": "special_function_infinity_frontier",
+    "expression": "polygamma(1,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_015",
+    "category": "special_function_infinity_frontier",
+    "expression": "airyaiprime(x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_016",
+    "category": "special_function_infinity_frontier",
+    "expression": "airybi(x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_017",
+    "category": "special_function_infinity_frontier",
+    "expression": "airybiprime(x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "special-function infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_018",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(1,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_019",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(2,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_020",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(3,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_021",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(4,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_022",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(5,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_023",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(6,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_024",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(7,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_025",
+    "category": "special_function_infinity_frontier",
+    "expression": "uppergamma(8,x)",
+    "variable": "x",
+    "point": "oo",
+    "expected_kind": "leading",
+    "behavior": "incomplete-gamma infinity expansion",
+    "reference_group": "199-245"
+  },
+  {
+    "id": "lim_frontier_026",
+    "category": "singularity_series_frontier",
+    "expression": "gamma(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_027",
+    "category": "singularity_series_frontier",
+    "expression": "log(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_028",
+    "category": "singularity_series_frontier",
+    "expression": "1/sin(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_029",
+    "category": "singularity_series_frontier",
+    "expression": "cot(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_030",
+    "category": "singularity_series_frontier",
+    "expression": "bessely(0,x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_031",
+    "category": "singularity_series_frontier",
+    "expression": "1/(exp(x)-1)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_032",
+    "category": "singularity_series_frontier",
+    "expression": "sqrt(x)*log(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_033",
+    "category": "singularity_series_frontier",
+    "expression": "x**(-3)+log(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_034",
+    "category": "singularity_series_frontier",
+    "expression": "gamma(x)*sin(x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_035",
+    "category": "singularity_series_frontier",
+    "expression": "log(sin(x))",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "singular local generalized series",
+    "reference_group": "199-204"
+  },
+  {
+    "id": "lim_frontier_036",
+    "category": "implicit_map_system",
+    "expression": "(y1-x**1, y2-y1-x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "multivariate dependent implicit-map series",
+    "reference_group": "2044-2093"
+  },
+  {
+    "id": "lim_frontier_037",
+    "category": "implicit_map_system",
+    "expression": "(y1-x**2, y2-y1-x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "multivariate dependent implicit-map series",
+    "reference_group": "2044-2093"
+  },
+  {
+    "id": "lim_frontier_038",
+    "category": "implicit_map_system",
+    "expression": "(y1-x**3, y2-y1-x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "multivariate dependent implicit-map series",
+    "reference_group": "2044-2093"
+  },
+  {
+    "id": "lim_frontier_039",
+    "category": "implicit_map_system",
+    "expression": "(y1-x**4, y2-y1-x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "multivariate dependent implicit-map series",
+    "reference_group": "2044-2093"
+  },
+  {
+    "id": "lim_frontier_040",
+    "category": "implicit_map_system",
+    "expression": "(y1-x**5, y2-y1-x)",
+    "variable": "x",
+    "point": "0",
+    "expected_kind": "series",
+    "behavior": "multivariate dependent implicit-map series",
+    "reference_group": "2044-2093"
+  }
+]

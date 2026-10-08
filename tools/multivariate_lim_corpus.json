@@ -1,0 +1,855 @@
+[
+  {
+    "id": "rat_radial_01",
+    "family": "RealRatFunLimit/Sertoz",
+    "expr": "(x**4+y**4)/(x**2+y**2)",
+    "wl": "(x^4+y^4)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "rat_radial_02",
+    "family": "RealRatFunLimit/Sertoz",
+    "expr": "(x**6+y**6)/(x**2+y**2)",
+    "wl": "(x^6+y^6)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "sertoz_inverse_01",
+    "family": "InvSertozLimit",
+    "expr": "(x**2+y**2)/(x**4+y**4)",
+    "wl": "(x^2+y^2)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "sertoz_inverse_02",
+    "family": "InvSertozLimit",
+    "expr": "-(x**2+y**2)/(x**4+y**4)",
+    "wl": "-(x^2+y^2)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "-oo"
+  },
+  {
+    "id": "sertoz_inverse_dne",
+    "family": "InvSertozLimit/weak-sign",
+    "expr": "(x**2-y**2)/(x**4+y**4)",
+    "wl": "(x^2-y^2)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "weak_sign_pos",
+    "family": "WeakSignNearZero",
+    "expr": "1/(x**4+x**2*y**2+y**4)",
+    "wl": "1/(x^4+x^2 y^2+y^4)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "weak_sign_neg",
+    "family": "WeakSignNearZero",
+    "expr": "-1/(x**4+x**2*y**2+y**4)",
+    "wl": "-1/(x^4+x^2 y^2+y^4)",
+    "head": "Limit",
+    "expected": "-oo"
+  },
+  {
+    "id": "weak_sign_indef",
+    "family": "WeakSignNearZero",
+    "expr": "1/(x**2-y**2)",
+    "wl": "1/(x^2-y^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "isolated_den_01",
+    "family": "IsolatedZeroQ",
+    "expr": "x**3/(x**2+y**2)",
+    "wl": "x^3/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "isolated_den_02",
+    "family": "IsolatedZeroQ",
+    "expr": "(x**4+y**4)/(x**2+y**2)",
+    "wl": "(x^4+y^4)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "nonisolated_den_01",
+    "family": "IsolatedZeroQ/nonisolated",
+    "expr": "x*y/(x**2)",
+    "wl": "x y/x^2",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "nonisolated_den_02",
+    "family": "IsolatedZeroQ/nonisolated",
+    "expr": "x**2/(x**2+y**2*x**2)",
+    "wl": "x^2/(x^2+x^2 y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "lagrange_01",
+    "family": "LagrangeLimit",
+    "expr": "(x**4+y**4)/(x**2+y**2)",
+    "wl": "(x^4+y^4)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "lagrange_02",
+    "family": "LagrangeLimit",
+    "expr": "(x**2*y**2)/(x**2+y**2)",
+    "wl": "x^2 y^2/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "lagrange_dne",
+    "family": "LagrangeLimit",
+    "expr": "(x**4-y**4)/(x**4+y**4)",
+    "wl": "(x^4-y^4)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "meromorphic_loja_01",
+    "family": "MeroFunLojasiewicz",
+    "expr": "(sp.sin(x)**4+sp.sin(y)**4)/(x**2+y**2)",
+    "wl": "(Sin[x]^4+Sin[y]^4)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "meromorphic_loja_02",
+    "family": "MeroFunLojasiewicz",
+    "expr": "(1-sp.cos(x**2+y**2))/(x**2+y**2)",
+    "wl": "(1-Cos[x^2+y^2])/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "meromorphic_loja_03",
+    "family": "MeroFunLojasiewicz",
+    "expr": "sp.sin(x**2+y**2)/(x**2+y**2)",
+    "wl": "Sin[x^2+y^2]/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "ratpow_01",
+    "family": "RatPowDenomLimit",
+    "expr": "(x**2+y**2)/sp.sqrt(x**2+y**2)",
+    "wl": "(x^2+y^2)/Sqrt[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "ratpow_02",
+    "family": "RatPowDenomLimit",
+    "expr": "(x**2+y**2)**2/(x**2+y**2)**sp.Rational(3,2)",
+    "wl": "(x^2+y^2)^2/(x^2+y^2)^(3/2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "ratpow_pole",
+    "family": "RatPowDenomLimit",
+    "expr": "1/sp.sqrt(x**2+y**2)",
+    "wl": "1/Sqrt[x^2+y^2]",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "composition_01",
+    "family": "LimitByComposition",
+    "expr": "sp.exp(-(x**2+y**2))",
+    "wl": "Exp[-(x^2+y^2)]",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "composition_02",
+    "family": "LimitByComposition",
+    "expr": "sp.sin(sp.sqrt(x**2+y**2))/sp.sqrt(x**2+y**2)",
+    "wl": "Sin[Sqrt[x^2+y^2]]/Sqrt[x^2+y^2]",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "composition_03",
+    "family": "LimitByComposition",
+    "expr": "sp.log(1+x**2+y**2)/(x**2+y**2)",
+    "wl": "Log[1+x^2+y^2]/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "composition_abs",
+    "family": "LimitByComposition",
+    "expr": "sp.Abs(x**2+y**2)",
+    "wl": "Abs[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "minlimit_01",
+    "family": "MinLimit",
+    "expr": "(x**2-y**2)/(x**2+y**2)",
+    "wl": "(x^2-y^2)/(x^2+y^2)",
+    "head": "MinLimit",
+    "expected": "-1"
+  },
+  {
+    "id": "maxlimit_01",
+    "family": "MaxLimit",
+    "expr": "(x**2-y**2)/(x**2+y**2)",
+    "wl": "(x^2-y^2)/(x^2+y^2)",
+    "head": "MaxLimit",
+    "expected": "1"
+  },
+  {
+    "id": "minlimit_02",
+    "family": "MinLimit",
+    "expr": "x**2/(x**2+y**2)",
+    "wl": "x^2/(x^2+y^2)",
+    "head": "MinLimit",
+    "expected": "0"
+  },
+  {
+    "id": "maxlimit_02",
+    "family": "MaxLimit",
+    "expr": "x**2/(x**2+y**2)",
+    "wl": "x^2/(x^2+y^2)",
+    "head": "MaxLimit",
+    "expected": "1"
+  },
+  {
+    "id": "growth_log_01",
+    "family": "LimitByGrowthScales",
+    "expr": "(x**2+y**2)*sp.log(x**2+y**2)",
+    "wl": "(x^2+y^2) Log[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_log_02",
+    "family": "LimitByGrowthScales",
+    "expr": "(x**2+y**2)**2*sp.log(x**2+y**2)**3",
+    "wl": "(x^2+y^2)^2 Log[x^2+y^2]^3",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_log_sqrt",
+    "family": "LimitByGrowthScales",
+    "expr": "sp.sqrt(x**2+y**2)*sp.log(x**2+y**2)",
+    "wl": "Sqrt[x^2+y^2] Log[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_exp_flat",
+    "family": "LimitByGrowthScales",
+    "expr": "sp.exp(-1/(x**2+y**2))",
+    "wl": "Exp[-1/(x^2+y^2)]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_exp_log",
+    "family": "LimitByGrowthScales",
+    "expr": "sp.exp(-1/(x**2+y**2))*sp.log(x**2+y**2)",
+    "wl": "Exp[-1/(x^2+y^2)] Log[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "param_regular",
+    "family": "parameter-stratification",
+    "expr": "(x**2+y**2)/(a+x**2+y**2)",
+    "wl": "(x^2+y^2)/(a+x^2+y^2)",
+    "head": "Limit",
+    "parameters": [
+      "a"
+    ],
+    "expected": "Conditional"
+  },
+  {
+    "id": "param_singular",
+    "family": "parameter-stratification",
+    "expr": "a*(x**2+y**2)/(a**2+x**2+y**2)",
+    "wl": "a (x^2+y^2)/(a^2+x^2+y^2)",
+    "head": "Limit",
+    "parameters": [
+      "a"
+    ],
+    "expected": "Conditional"
+  },
+  {
+    "id": "param_direction",
+    "family": "parameter-stratification",
+    "expr": "(a*x**2+y**2)/(x**2+y**2)",
+    "wl": "(a x^2+y^2)/(x^2+y^2)",
+    "head": "Limit",
+    "parameters": [
+      "a"
+    ],
+    "expected": "Conditional"
+  },
+  {
+    "id": "fallback_rays_dne",
+    "family": "mixed-fallback/path-conflict",
+    "expr": "x*y/(x**2+y**2)",
+    "wl": "x y/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "fallback_weighted_dne",
+    "family": "mixed-fallback/Newton",
+    "expr": "x**3*y/(x**6+y**2)",
+    "wl": "x^3 y/(x^6+y^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "fallback_weighted_zero",
+    "family": "mixed-fallback/Newton",
+    "expr": "x**4*y**2/(x**6+y**2)",
+    "wl": "x^4 y^2/(x^6+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "fallback_cad_zero",
+    "family": "mixed-fallback/CAD",
+    "expr": "x**2*y**2/(x**4+y**4)",
+    "wl": "x^2 y^2/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "fallback_removable",
+    "family": "mixed-fallback/cancel",
+    "expr": "(x**2+y**2)*(1+x+y)/(x**2+y**2)",
+    "wl": "(x^2+y^2)(1+x+y)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "analytic_taylor_01",
+    "family": "analytic/Taylor",
+    "expr": "(sp.exp(x**2+y**2)-1)/(x**2+y**2)",
+    "wl": "(Exp[x^2+y^2]-1)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "analytic_taylor_02",
+    "family": "analytic/Taylor",
+    "expr": "(sp.sin(x)-x+sp.sin(y)-y)/(x**2+y**2)",
+    "wl": "(Sin[x]-x+Sin[y]-y)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "analytic_taylor_dne",
+    "family": "analytic/Taylor",
+    "expr": "(sp.exp(x)-1)/(sp.exp(y)-1)",
+    "wl": "(Exp[x]-1)/(Exp[y]-1)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "sign_pole_pos",
+    "family": "meromorphic/sign",
+    "expr": "1/(sp.sin(x)**2+sp.sin(y)**2)",
+    "wl": "1/(Sin[x]^2+Sin[y]^2)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "sign_pole_indef",
+    "family": "meromorphic/sign",
+    "expr": "1/(sp.sin(x)**2-sp.sin(y)**2)",
+    "wl": "1/(Sin[x]^2-Sin[y]^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "difference_rule_01",
+    "family": "meromorphic/difference-rule",
+    "expr": "(sp.sin(x)-sp.sin(y))/(x-y)",
+    "wl": "(Sin[x]-Sin[y])/(x-y)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "difference_rule_02",
+    "family": "meromorphic/difference-rule",
+    "expr": "(sp.cos(x)-sp.cos(y))/(x**2-y**2)",
+    "wl": "(Cos[x]-Cos[y])/(x^2-y^2)",
+    "head": "Limit",
+    "expected": "-1/2"
+  },
+  {
+    "id": "threevar_sertoz",
+    "family": "Sertoz/3D",
+    "expr": "(x**4+y**4+z**4)/(x**2+y**2+z**2)",
+    "wl": "(x^4+y^4+z^4)/(x^2+y^2+z^2)",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ],
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "threevar_dne",
+    "family": "CAD/3D",
+    "expr": "x**2/(x**2+y**2+z**2)",
+    "wl": "x^2/(x^2+y^2+z^2)",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ],
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "threevar_growth",
+    "family": "LimitByGrowthScales/3D",
+    "expr": "(x**2+y**2+z**2)*sp.log(x**2+y**2+z**2)",
+    "wl": "(x^2+y^2+z^2) Log[x^2+y^2+z^2]",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ],
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "rat_anisotropic_03",
+    "family": "RealRatFunLimit/Sertoz",
+    "expr": "(x**8+y**12)/(x**4+y**6)",
+    "wl": "(x^8+y^12)/(x^4+y^6)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "rat_anisotropic_04",
+    "family": "RealRatFunLimit/Sertoz",
+    "expr": "x**6*y**4/(x**8+y**6)",
+    "wl": "x^6 y^4/(x^8+y^6)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "sertoz_inverse_03",
+    "family": "InvSertozLimit",
+    "expr": "(x**4+y**6)/(x**8+y**12)",
+    "wl": "(x^4+y^6)/(x^8+y^12)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "sertoz_inverse_indef_02",
+    "family": "InvSertozLimit/weak-sign",
+    "expr": "(x**4-y**6)/(x**8+y**12)",
+    "wl": "(x^4-y^6)/(x^8+y^12)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "weak_sign_pos_02",
+    "family": "WeakSignNearZero",
+    "expr": "1/(x**6+x**4*y**2+y**6)",
+    "wl": "1/(x^6+x^4 y^2+y^6)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "weak_sign_indef_02",
+    "family": "WeakSignNearZero",
+    "expr": "1/(x**4-y**6)",
+    "wl": "1/(x^4-y^6)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "isolated_den_03",
+    "family": "IsolatedZeroQ",
+    "expr": "x**5/(x**4+y**4)",
+    "wl": "x^5/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "isolated_den_04",
+    "family": "IsolatedZeroQ",
+    "expr": "x**8*y**2/(x**6+y**4)",
+    "wl": "x^8 y^2/(x^6+y^4)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "nonisolated_den_03",
+    "family": "IsolatedZeroQ/nonisolated",
+    "expr": "x**3*y/(x**4)",
+    "wl": "x^3 y/x^4",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "nonisolated_cancel_03",
+    "family": "IsolatedZeroQ/nonisolated",
+    "expr": "x**4*(1+y)/(x**4*(1+x**2+y**2))",
+    "wl": "x^4 (1+y)/(x^4 (1+x^2+y^2))",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "lagrange_03",
+    "family": "LagrangeLimit",
+    "expr": "x**6*y**2/(x**8+y**4)",
+    "wl": "x^6 y^2/(x^8+y^4)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "lagrange_04",
+    "family": "LagrangeLimit",
+    "expr": "(x**6+y**6)/(x**4+y**4)",
+    "wl": "(x^6+y^6)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "lagrange_dne_02",
+    "family": "LagrangeLimit",
+    "expr": "(x**6-y**6)/(x**6+y**6)",
+    "wl": "(x^6-y^6)/(x^6+y^6)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "meromorphic_loja_04",
+    "family": "MeroFunLojasiewicz",
+    "expr": "(sp.sin(x)**6+sp.sin(y)**6)/(x**2+y**2)",
+    "wl": "(Sin[x]^6+Sin[y]^6)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "meromorphic_loja_05",
+    "family": "MeroFunLojasiewicz",
+    "expr": "(sp.exp(x**2+y**2)-1-(x**2+y**2))/(x**2+y**2)",
+    "wl": "(Exp[x^2+y^2]-1-(x^2+y^2))/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "meromorphic_loja_06",
+    "family": "MeroFunLojasiewicz",
+    "expr": "sp.tan(x**2+y**2)/(x**2+y**2)",
+    "wl": "Tan[x^2+y^2]/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "ratpow_03",
+    "family": "RatPowDenomLimit",
+    "expr": "(x**2+y**2)**sp.Rational(5,3)/(x**2+y**2)",
+    "wl": "(x^2+y^2)^(5/3)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "ratpow_04",
+    "family": "RatPowDenomLimit",
+    "expr": "(x**4+y**4)/sp.sqrt(x**2+y**2)",
+    "wl": "(x^4+y^4)/Sqrt[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "ratpow_pole_02",
+    "family": "RatPowDenomLimit",
+    "expr": "1/(x**2+y**2)**sp.Rational(3,2)",
+    "wl": "1/(x^2+y^2)^(3/2)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "composition_04",
+    "family": "LimitByComposition",
+    "expr": "sp.tan(x**2+y**2)/(x**2+y**2)",
+    "wl": "Tan[x^2+y^2]/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "composition_05",
+    "family": "LimitByComposition",
+    "expr": "sp.sinh(x**2+y**2)/(x**2+y**2)",
+    "wl": "Sinh[x^2+y^2]/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "composition_06",
+    "family": "LimitByComposition",
+    "expr": "(sp.sqrt(1+x**2+y**2)-1)/(x**2+y**2)",
+    "wl": "(Sqrt[1+x^2+y^2]-1)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "1/2"
+  },
+  {
+    "id": "minlimit_03",
+    "family": "MinLimit",
+    "expr": "(x**4-y**4)/(x**4+y**4)",
+    "wl": "(x^4-y^4)/(x^4+y^4)",
+    "head": "MinLimit",
+    "expected": "-1"
+  },
+  {
+    "id": "maxlimit_03",
+    "family": "MaxLimit",
+    "expr": "(x**4-y**4)/(x**4+y**4)",
+    "wl": "(x^4-y^4)/(x^4+y^4)",
+    "head": "MaxLimit",
+    "expected": "1"
+  },
+  {
+    "id": "minlimit_04",
+    "family": "MinLimit",
+    "expr": "x**4/(x**4+y**6)",
+    "wl": "x^4/(x^4+y^6)",
+    "head": "MinLimit",
+    "expected": "0"
+  },
+  {
+    "id": "maxlimit_04",
+    "family": "MaxLimit",
+    "expr": "x**4/(x**4+y**6)",
+    "wl": "x^4/(x^4+y^6)",
+    "head": "MaxLimit",
+    "expected": "1"
+  },
+  {
+    "id": "growth_log_03",
+    "family": "LimitByGrowthScales",
+    "expr": "(x**2+y**2)**sp.Rational(1,3)*sp.log(x**2+y**2)**5",
+    "wl": "(x^2+y^2)^(1/3) Log[x^2+y^2]^5",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_log_04",
+    "family": "LimitByGrowthScales",
+    "expr": "(x**2+y**2)**5*sp.log(x**2+y**2)**10",
+    "wl": "(x^2+y^2)^5 Log[x^2+y^2]^10",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_exp_02",
+    "family": "LimitByGrowthScales",
+    "expr": "sp.exp(-1/(x**2+y**2))/(x**2+y**2)**3",
+    "wl": "Exp[-1/(x^2+y^2)]/(x^2+y^2)^3",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "growth_exp_03",
+    "family": "LimitByGrowthScales",
+    "expr": "sp.exp(-1/sp.sqrt(x**2+y**2))*sp.log(x**2+y**2)",
+    "wl": "Exp[-1/Sqrt[x^2+y^2]] Log[x^2+y^2]",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "param_direction_02",
+    "family": "parameter-stratification",
+    "expr": "(a*x**4+y**4)/(x**4+y**4)",
+    "wl": "(a x^4+y^4)/(x^4+y^4)",
+    "head": "Limit",
+    "expected": "Conditional",
+    "parameters": [
+      "a"
+    ]
+  },
+  {
+    "id": "param_pole_sign",
+    "family": "parameter-stratification",
+    "expr": "1/(a*(x**2+y**2))",
+    "wl": "1/(a (x^2+y^2))",
+    "head": "Limit",
+    "expected": "Conditional",
+    "parameters": [
+      "a"
+    ]
+  },
+  {
+    "id": "param_removable_02",
+    "family": "parameter-stratification",
+    "expr": "(a*(x**2+y**2)+x**4+y**4)/(x**2+y**2)",
+    "wl": "(a (x^2+y^2)+x^4+y^4)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "Conditional",
+    "parameters": [
+      "a"
+    ]
+  },
+  {
+    "id": "fallback_weighted_zero_02",
+    "family": "mixed-fallback/Newton",
+    "expr": "x**6*y**4/(x**8+y**6)",
+    "wl": "x^6 y^4/(x^8+y^6)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "fallback_weighted_dne_02",
+    "family": "mixed-fallback/Newton",
+    "expr": "x**4*y/(x**8+y**2)",
+    "wl": "x^4 y/(x^8+y^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "fallback_cad_dne_02",
+    "family": "mixed-fallback/CAD",
+    "expr": "x**4*y**2/(x**8+y**4)",
+    "wl": "x^4 y^2/(x^8+y^4)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "fallback_cancel_02",
+    "family": "mixed-fallback/cancel",
+    "expr": "(x**4+y**6)*(1+x*y)/(x**4+y**6)",
+    "wl": "(x^4+y^6)(1+x y)/(x^4+y^6)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "analytic_taylor_03",
+    "family": "analytic/Taylor",
+    "expr": "(sp.exp(x**2+y**2)-1-(x**2+y**2))/(x**2+y**2)",
+    "wl": "(Exp[x^2+y^2]-1-(x^2+y^2))/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "analytic_taylor_04",
+    "family": "analytic/Taylor",
+    "expr": "(sp.cos(x)-1+x**2/2+sp.cos(y)-1+y**2/2)/(x**2+y**2)",
+    "wl": "(Cos[x]-1+x^2/2+Cos[y]-1+y^2/2)/(x^2+y^2)",
+    "head": "Limit",
+    "expected": "0"
+  },
+  {
+    "id": "analytic_taylor_dne_02",
+    "family": "analytic/Taylor",
+    "expr": "(sp.sin(x)-x)/(sp.sin(y)-y)",
+    "wl": "(Sin[x]-x)/(Sin[y]-y)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "sign_pole_pos_02",
+    "family": "meromorphic/sign",
+    "expr": "1/((sp.exp(x)-1)**2+(sp.exp(y)-1)**2)",
+    "wl": "1/((Exp[x]-1)^2+(Exp[y]-1)^2)",
+    "head": "Limit",
+    "expected": "oo"
+  },
+  {
+    "id": "sign_pole_indef_02",
+    "family": "meromorphic/sign",
+    "expr": "1/((sp.exp(x)-1)**2-(sp.exp(y)-1)**2)",
+    "wl": "1/((Exp[x]-1)^2-(Exp[y]-1)^2)",
+    "head": "Limit",
+    "expected": "DNE"
+  },
+  {
+    "id": "difference_rule_03",
+    "family": "meromorphic/difference-rule",
+    "expr": "(sp.exp(x)-sp.exp(y))/(x-y)",
+    "wl": "(Exp[x]-Exp[y])/(x-y)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "difference_rule_04",
+    "family": "meromorphic/difference-rule",
+    "expr": "(sp.log(1+x)-sp.log(1+y))/(x-y)",
+    "wl": "(Log[1+x]-Log[1+y])/(x-y)",
+    "head": "Limit",
+    "expected": "1"
+  },
+  {
+    "id": "threevar_sertoz_02",
+    "family": "Sertoz/3D",
+    "expr": "(x**6+y**6+z**6)/(x**2+y**2+z**2)",
+    "wl": "(x^6+y^6+z^6)/(x^2+y^2+z^2)",
+    "head": "Limit",
+    "expected": "0",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ]
+  },
+  {
+    "id": "threevar_dne_02",
+    "family": "CAD/3D",
+    "expr": "x*y/(x**2+y**2+z**2)",
+    "wl": "x y/(x^2+y^2+z^2)",
+    "head": "Limit",
+    "expected": "DNE",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ]
+  },
+  {
+    "id": "threevar_growth_02",
+    "family": "LimitByGrowthScales/3D",
+    "expr": "(x**2+y**2+z**2)**2*sp.log(x**2+y**2+z**2)**3",
+    "wl": "(x^2+y^2+z^2)^2 Log[x^2+y^2+z^2]^3",
+    "head": "Limit",
+    "expected": "0",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ]
+  },
+  {
+    "id": "threevar_weighted_zero",
+    "family": "mixed-fallback/Newton/3D",
+    "expr": "x**4*y**2*z**2/(x**6+y**2+z**2)",
+    "wl": "x^4 y^2 z^2/(x^6+y^2+z^2)",
+    "head": "Limit",
+    "expected": "0",
+    "vars": [
+      "x",
+      "y",
+      "z"
+    ]
+  }
+]

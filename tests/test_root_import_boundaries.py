@@ -1,4 +1,4 @@
-"""Repository-wide guard for the deliberately small root namespace."""
+"""Repository-wide guard for the primary root namespace."""
 
 from __future__ import annotations
 
@@ -43,7 +43,7 @@ def test_documentation_python_fences_use_only_primary_root_imports():
             try:
                 retired.update(_retired_root_imports(block))
             except SyntaxError:
-                # Some documentation fragments are intentionally incomplete.
+                # Some documentation fragments are incomplete by design.
                 continue
         if retired:
             violations[str(path)] = sorted(retired)

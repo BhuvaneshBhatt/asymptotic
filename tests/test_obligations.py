@@ -1,8 +1,10 @@
 import sympy as sp
 
 from asymptotic import (
-    GrowthComparison,
     multiseries,
+)
+from asymptotic.context import (
+    AsymptoticGrowthComparison,
 )
 from asymptotic.obligations import (
     CoefficientExpansionObligation,
@@ -15,7 +17,7 @@ from asymptotic.obligations import (
 
 def test_zero_fact_obligation_resolves_without_changing_scale():
     x = sp.symbols("x", positive=True)
-    ms = multiseries(x + 1, x, scale=[1 / sp.log(x), 1 / x])
+    ms = multiseries(x + 1, x, scale=[1 / sp.log(x), 1 / x], return_result=True)
     _, syms = ms._formal()
     before = ms.scale.exprs
     obligation = ZeroTestObligation(ms.expr, syms[0] * sp.log(x) - 1)
@@ -28,21 +30,28 @@ def test_zero_fact_obligation_resolves_without_changing_scale():
 
 def test_growth_comparison_obligation_returns_shared_fact():
     x = sp.symbols("x", positive=True)
-    ms = multiseries(x + 1, x, scale=[1 / sp.log(x), 1 / x])
+    ms = multiseries(x + 1, x, scale=[1 / sp.log(x), 1 / x], return_result=True)
     _, syms = ms._formal()
     obligation = GrowthComparisonObligation(ms.expr, syms[0], syms[1])
 
     assert ms.resolve_obligation(obligation)
     comparison, ratio = ms.knowledge.get(obligation)
-    assert comparison is GrowthComparison.LARGER
+    assert comparison is AsymptoticGrowthComparison.LARGER
     assert ratio is sp.oo
 
 
 def test_coefficient_expansion_obligation_recurses_into_lower_scale():
     x = sp.symbols("x", positive=True)
-    ms = multiseries(sp.exp(1 / sp.log(x)) + 1 / x, x, scale=[1 / sp.log(x), 1 / x])
+    ms = multiseries(
+        sp.exp(1 / sp.log(x)) + 1 / x,
+        x,
+        scale=[1 / sp.log(x), 1 / x],
+        return_result=True,
+    )
     _, syms = ms._formal()
-    obligation = CoefficientExpansionObligation(ms.expr, sp.exp(syms[0]), lower_level=0, terms=3)
+    obligation = CoefficientExpansionObligation(
+        ms.expr, sp.exp(syms[0]), lower_level=0, terms=3
+    )
 
     assert ms.resolve_obligation(obligation)
     answer = ms.knowledge.get(obligation)
@@ -53,7 +62,7 @@ def test_coefficient_expansion_obligation_recurses_into_lower_scale():
 
 def test_comparability_factor_obligation_returns_factor_and_residual():
     x = sp.symbols("x", positive=True)
-    ms = multiseries(sp.exp(-2 * x), x, scale=[1 / x, sp.exp(-x)])
+    ms = multiseries(sp.exp(-2 * x), x, scale=[1 / x, sp.exp(-x)], return_result=True)
     obligation = ComparabilityFactorObligation(ms.expr, -2 * x, (-x,))
 
     assert ms.resolve_obligation(obligation)

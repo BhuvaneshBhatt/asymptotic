@@ -14,7 +14,7 @@ import sympy as sp
 
 from ._power_simplify import analytic_powsimp
 from ._symbolic_errors import SYMBOLIC_ERRORS
-from .context import AsymptoticContext, GrowthComparison
+from .context import AsymptoticContext, AsymptoticGrowthComparison
 from .tower import ExpLogTower
 
 
@@ -54,7 +54,7 @@ class LogExpScale:
 
 def _ratio_comparison(
     left: sp.Expr, right: sp.Expr, ctx: AsymptoticContext
-) -> GrowthComparison | None:
+) -> AsymptoticGrowthComparison | None:
     quotient = analytic_powsimp(sp.simplify(left / right))
     candidates = [quotient]
     if quotient.is_positive is not True:
@@ -65,11 +65,11 @@ def _ratio_comparison(
         except SYMBOLIC_ERRORS:
             ratio = None
         if ratio == 0:
-            return GrowthComparison.SMALLER
+            return AsymptoticGrowthComparison.SMALLER
         if ratio in (sp.oo, -sp.oo):
-            return GrowthComparison.LARGER
+            return AsymptoticGrowthComparison.LARGER
         if getattr(ratio, "is_finite", None) is True and ratio.is_zero is False:
-            return GrowthComparison.SAME_ORDER
+            return AsymptoticGrowthComparison.SAME_ORDER
     return None
 
 
@@ -80,7 +80,7 @@ def compare_log_exp_scales(
     *,
     point: sp.Expr = sp.oo,
     max_log_reductions: int = 8,
-) -> GrowthComparison:
+) -> AsymptoticGrowthComparison:
     """Compare finite-height logarithmico-exponential magnitudes.
 
     Ratio limits are attempted first.  When direct comparison is opaque, the
@@ -106,15 +106,18 @@ def compare_log_exp_scales(
         # Taking logs preserves ordering for eventually positive quantities
         # tending to infinity.  If only one diverges, the answer is immediate.
         if l_lim is sp.oo and r_lim is not sp.oo:
-            return GrowthComparison.LARGER
+            return AsymptoticGrowthComparison.LARGER
         if r_lim is sp.oo and l_lim is not sp.oo:
-            return GrowthComparison.SMALLER
+            return AsymptoticGrowthComparison.SMALLER
         if l_lim is not sp.oo or r_lim is not sp.oo:
             break
         l_cur = sp.log(l_cur)
         r_cur = sp.log(r_cur)
         direct = _ratio_comparison(l_cur, r_cur, ctx)
-        if direct in (GrowthComparison.LARGER, GrowthComparison.SMALLER):
+        if direct in (
+            AsymptoticGrowthComparison.LARGER,
+            AsymptoticGrowthComparison.SMALLER,
+        ):
             return direct
         # SAME_ORDER after logarithms does not imply same order before logs;
         # inspect the difference of logarithms, i.e. log(left/right).
@@ -123,9 +126,9 @@ def compare_log_exp_scales(
         except SYMBOLIC_ERRORS:
             delta = None
         if delta is sp.oo:
-            return GrowthComparison.LARGER
+            return AsymptoticGrowthComparison.LARGER
         if delta is -sp.oo:
-            return GrowthComparison.SMALLER
+            return AsymptoticGrowthComparison.SMALLER
         if getattr(delta, "is_finite", None) is True:
-            return GrowthComparison.SAME_ORDER
-    return GrowthComparison.UNKNOWN
+            return AsymptoticGrowthComparison.SAME_ORDER
+    return AsymptoticGrowthComparison.UNKNOWN

@@ -139,10 +139,15 @@ def _lift_joint_branch(
     while accepted < terms and scan <= max_scan:
         delta = step * scan
         coeffs = tuple(sp.Dummy(f"c{j}_{scan}") for j in range(len(dependents)))
-        trial = [sp.expand(s + c * eps ** (rho + delta)) for s, c, rho in zip(series, coeffs, rhos)]
+        trial = [
+            sp.expand(s + c * eps ** (rho + delta))
+            for s, c, rho in zip(series, coeffs, rhos)
+        ]
         eqs = []
         for equation in equations:
-            transformed = sp.expand(equation.subs(xsubs).subs(dict(zip(dependents, trial))))
+            transformed = sp.expand(
+                equation.subs(xsubs).subs(dict(zip(dependents, trial)))
+            )
             low = _lowest_epsilon_coefficient(transformed, eps)
             if low is None:
                 eqs = []
@@ -168,7 +173,8 @@ def _lift_joint_branch(
         scan += 1
 
     residuals = tuple(
-        sp.simplify(eq.subs(xsubs).subs(dict(zip(dependents, series)))) for eq in equations
+        sp.simplify(eq.subs(xsubs).subs(dict(zip(dependents, series))))
+        for eq in equations
     )
     complete = all(r == 0 for r in residuals)
     return eps, tuple(series), residuals, complete
@@ -207,7 +213,9 @@ def _unstratified_multivariate_implicit(
         bases = []
         for row, (i, j) in zip(support, selected):
             left, right = row[i], row[j]
-            equal_weight_eqs.append(sp.Eq(_weight(left, ws, rhos), _weight(right, ws, rhos)))
+            equal_weight_eqs.append(
+                sp.Eq(_weight(left, ws, rhos), _weight(right, ws, rhos))
+            )
             bases.append(left)
         solved = bounded_solve_system(equal_weight_eqs, rhos) or ()
         for rho_sol in solved:
@@ -218,7 +226,8 @@ def _unstratified_multivariate_implicit(
             for row, base in zip(support, bases):
                 base_w = _weight(base, ws, rhos).subs(rho_sol)
                 differences.extend(
-                    sp.factor(_weight(term, ws, rhos).subs(rho_sol) - base_w) for term in row
+                    sp.factor(_weight(term, ws, rhos).subs(rho_sol) - base_w)
+                    for term in row
                 )
             inequalities = tuple(d for d in differences if d != 0)
             rep = _rational_representative(
@@ -226,7 +235,9 @@ def _unstratified_multivariate_implicit(
             ) or _rational_representative(ws, (), inequalities)
             if rep is None:
                 continue
-            rho_values = tuple(sp.simplify(r.subs(dict(zip(ws, rep)))) for r in rho_exprs)
+            rho_values = tuple(
+                sp.simplify(r.subs(dict(zip(ws, rep)))) for r in rho_exprs
+            )
             if not all(r.is_Rational for r in rho_values):
                 continue
             rho_values = tuple(sp.Rational(r) for r in rho_values)
@@ -235,11 +246,15 @@ def _unstratified_multivariate_implicit(
             cs = tuple(sp.Dummy(f"C_{y}") for y in dependents)
             for row in support:
                 values = [
-                    sp.simplify(_weight(term, ws, rhos).subs(rho_sol).subs(dict(zip(ws, rep))))
+                    sp.simplify(
+                        _weight(term, ws, rhos).subs(rho_sol).subs(dict(zip(ws, rep)))
+                    )
                     for term in row
                 ]
                 minimum = min(values)
-                active = tuple(term for term, value in zip(row, values) if value == minimum)
+                active = tuple(
+                    term for term, value in zip(row, values) if value == minimum
+                )
                 active_rows.append(active)
                 leading_eqs.append(
                     sp.simplify(
@@ -250,7 +265,9 @@ def _unstratified_multivariate_implicit(
                         )
                     )
                 )
-            leading_solutions = bounded_solve_system(leading_eqs, cs, allow_general=True) or ()
+            leading_solutions = (
+                bounded_solve_system(leading_eqs, cs, allow_general=True) or ()
+            )
             branches = []
             jac = sp.Matrix(leading_eqs).jacobian(cs)
             for sol in leading_solutions:
@@ -261,7 +278,13 @@ def _unstratified_multivariate_implicit(
                     continue
                 jac_det = sp.simplify(jac.det().subs(sol))
                 eps, series, residuals, complete = _lift_joint_branch(
-                    equations, variables, dependents, rep, rho_values, leading, terms=terms
+                    equations,
+                    variables,
+                    dependents,
+                    rep,
+                    rho_values,
+                    leading,
+                    terms=terms,
                 )
                 cone = WeightCone(ws, (), inequalities, sp.S.Zero, (), rep)
                 branches.append(
@@ -297,7 +320,7 @@ def _unstratified_multivariate_implicit(
     )
 
 
-def multivariate_implicit_asymptotics(
+def multivariate_implicit(
     equations: tuple[sp.Expr, ...] | list[sp.Expr],
     dependents: tuple[sp.Symbol, ...] | list[sp.Symbol],
     variables: tuple[sp.Symbol, ...] | list[sp.Symbol],
@@ -335,9 +358,10 @@ def multivariate_implicit_asymptotics(
 
             def evaluate(condition: sp.Expr) -> tuple[MultivariateImplicitRegime, ...]:
                 specialized = tuple(
-                    specialize_expression(eq, condition, parameters=params) for eq in equations
+                    specialize_expression(eq, condition, parameters=params)
+                    for eq in equations
                 )
-                result = multivariate_implicit_asymptotics(
+                result = multivariate_implicit(
                     specialized,
                     dependents,
                     variables,
@@ -361,4 +385,6 @@ def multivariate_implicit_asymptotics(
             if stratified is not None:
                 return stratified
 
-    return _unstratified_multivariate_implicit(equations, dependents, variables, terms=terms)
+    return _unstratified_multivariate_implicit(
+        equations, dependents, variables, terms=terms
+    )

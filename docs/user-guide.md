@@ -7,10 +7,10 @@ This guide is organized by the question you are trying to answer. For mathematic
 `asymptotic` has several related representations because different asymptotic problems require different algebraic structure.
 
 - Use `multiseries()` when you want a lazy expansion over one or more small scale generators.
-- Use `nested_form()` / `nested_expansion()` when the main issue is nested powers, exponentials, or logarithms.
+- Use `nested_form()` / `nested_series()` when the main issue is nested powers, exponentials, or logarithms.
 - Use `transseries_from_expression()` when you need structural monomials, arithmetic, composition, or rigorous remainder objects.
 - Use `algebraic_branches()` / `puiseux_series()` for algebraic equations and fractional powers.
-- Use `series_reversion()` / `inverse_asymptotic()` for local or asymptotic inverses.
+- Use `series_reversion()` / `inverse()` for local or asymptotic inverses.
 - Use dominant-balance, implicit, multivariate, or nonlinear-ODE APIs when the unknown function itself must be solved asymptotically.
 
 These layers share `AsymptoticContext` for expensive zero, sign, limit, and growth decisions.
@@ -19,28 +19,30 @@ These layers share `AsymptoticContext` for expensive zero, sign, limit, and grow
 
 ```python
 import sympy as sp
-from asymptotic import AsymptoticScale, multiseries
+from asymptotic import Scale, multiseries
 
 x = sp.symbols("x", positive=True)
-scale = AsymptoticScale.from_exprs(x, [1/sp.log(x), 1/x])
-ms = multiseries(sp.exp(1/x + 1/sp.log(x)), x, scale=scale, terms=5)
+scale = Scale.from_exprs(x, [1 / sp.log(x), 1 / x])
+ms = multiseries(
+    sp.exp(1 / x + 1 / sp.log(x)), x, scale=scale, terms=5, return_result=True
+)
 
 leading = ms.terms(3)
 next_level = ms.coefficient_series(0).terms(3)
 ```
 
-If `scale` is omitted, `discover_scale()` is used. Expansion is demand-driven: asking for more terms refines the same sparse object rather than recomputing from scratch.
+If `scale` is omitted, `discover_scale()` is used. Expansion is demand-driven: asking for more terms refines the same sparse object instead of recomputing from scratch.
 
-Recoverable structural failures are represented as obligations and may extend the scale dynamically. Terminal unsupported nodes remain explicit rather than being treated as proved expansions.
+Recoverable structural failures are represented as obligations and may extend the scale dynamically. Terminal unsupported nodes remain explicit instead of being treated as proved expansions.
 
 ## 3. Structural and nested analysis
 
 ```python
-from asymptotic import mrv_decomposition
+from asymptotic.mrv_hardy import mrv_decomposition
 from asymptotic.decomposition import decompose_expression
 from asymptotic.nested import nested_form
 
-expr = sp.exp(x**2) * (1 + 1/sp.log(x))
+expr = sp.exp(x**2) * (1 + 1 / sp.log(x))
 structure = decompose_expression(expr, x)
 mrv = mrv_decomposition(expr, x)
 form = nested_form(expr, x)
@@ -51,10 +53,10 @@ form = nested_form(expr, x)
 ## 4. Transseries and arithmetic
 
 ```python
-from asymptotic import compose_transseries, transseries_from_expression
+from asymptotic.general_ops import compose_transseries, transseries_from_expression
 
 z = sp.symbols("z")
-inner = transseries_from_expression(1/x, x, complete=True)
+inner = transseries_from_expression(1 / x, x, complete=True)
 out = compose_transseries(sp.exp(z), inner, argument=z, terms=5)
 ```
 
@@ -71,7 +73,7 @@ poly = y**2 - x
 
 candidates = newton_polygon_candidates(poly, y, x)
 branches = algebraic_branches(poly, y, x)
-series = puiseux_series(poly, y, x, terms=5)
+series = puiseux_series(poly, y, x, terms=5, return_result=True)
 ```
 
 Newton-polygon candidates determine possible leading exponents and coefficients. Ramification is represented explicitly, so fractional powers are not flattened into ordinary Taylor series accidentally.
@@ -79,13 +81,14 @@ Newton-polygon candidates determine possible leading exponents and coefficients.
 ## 6. Series reversion and inverse asymptotics
 
 ```python
-from asymptotic import inverse_asymptotic, series_reversion
+from asymptotic import inverse
+from asymptotic.reversion import series_reversion
 
 t = sp.symbols("t")
 local = series_reversion(x + x**2, x, t, terms=6, branch=0)
 print(local.truncate())
 
-at_infinity = inverse_asymptotic(x + 1/x, x, t, point=sp.oo, terms=5)
+at_infinity = inverse(x + 1 / x, x, t, point=sp.oo, terms=5, return_result=True)
 ```
 
 Reversion tracks branch decisions produced by nested principal-branch checks. Multiple algebraic leading inverses are returned as separate branches unless a branch index is selected.
@@ -93,13 +96,14 @@ Reversion tracks branch decisions produced by nested principal-branch checks. Mu
 ## 7. Dominant balance and implicit equations
 
 ```python
-from asymptotic import dominant_balance_candidates, implicit_asymptotic
+from asymptotic import implicit
+from asymptotic.implicit import dominant_balance_candidates
 
-candidates = dominant_balance_candidates(y**2 + x*y + x**3, y, x)
-branches = implicit_asymptotic(y**2 + x*y + x**3, y, x, terms=5)
+candidates = dominant_balance_candidates(y**2 + x * y + x**3, y, x)
+branches = implicit(y**2 + x * y + x**3, y, x, terms=5, return_result=True)
 ```
 
-Dominant-balance candidates include replayable certificates for their weighted-valuation decisions. Parameter-dependent leading coefficients can trigger automatic strata rather than silently assuming a generic nonzero case. Generated polynomial conditions are canonicalized: repeated factors and nonzero rational scalars are removed, small equality systems use a deterministic Groebner basis, and contradictions/nonzero conditions are reduced modulo that equality ideal.
+Dominant-balance candidates include replayable certificates for their weighted-valuation decisions. Parameter-dependent leading coefficients can trigger automatic strata instead of assuming a generic nonzero case. Generated polynomial conditions are canonicalized: repeated factors and nonzero rational scalars are removed, small equality systems use a deterministic Groebner basis, and contradictions/nonzero conditions are reduced modulo that equality ideal.
 
 For generalized log-exp balances, use `transseries_dominant_balance_candidates()`.
 
@@ -109,24 +113,24 @@ For singular centers, inspect the multiplicity/scaling diagnosis directly:
 from asymptotic.implicit import implicit_singularity_profile
 
 profile = implicit_singularity_profile(y**2 - x, y, x)
-print(profile.multiplicity)       # 2
-print(profile.turning_point)      # True
+print(profile.multiplicity)  # 2
+print(profile.turning_point)  # True
 print(profile.scaling_exponents)  # (1/2,)
 ```
 
-`implicit_asymptotic()` performs this diagnosis automatically. A certified multiple root uses the recursive Newton–Puiseux/scaling path and each returned branch records `method="newton-puiseux-blowup"`. The structural parameter probe is evaluated after translating `dependent_limit`, so multiplicity changes at nonzero centers are stratified correctly.
+`implicit()` performs this diagnosis automatically. A certified multiple root uses the recursive Newton–Puiseux/scaling path and each returned branch records `method="newton-puiseux-blowup"`. The structural parameter probe is evaluated after translating `dependent_limit`, so multiplicity changes at nonzero centers are stratified correctly.
 
 ## 8. Multivariate scaling and implicit asymptotics
 
 ```python
-from asymptotic import multivariate_implicit_asymptotics
+from asymptotic.multivariate_implicit import multivariate_implicit
 from asymptotic.multivariate import multivariate_scaling_regimes, scaling_path
 
 z = sp.symbols("z", positive=True)
 path = scaling_path((x, z), (1, 2))
-regimes = multivariate_scaling_regimes(y**2 + x*y + z**3, y, (x, z))
-branches = multivariate_implicit_asymptotics(
-    (y**2 + x*y + z**3,),
+regimes = multivariate_scaling_regimes(y**2 + x * y + z**3, y, (x, z))
+branches = multivariate_implicit(
+    (y**2 + x * y + z**3,),
     (y,),
     (x, z),
 )
@@ -137,14 +141,14 @@ Automatic weight-cone discovery partitions positive scaling-weight space into ch
 ## 9. Nonlinear differential transseries
 
 ```python
-from asymptotic.nonlinear_ode import nonlinear_differential_transseries
+from asymptotic.nonlinear_ode import differential_transseries
 
 u = sp.Function("u")
-equation = sp.diff(u(x), x) - u(x)**2 + 1/x**2
-branches = nonlinear_differential_transseries(equation, u, x, terms=5)
+equation = sp.diff(u(x), x) - u(x) ** 2 + 1 / x**2
+branches = differential_transseries(equation, u, x, terms=5)
 ```
 
-The solver combines differential dominant balance, recursive correction lifting, logarithmic/exponential descendants, parameter strata, and Frechet linearization. A formal branch may exist even when a rigorous inverse-operator estimate is unavailable; inspect its certificate/remainder information rather than assuming convergence.
+The solver combines differential dominant balance, recursive correction lifting, logarithmic/exponential descendants, parameter strata, and Frechet linearization. A formal branch may exist even when a rigorous inverse-operator estimate is unavailable; inspect its certificate/remainder information instead of assuming convergence.
 
 ## 10. Function properties and branch safety
 
@@ -163,11 +167,11 @@ singularities = singularity_properties(sp.log(x))
 safe = branch_safe_substitution_decision(sp.log(x), x, 2)
 ```
 
-The registry contains reviewed facts rather than ad-hoc assumptions. Queries are tri-state where appropriate. Register application-specific function facts with `FunctionPropertyRegistry` and `register_function_properties()`. See [function properties and branch knowledge](function-properties.md) for the reviewed coverage and branch model.
+The registry contains reviewed facts instead of ad-hoc assumptions. Queries are tri-state where appropriate. Register application-specific function facts with `FunctionPropertyRegistry` and `register_function_properties()`. See [function properties and branch knowledge](function-properties.md) for the reviewed coverage and branch model.
 
 ## 11. Formal vs certified remainders
 
-`AsymptoticRemainder` and `AsymptoticTruncation` distinguish exact tails, `O`, `o`, and unknown remainder information. Operation-specific theorem functions can upgrade a formal result only when their hypotheses are proved.
+`Remainder` and `Truncation` distinguish exact tails, `O`, `o`, and unknown remainder information. Operation-specific theorem functions can upgrade a formal result only when their hypotheses are proved.
 
 ```python
 from asymptotic.remainder_theorems import certify_differentiation_remainder
@@ -177,23 +181,23 @@ if cert.certified:
     assert cert.replay()
 ```
 
-The same pattern is used for finite sums/products, reciprocal and quotient propagation, algebraic substitution, general unary composition, inversion, nonlinear lifting, Frechet inverses, and Green operators. Polynomial/rational substitution uses exact finite perturbation identities; general composition searches for the first nonzero Taylor derivative, so stationary points can still yield certified higher-order scales. Higher-order Green certification supports both exact constant coefficients and a conservative asymptotically constant case `L=L0+E(x)` at `+/-oo`. In the latter case, normalized coefficients must converge to a finite hyperbolic constant operator, the limiting Green particular is substituted back into the full operator, the resulting defect must be `o(R)`, and a strict exponential-rate gap must control the homogeneous modes. `GreenOperatorCertificate.replay_asymptotic()` rechecks those asymptotic conditions; `exact_right_inverse` remains false unless the full variable-coefficient identity is exact.
+The same pattern is used for finite sums/products, reciprocal and quotient propagation, algebraic substitution, general unary composition, inversion, nonlinear lifting, Frechet inverses, and Green operators. Polynomial/rational substitution uses exact finite perturbation identities; general composition searches for the first nonzero Taylor derivative, so stationary points can still yield certified higher-order scales. Higher-order Green certification supports both exact constant coefficients and a proof-bounded asymptotically constant case `L=L0+E(x)` at `+/-oo`. In the latter case, normalized coefficients must converge to a finite hyperbolic constant operator, the limiting Green particular is substituted back into the full operator, the resulting defect must be `o(R)`, and a strict exponential-rate gap must control the homogeneous modes. `GreenOperatorCertificate.replay_asymptotic()` rechecks those asymptotic conditions; `exact_right_inverse` remains false unless the full variable-coefficient identity is exact.
 
-Certification code uses a shared bounded symbolic policy. Polynomial/linear/rational exact methods are tried before general SymPy algorithms, and proof-critical failures remain inconclusive rather than launching open-ended symbolic searches.
+Certification code uses a shared bounded symbolic policy. Polynomial/linear/rational exact methods are tried before general SymPy algorithms, and proof-critical failures remain inconclusive instead of launching open-ended symbolic searches.
 
 ## 12. Asymptotic differential fields, shadows, and ghosts
 
 ```python
 from asymptotic.asymptotic_field import asymptotic_differential_field
 
-field = asymptotic_differential_field(x, (1/x, sp.exp(-x)))
+field = asymptotic_differential_field(x, (1 / x, sp.exp(-x)))
 ```
 
 The field layer models moderate growth, infinitesimal ideals, shadow projection, ghosts, integral-shadow extensions, and integration-constant placement. It implements a useful subset of Shackell-style shadow machinery, not a complete asymptotic differential-field decision procedure.
 
 ## 13. ODE interchange
 
-`from_formal_ode_data()` consumes the structural schema exported by optional `odeanalysis` without creating an import cycle. `certify_green_operator_data()` validates and replays a constant-coefficient operator descriptor before using it for a Green/dichotomy theorem.
+`from_formal_ode_data()` converts the core structural formal blocks without creating an import cycle. `from_odeanalysis_formal_data()` consumes the complete modern optional `odeanalysis` interchange: verified scalar coefficient recurrences and generated values, independently replayed residual exact-zero/valuation claims, and ramified sector domains with cover/local/original angular intervals, sheet labels, open-boundary data, and per-sector block dominance levels. Producer `verify()` results are necessary but not sufficient for residual certification: the consumer checks the residual claim again from the exported exact expression. `certify_green_operator_data()` validates and replays a constant-coefficient operator descriptor before using it for a Green/dichotomy theorem.
 
 ## 14. Understanding UNKNOWN
 
@@ -208,13 +212,13 @@ You can often resolve it by strengthening symbol assumptions, supplying a parame
 
 ## 15. Working uniformly across representations
 
-Use `asymptotic_element()` when an algorithm should accept more than one asymptotic representation:
+Use `element()` when an algorithm should accept more than one asymptotic representation:
 
 ```python
-from asymptotic import asymptotic_element, multiseries, nested_expansion
+from asymptotic import as_element, multiseries, nested_series
 
-m = asymptotic_element(multiseries(sp.exp(1/x), x, terms=5))
-n = asymptotic_element(nested_expansion(sp.log(x) + 1/x, x))
+m = element(multiseries(sp.exp(1 / x), x, terms=5, return_result=True))
+n = element(nested_series(sp.log(x) + 1 / x, x, return_result=True))
 
 m.truncation(3)
 m.differentiate()
@@ -235,7 +239,7 @@ The wrapper retains the original object as `.native`. Operations use its special
 A discovered scale can expose a representative directly:
 
 ```python
-scale = discover_scale(1/x + sp.exp(-x), x)
+scale = discover_scale(1 / x + sp.exp(-x), x)
 slow = scale.element(0)
 fast = scale.element(1)
 slow.compare(fast)
@@ -244,30 +248,29 @@ slow.compare(fast)
 Likewise, expressions attached to a shadow or differential field can join the same algebra without discarding the field object:
 
 ```python
-field = asymptotic_differential_field(x, (1/x,))
-u = field.element(1 + 1/x)
+field = asymptotic_differential_field(x, (1 / x,))
+u = field.element(1 + 1 / x)
 u.reciprocal(terms=4)
 ```
 
 Shadow projection itself remains a `ShadowField` operation; the common element protocol is for algebra on the resulting/attached expressions, not a replacement for the shadow-field theorem machinery.
-
 
 ## Common algebra object
 
 For workflows mixing representations repeatedly, construct one coordinate-aware algebra instead of adapting each pair manually:
 
 ```python
-from asymptotic import AsymptoticAlgebra
+from asymptotic.algebra import AsymptoticAlgebra
 
 A = AsymptoticAlgebra(x, sp.oo, terms=6)
-u = A.element(multiseries(sp.exp(1/x), x, terms=8))
-v = A.element(nested_expansion(1 + 1/x, x, depth=1))
+u = A.element(multiseries(sp.exp(1 / x), x, terms=8, return_result=True))
+v = A.element(nested_series(1 + 1 / x, x, depth=1, return_result=True))
 w = A.multiply(u, v)
 q = A.reciprocal(w, terms=5)
 relation = A.compare(q, 1)
 ```
 
-The algebra rejects mismatched endpoints/variables rather than silently converting them. Native unary algorithms are preferred; heterogeneous arithmetic uses the finite certified transseries normal form. Incomplete implicit branches carry an `UNKNOWN` solution remainder through this conversion instead of being treated as exact finite series.
+The algebra rejects mismatched endpoints/variables instead of converting them. Native unary algorithms are preferred; heterogeneous arithmetic uses the finite certified transseries normal form. Incomplete implicit branches carry an `UNKNOWN` solution remainder through this conversion instead of being treated as exact finite series.
 
 ## Finding the right entry point
 
@@ -275,11 +278,10 @@ If you know the mathematical problem but not the representation, use the [proble
 
 ## Diagnosing inconclusive results
 
-An `UNKNOWN` remainder or property decision is intentionally auditable. See [Understanding `UNKNOWN`](unknown-results.md) for the common hypotheses behind reciprocal, composition, inverse, implicit, and Green/Frechet inconclusive results.
+An `UNKNOWN` remainder or property decision is auditable. See [Understanding `UNKNOWN`](certification.md) for the common hypotheses behind reciprocal, composition, inverse, implicit, and Green/Frechet inconclusive results.
 
 ## Executable examples
 
-The repository's `examples/` directory contains complete scripts for ordinary multiseries truncation, common-algebra interoperability, singular implicit Newton--Puiseux switching, and asymptotically constant Green certification. The test suite imports and executes these scripts, so the examples are kept synchronized with the public API.
+The repository's `examples/` directory contains complete scripts for ordinary multiseries truncation, common-algebra interoperability, singular implicit Newton–Puiseux switching, and asymptotically constant Green certification. The test suite imports and executes these scripts, so the examples are kept synchronized with the public API.
 
-
-For dispatch behavior, see [Algorithm selection](algorithm-selection.md). For unresolved results, see [Understanding `UNKNOWN`](unknown-results.md).
+For dispatch behavior, see [Algorithm selection](algorithm-selection.md). For unresolved results, see [Understanding `UNKNOWN`](certification.md).

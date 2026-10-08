@@ -8,7 +8,7 @@ The implementation follows four increasingly structural routes:
    scale substitution;
 4. endpoint or interior-saddle Laplace expansion.
 
-Laplace results are deliberately marked formal unless an exact reduction was
+Laplace results are marked formal unless an exact reduction was
 used.  Local saddle calculations alone do not prove global dominance or a
 uniform tail bound, so the package does not manufacture a certified remainder.
 """
@@ -19,6 +19,7 @@ from dataclasses import dataclass
 from typing import Literal
 
 import sympy as sp
+from funcprops import normalize_assumptions
 from sympy.stats import E, P, density, given
 from sympy.stats.crv import ContinuousDistribution, SingleContinuousPSpace
 from sympy.stats.drv import DiscreteDistribution, SingleDiscretePSpace
@@ -29,9 +30,11 @@ from sympy.stats.rv import RandomSymbol
 from ._power_simplify import analytic_powsimp, power_expand_exact
 from ._symbolic_errors import SYMBOLIC_ERRORS
 from ._symbolic_policy import bounded_assumption_sign, bounded_limit, bounded_solve_one
+from .context import AsymptoticContext
 from .instrumentation import record_symbolic_event
-from .remainder import AsymptoticRemainder
+from .remainder import Remainder
 from .sums import DISCRETE_STAT_METHODS, SUM_METHODS
+from .theorem_registry import CertificationStrength, Theorem, TheoremRegistry
 from .transseries import TransseriesExpansion, transseries_from_expression
 
 StatisticalStatus = Literal["EXACT", "CERTIFIED", "FORMAL", "UNKNOWN"]
@@ -56,7 +59,9 @@ def _apply_random_bindings(
         if isinstance(symbol, (tuple, list, sp.Tuple)):
             symbols = tuple(symbol)
             if not symbols or not all(isinstance(item, sp.Symbol) for item in symbols):
-                raise TypeError("multivariate binding keys must contain only SymPy Symbols")
+                raise TypeError(
+                    "multivariate binding keys must contain only SymPy Symbols"
+                )
             if isinstance(prob_spec, JointRandomSymbol):
                 joint = prob_spec
             elif isinstance(prob_spec, JointDistribution):
@@ -74,7 +79,9 @@ def _apply_random_bindings(
             # Indexed access is the stable public representation of joint RV
             # components.  Dimension mismatches are detected when components
             # are materialized by the distribution/pspace.
-            replacements.update({item: joint[index] for index, item in enumerate(symbols)})
+            replacements.update(
+                {item: joint[index] for index, item in enumerate(symbols)}
+            )
             continue
         if not isinstance(symbol, sp.Symbol):
             raise TypeError("bindings must use SymPy Symbols or symbol tuples as keys")
@@ -90,7 +97,9 @@ def _apply_random_bindings(
         if isinstance(prob_spec, SingleFiniteDistribution):
             replacements[symbol] = SingleFinitePSpace(symbol, prob_spec).value
             continue
-        raise TypeError("bindings must map SymPy Symbols to RandomSymbols or SymPy distributions")
+        raise TypeError(
+            "bindings must map SymPy Symbols to RandomSymbols or SymPy distributions"
+        )
     return expression.xreplace(replacements)
 
 
@@ -98,7 +107,7 @@ def _apply_random_bindings(
 class LaplaceRemainderCertificate:
     """Replayable evidence for a globally valid real Laplace expansion.
 
-    Certification is intentionally narrow: the phase must be a real polynomial
+    Certification is narrow: the phase must be a real polynomial
     on a real interval, all relevant critical points must be exactly enumerable,
     every dominant interior point must be an even-order strict minimum, and
     infinite tails must be coercive.  Within that class the standard real
@@ -115,7 +124,7 @@ class LaplaceRemainderCertificate:
     local_orders: tuple[int, ...]
     minimum_value: sp.Expr | None
     coercive_tails: bool
-    remainder: AsymptoticRemainder | None
+    remainder: Remainder | None
     reason: str
 
     def replay(self) -> bool | None:
@@ -129,7 +138,12 @@ class LaplaceRemainderCertificate:
         if self.remainder is None or not self.remainder.is_certified:
             return False
         for point in self.stationary_points:
-            if sp.simplify(sp.diff(self.phase, self.variable).subs(self.variable, point)) != 0:
+            if (
+                sp.simplify(
+                    sp.diff(self.phase, self.variable).subs(self.variable, point)
+                )
+                != 0
+            ):
                 return False
             if self.domain.contains(point) is sp.S.false:
                 return False
@@ -156,7 +170,7 @@ class LaplaceRemainderCertificate:
 
 
 @dataclass(frozen=True)
-class StatisticalAsymptoticResult:
+class StatisticalResult:
     """Result of an asymptotic probability or expectation computation.
 
     ``expression`` is the finite asymptotic expression returned by the chosen
@@ -176,7 +190,7 @@ class StatisticalAsymptoticResult:
     domain: sp.Set | None = None
     transformation: tuple[sp.Symbol, sp.Expr] | None = None
     conditions: tuple[sp.Expr, ...] = ()
-    remainder: AsymptoticRemainder | None = None
+    remainder: Remainder | None = None
     certificate: object | None = None
     normalization: object | None = None
 
@@ -237,7 +251,9 @@ def _random_symbols(expr: sp.Expr) -> tuple[RandomSymbol, ...]:
     return tuple(sorted(expr.atoms(RandomSymbol), key=sp.default_sort_key))
 
 
-def _resolve_random_symbol(expr: sp.Expr, random_symbol: RandomSymbol | None) -> RandomSymbol:
+def _resolve_random_symbol(
+    expr: sp.Expr, random_symbol: RandomSymbol | None
+) -> RandomSymbol:
     if random_symbol is not None:
         if not isinstance(random_symbol, RandomSymbol):
             raise TypeError("random_symbol must be a SymPy RandomSymbol")
@@ -255,7 +271,7 @@ def _finite_asymptotic_series(
     terms: int,
     *,
     complete: bool,
-    remainder: AsymptoticRemainder | None = None,
+    remainder: Remainder | None = None,
 ) -> TransseriesExpansion | None:
     """Convert a usable exact/formal expression into a finite transseries."""
 
@@ -275,9 +291,9 @@ def _finite_asymptotic_series(
         pass
     if remainder is None:
         remainder = (
-            AsymptoticRemainder.exact_zero(parameter, point, source="exact statistical reduction")
+            Remainder.exact_zero(parameter, point, source="exact statistical reduction")
             if complete and candidate == expr
-            else AsymptoticRemainder.unknown(
+            else Remainder.unknown(
                 parameter,
                 point,
                 source=(
@@ -312,9 +328,9 @@ def _result_from_expression(
     domain: sp.Set | None = None,
     transformation: tuple[sp.Symbol, sp.Expr] | None = None,
     conditions: tuple[sp.Expr, ...] = (),
-    remainder: AsymptoticRemainder | None = None,
+    remainder: Remainder | None = None,
     certificate: LaplaceRemainderCertificate | None = None,
-) -> StatisticalAsymptoticResult:
+) -> StatisticalResult:
     series = _finite_asymptotic_series(
         expr, parameter, point, terms, complete=status == "EXACT", remainder=remainder
     )
@@ -325,7 +341,7 @@ def _result_from_expression(
         if series is not None
         else sp.sympify(expr)
     )
-    return StatisticalAsymptoticResult(
+    return StatisticalResult(
         finite,
         parameter,
         point,
@@ -399,12 +415,18 @@ def _event_domain(event: sp.Expr, rv: RandomSymbol) -> sp.Set | None:
     if event.lhs == rv:
         value = event.rhs
         if isinstance(event, (sp.StrictGreaterThan, sp.GreaterThan)):
-            return sp.Interval(value, sp.oo, left_open=isinstance(event, sp.StrictGreaterThan))
-        return sp.Interval(-sp.oo, value, right_open=isinstance(event, sp.StrictLessThan))
+            return sp.Interval(
+                value, sp.oo, left_open=isinstance(event, sp.StrictGreaterThan)
+            )
+        return sp.Interval(
+            -sp.oo, value, right_open=isinstance(event, sp.StrictLessThan)
+        )
     if event.rhs == rv:
         value = event.lhs
         if isinstance(event, (sp.StrictGreaterThan, sp.GreaterThan)):
-            return sp.Interval(-sp.oo, value, right_open=isinstance(event, sp.StrictGreaterThan))
+            return sp.Interval(
+                -sp.oo, value, right_open=isinstance(event, sp.StrictGreaterThan)
+            )
         return sp.Interval(value, sp.oo, left_open=isinstance(event, sp.StrictLessThan))
     return None
 
@@ -414,7 +436,9 @@ def _support(rv: RandomSymbol) -> sp.Set:
     if support is None:
         support = getattr(rv.pspace.distribution, "set", None)
     if not isinstance(support, sp.Set):
-        raise NotImplementedError("distribution support is not available as a SymPy set")
+        raise NotImplementedError(
+            "distribution support is not available as a SymPy set"
+        )
     return support
 
 
@@ -441,14 +465,6 @@ def _discrete_components(
     observed = sp.sympify(integrand).xreplace({rv: k})
     record_symbolic_event("stat_pmf_routes")
     return observed, pmf, k
-
-
-def _discrete_reduction(
-    integrand: sp.Expr,
-    rv: RandomSymbol,
-) -> tuple[sp.Expr, sp.Symbol]:
-    observed, pmf, k = _discrete_components(integrand, rv)
-    return analytic_powsimp(observed * pmf), k
 
 
 def _support_assumptions(domain: sp.Set, variable: sp.Symbol) -> sp.Expr:
@@ -532,7 +548,9 @@ def _discrete_bounds(domain: sp.Set) -> tuple[sp.Expr, sp.Expr] | None:
             seen = True
             continue
         if isinstance(part, sp.Interval):
-            lo = (sp.floor(part.start) + 1) if part.left_open else sp.ceiling(part.start)
+            lo = (
+                (sp.floor(part.start) + 1) if part.left_open else sp.ceiling(part.start)
+            )
             hi = (sp.ceiling(part.end) - 1) if part.right_open else sp.floor(part.end)
             if part.start is -sp.oo:
                 lo = -sp.oo
@@ -555,7 +573,9 @@ def _set_sum(expr: sp.Expr, variable: sp.Symbol, domain: sp.Set) -> sp.Expr:
     if bounds is not None:
         lo, hi = bounds
         return sp.Sum(expr, (variable, lo, hi))
-    raise NotImplementedError(f"discrete domain {domain} is not a supported integer range")
+    raise NotImplementedError(
+        f"discrete domain {domain} is not a supported integer range"
+    )
 
 
 def _evaluate_reduction(reduction: sp.Expr) -> sp.Expr | None:
@@ -570,7 +590,9 @@ def _evaluate_reduction(reduction: sp.Expr) -> sp.Expr | None:
     return sp.sympify(value)
 
 
-def _leading_boundary_scale(bound: sp.Expr, parameter: sp.Symbol, point: sp.Expr) -> sp.Expr | None:
+def _leading_boundary_scale(
+    bound: sp.Expr, parameter: sp.Symbol, point: sp.Expr
+) -> sp.Expr | None:
     """Find an exact multiplicative scale making a moving bound constant."""
 
     if parameter not in bound.free_symbols:
@@ -612,14 +634,22 @@ def _moving_domain_transform(
         return None
     # All finite moving boundaries must become parameter-free under one scale.
     new_start = (
-        domain.start if domain.start in (-sp.oo, sp.oo) else analytic_powsimp(domain.start / scale)
+        domain.start
+        if domain.start in (-sp.oo, sp.oo)
+        else analytic_powsimp(domain.start / scale)
     )
-    new_end = domain.end if domain.end in (-sp.oo, sp.oo) else analytic_powsimp(domain.end / scale)
+    new_end = (
+        domain.end
+        if domain.end in (-sp.oo, sp.oo)
+        else analytic_powsimp(domain.end / scale)
+    )
     if parameter in sp.Tuple(new_start, new_end).free_symbols:
         return None
     y = sp.Dummy(f"{variable}_scaled", real=True)
     replacement = analytic_powsimp(scale * y)
-    transformed = analytic_powsimp(expr.xreplace({variable: replacement}) * sp.Abs(scale))
+    transformed = analytic_powsimp(
+        expr.xreplace({variable: replacement}) * sp.Abs(scale)
+    )
     transformed_domain = sp.Interval(
         new_start,
         new_end,
@@ -639,7 +669,20 @@ def _extract_laplace_form(
 ) -> tuple[sp.Expr, sp.Expr, sp.Expr, bool] | None:
     """Return prefactor, amplitude, phase, and whether amplitude was truncated."""
 
-    prefactor, dependent = sp.sympify(integrand).as_independent(variable, as_Add=False)
+    integrand = sp.sympify(integrand)
+    # Separate factors independent of the integration variable, but keep
+    # parameter-dependent exponentials in the Laplace phase.  SymPy's generic
+    # ``as_independent`` may pull exp(-p*c) into the prefactor; the direct
+    # factor walk below avoids that ambiguity and is cheaper for the canonical
+    # exp(-p*phi(x)) form.
+    prefactor = sp.S.One
+    dependent_factors = []
+    for factor in sp.Mul.make_args(integrand):
+        if variable not in factor.free_symbols and factor.func is not sp.exp:
+            prefactor *= factor
+        else:
+            dependent_factors.append(factor)
+    dependent = sp.Mul(*dependent_factors)
     exponent = sp.S.Zero
     amplitude = sp.S.One
     found = False
@@ -669,10 +712,14 @@ def _extract_laplace_form(
         # substantially cheaper and more reliable than asking a generic limit
         # engine to simplify cancellations among p*log(p), p*log(p*x), etc.
         try:
-            expanded_exponent = sp.series(exponent, parameter, sp.oo, max(3, terms + 2)).removeO()
+            expanded_exponent = sp.series(
+                exponent, parameter, sp.oo, max(3, terms + 2)
+            ).removeO()
         except SYMBOLIC_ERRORS:
             expanded_exponent = exponent
-        slope = bounded_limit(expanded_exponent / parameter, parameter, sp.oo, allow_general=True)
+        slope = bounded_limit(
+            expanded_exponent / parameter, parameter, sp.oo, allow_general=True
+        )
         if slope is None:
             return None
         if isinstance(slope, sp.Limit) or slope in (sp.oo, -sp.oo, sp.zoo, sp.nan):
@@ -762,20 +809,28 @@ def _interior_saddle_expansion(
     parameter: sp.Symbol,
     terms: int,
 ) -> tuple[sp.Expr, tuple[sp.Expr, ...]] | None:
-    curvature = sp.simplify(analytic_powsimp(sp.diff(phase, variable, 2).subs(variable, saddle)))
+    curvature = sp.simplify(
+        analytic_powsimp(sp.diff(phase, variable, 2).subs(variable, saddle))
+    )
     if bounded_assumption_sign(curvature) != 1:
         return None
     eps = sp.Dummy("eps", positive=True)
     u = sp.Dummy("u", real=True)
     local_x = saddle + eps * u
     phi0 = sp.simplify(analytic_powsimp(phase.subs(variable, saddle)))
-    phi_local = sp.series(phase.subs(variable, local_x), eps, 0, 2 * terms + 3).removeO()
+    phi_local = sp.series(
+        phase.subs(variable, local_x), eps, 0, 2 * terms + 3
+    ).removeO()
     gaussian = curvature * u**2 * eps**2 / 2
     correction = analytic_powsimp((phi_local - phi0 - gaussian) / eps**2)
     local_amp = amplitude.subs({variable: local_x, parameter: eps**-2})
     try:
-        correction_series = sp.series(sp.exp(-correction), eps, 0, 2 * terms + 2).removeO()
-        product = sp.series(local_amp * correction_series, eps, 0, 2 * terms + 2).removeO()
+        correction_series = sp.series(
+            sp.exp(-correction), eps, 0, 2 * terms + 2
+        ).removeO()
+        product = sp.series(
+            local_amp * correction_series, eps, 0, 2 * terms + 2
+        ).removeO()
     except SYMBOLIC_ERRORS:
         return None
     integrated = sp.S.Zero
@@ -902,12 +957,18 @@ def _degenerate_local_expansion(
     phi0 = analytic_powsimp(phase.subs(variable, location))
     expansion_order = max(order * terms + order + 2, order + 3)
     try:
-        phi_local = sp.series(phase.subs(variable, local_x), eps, 0, expansion_order).removeO()
+        phi_local = sp.series(
+            phase.subs(variable, local_x), eps, 0, expansion_order
+        ).removeO()
         leading = coefficient * eps**order * u**order
         correction = analytic_powsimp((phi_local - phi0 - leading) / eps**order)
         local_amp = amplitude.subs({variable: local_x, parameter: eps ** (-order)})
-        correction_series = sp.series(sp.exp(-correction), eps, 0, expansion_order).removeO()
-        product = sp.series(local_amp * correction_series, eps, 0, expansion_order).removeO()
+        correction_series = sp.series(
+            sp.exp(-correction), eps, 0, expansion_order
+        ).removeO()
+        product = sp.series(
+            local_amp * correction_series, eps, 0, expansion_order
+        ).removeO()
     except SYMBOLIC_ERRORS:
         return None
     integrated = sp.S.Zero
@@ -972,7 +1033,10 @@ def _polynomial_global_laplace_certificate(
         amp_for_test = amplitude.as_independent(parameter, as_Add=False)[1]
     else:
         amp_for_test = amplitude
-    if not (amp_for_test.is_polynomial(variable) or variable not in amp_for_test.free_symbols):
+    if not (
+        amp_for_test.is_polynomial(variable)
+        or variable not in amp_for_test.free_symbols
+    ):
         return LaplaceRemainderCertificate(
             False,
             phase,
@@ -1036,7 +1100,9 @@ def _polynomial_global_laplace_certificate(
                 )
             local_order, local_derivative = first
             if kind == "degenerate-upper":
-                local_derivative = analytic_powsimp((-1) ** local_order * local_derivative)
+                local_derivative = analytic_powsimp(
+                    (-1) ** local_order * local_derivative
+                )
             if kind in {"saddle", "degenerate"} and local_order % 2:
                 return LaplaceRemainderCertificate(
                     False,
@@ -1092,7 +1158,7 @@ def _polynomial_global_laplace_certificate(
         * sp.exp(-parameter * phi0)
         * parameter ** (-sp.Rational(terms + 1, max_order))
     )
-    remainder = AsymptoticRemainder.big_o(
+    remainder = Remainder.big_o(
         scale,
         parameter,
         sp.oo,
@@ -1124,7 +1190,8 @@ def airy_uniform_saddle_asymptotic(
     coalescence_value: sp.Expr = 0,
     location: sp.Expr = 0,
     terms: int = 1,
-) -> StatisticalAsymptoticResult:
+    assumptions: sp.Expr = sp.S.true,
+) -> StatisticalResult:
     """Leading uniform Airy approximation at a simple cubic turning point.
 
     This routine covers the canonical oscillatory coalescence in which an
@@ -1132,7 +1199,7 @@ def airy_uniform_saddle_asymptotic(
     ``phase_x = phase_xx = 0`` while ``phase_xxx`` and ``phase_xmu`` are real
     and nonzero.  With ``mu-mu0 = O(parameter**(-2/3))`` two simple stationary
     points coalesce and the local integral is uniformly represented by an Airy
-    function.  The implementation intentionally returns only the leading CFU
+    function.  The implementation returns only the leading CFU
     term; higher ``terms`` are reserved for later Airy/Airy-prime transport.
 
     The full real line is required because the normalization uses the standard
@@ -1151,7 +1218,7 @@ def airy_uniform_saddle_asymptotic(
     if not isinstance(domain, sp.Interval):
         domain = sp.Interval(*domain)
     if domain.start is not -sp.oo or domain.end is not sp.oo:
-        raise NotImplementedError("Airy uniform saddles currently require the full real line")
+        raise NotImplementedError("Airy uniform saddles require the full real line")
 
     expression = sp.sympify(integrand)
     parameter = sp.sympify(parameter)
@@ -1170,20 +1237,29 @@ def airy_uniform_saddle_asymptotic(
         )
     amplitude = analytic_powsimp(expression / exponential)
     if parameter in amplitude.free_symbols:
-        raise NotImplementedError("Airy leading amplitude must be parameter-independent")
+        raise NotImplementedError(
+            "Airy leading amplitude must be parameter-independent"
+        )
 
-    at = {variable: sp.sympify(location), control_parameter: sp.sympify(coalescence_value)}
+    at = {
+        variable: sp.sympify(location),
+        control_parameter: sp.sympify(coalescence_value),
+    }
     first = analytic_powsimp(sp.diff(phase, variable).subs(at))
     second = analytic_powsimp(sp.diff(phase, variable, 2).subs(at))
     third = analytic_powsimp(sp.diff(phase, variable, 3).subs(at))
     unfolding = analytic_powsimp(sp.diff(phase, variable, control_parameter).subs(at))
     if first != 0 or second != 0:
-        raise NotImplementedError("supported Airy coalescence requires phase_x = phase_xx = 0")
+        raise NotImplementedError(
+            "supported Airy coalescence requires phase_x = phase_xx = 0"
+        )
     cubic_sign = bounded_assumption_sign(third)
     if cubic_sign not in {-1, 1}:
         raise NotImplementedError("phase_xxx must have a proved nonzero real sign")
     if bounded_assumption_sign(unfolding) not in {-1, 1}:
-        raise NotImplementedError("control parameter must unfold the stationary equation linearly")
+        raise NotImplementedError(
+            "control parameter must unfold the stationary equation linearly"
+        )
 
     # phase = phase0 + a*y**3/3 + b*(mu-mu0)*y + ...,
     # where a = phase_xxx/2.  The canonical scaling t=(p*|a|)^(1/3)y
@@ -1193,7 +1269,11 @@ def airy_uniform_saddle_asymptotic(
     sign = sp.Integer(cubic_sign)
     delta = analytic_powsimp(control_parameter - coalescence_value)
     airy_argument = analytic_powsimp(
-        sign * unfolding * delta * parameter ** sp.Rational(2, 3) / cubic_abs ** sp.Rational(1, 3)
+        sign
+        * unfolding
+        * delta
+        * parameter ** sp.Rational(2, 3)
+        / cubic_abs ** sp.Rational(1, 3)
     )
     phase0 = analytic_powsimp(phase.subs(variable, location))
     amplitude0 = analytic_powsimp(amplitude.subs(variable, location))
@@ -1208,7 +1288,7 @@ def airy_uniform_saddle_asymptotic(
     record_symbolic_event("stat_coalescing_saddles")
     # The Airy argument is itself a transition variable of size O(1), so it
     # must not be re-expanded by the ordinary one-parameter transseries parser.
-    return StatisticalAsymptoticResult(
+    return StatisticalResult(
         expression=result_expression,
         parameter=parameter,
         point=sp.oo,
@@ -1233,7 +1313,8 @@ def coalescing_saddle_asymptotic(
     location: sp.Expr = 0,
     transition_symbol: sp.Symbol | None = None,
     terms: int = 2,
-) -> StatisticalAsymptoticResult:
+    assumptions: sp.Expr = sp.S.true,
+) -> StatisticalResult:
     """Uniform quartic transition for a symmetric pair of coalescing minima.
 
     The method targets the real Laplace normal form in which, at the
@@ -1246,20 +1327,32 @@ def coalescing_saddle_asymptotic(
     if not isinstance(domain, sp.Interval):
         domain = sp.Interval(*domain)
     if domain.start is not -sp.oo or domain.end is not sp.oo:
-        raise NotImplementedError("quartic coalescing-saddle profiles require the full real line")
+        raise NotImplementedError(
+            "quartic coalescing-saddle profiles require the full real line"
+        )
     if transition_symbol is None:
         transition_symbol = sp.Dummy("tau", real=True)
-    extracted = _extract_laplace_form(sp.sympify(integrand), variable, parameter, terms=terms)
+    extracted = _extract_laplace_form(
+        sp.sympify(integrand), variable, parameter, terms=terms
+    )
     if extracted is None:
         raise NotImplementedError("coalescing saddle requires Laplace exponential form")
     prefactor, amplitude, phase, _truncated_amplitude = extracted
     at = {variable: location, control_parameter: coalescence_value}
-    derivs = [analytic_powsimp(sp.diff(phase, variable, j).subs(at)) for j in range(1, 5)]
+    derivs = [
+        analytic_powsimp(sp.diff(phase, variable, j).subs(at)) for j in range(1, 5)
+    ]
     if derivs[:3] != [0, 0, 0] or bounded_assumption_sign(derivs[3]) != 1:
-        raise NotImplementedError("supported coalescence requires a positive quartic normal form")
-    mixed = analytic_powsimp(sp.diff(phase, variable, 2, control_parameter, 1).subs(at) / 2)
+        raise NotImplementedError(
+            "supported coalescence requires a positive quartic normal form"
+        )
+    mixed = analytic_powsimp(
+        sp.diff(phase, variable, 2, control_parameter, 1).subs(at) / 2
+    )
     if mixed == 0:
-        raise NotImplementedError("control parameter does not unfold the quadratic saddle term")
+        raise NotImplementedError(
+            "control parameter does not unfold the quadratic saddle term"
+        )
     eps = sp.Dummy("eps", positive=True)
     u = sp.Dummy("u", real=True)
     substitutions = {
@@ -1275,11 +1368,15 @@ def coalescing_saddle_asymptotic(
     local_phase = analytic_powsimp((phase.subs(substitutions) - phi0_mu) / eps**4)
     try:
         q = sp.series(local_phase, eps, 0, max(2, terms + 1)).removeO()
-        local_amp = sp.series(amplitude.subs(substitutions), eps, 0, max(1, terms)).removeO()
+        local_amp = sp.series(
+            amplitude.subs(substitutions), eps, 0, max(1, terms)
+        ).removeO()
         correction = sp.series(sp.exp(-q), eps, 0, max(1, terms)).removeO()
         product = sp.series(local_amp * correction, eps, 0, max(1, terms)).removeO()
     except SYMBOLIC_ERRORS as exc:
-        raise NotImplementedError("could not form quartic transition expansion") from exc
+        raise NotImplementedError(
+            "could not form quartic transition expansion"
+        ) from exc
     pieces = []
     for j in range(terms):
         coeff = analytic_powsimp(sp.expand(product).coeff(eps, j))
@@ -1288,20 +1385,30 @@ def coalescing_saddle_asymptotic(
         pieces.append(eps ** (j + 1) * sp.Integral(coeff, (u, -sp.oo, sp.oo)))
     if not pieces:
         raise NotImplementedError("empty coalescing-saddle transition expansion")
-    outside = analytic_powsimp(prefactor.subs(parameter, eps**-4) * sp.exp(-(eps**-4) * phi0_mu))
+    outside = analytic_powsimp(
+        prefactor.subs(parameter, eps**-4) * sp.exp(-(eps**-4) * phi0_mu)
+    )
     expression_eps = analytic_powsimp(outside * sp.Add(*pieces))
     expression = expression_eps.xreplace({eps: parameter ** (-sp.Rational(1, 4))})
     expression = expression.xreplace(
-        {transition_symbol: (control_parameter - coalescence_value) * sp.sqrt(parameter)}
+        {
+            transition_symbol: (control_parameter - coalescence_value)
+            * sp.sqrt(parameter)
+        }
     )
     record_symbolic_event("stat_coalescing_saddles")
-    return _result_from_expression(
-        expression,
-        parameter,
-        sp.oo,
-        terms,
+    # The canonical quartic profile integrals are already the uniform
+    # asymptotic representation. Passing them through the ordinary one-scale
+    # transseries parser asks SymPy to series-expand unevaluated integrals and
+    # can trigger expensive Meijer-G integration without strengthening the
+    # formal certificate.
+    return StatisticalResult(
+        expression=expression,
+        parameter=parameter,
+        point=sp.oo,
         method="laplace-coalescing-quartic",
         status="FORMAL",
+        series=None,
         reduction=sp.Integral(integrand, (variable, domain.start, domain.end)),
         integration_variable=variable,
         domain=domain,
@@ -1318,8 +1425,9 @@ def laplace_asymptotic_integral(
     point: sp.Expr = sp.oo,
     terms: int = 4,
     certify: bool = True,
+    assumptions: sp.Expr = sp.S.true,
     _extracted_form: tuple[sp.Expr, sp.Expr, sp.Expr, bool] | None = None,
-) -> StatisticalAsymptoticResult:
+) -> StatisticalResult:
     """Expand a one-dimensional Laplace integral at ``parameter -> +oo``.
 
     Supported geometries include nondegenerate and even-order degenerate
@@ -1328,6 +1436,8 @@ def laplace_asymptotic_integral(
     theorem class; otherwise the local expansion remains formal.
     """
 
+    assumptions = normalize_assumptions(assumptions)
+    integrand = sp.refine(sp.sympify(integrand), assumptions)
     if point is not sp.oo:
         raise NotImplementedError("Laplace asymptotics target parameter -> +oo")
     if terms < 1:
@@ -1338,15 +1448,19 @@ def laplace_asymptotic_integral(
         domain = sp.Interval(*domain)
     extracted = _extracted_form
     if extracted is None:
-        extracted = _extract_laplace_form(sp.sympify(integrand), variable, parameter, terms=terms)
+        extracted = _extract_laplace_form(integrand, variable, parameter, terms=terms)
     if extracted is None:
-        raise NotImplementedError("integrand is not a supported A(x,p)*exp(-p*phi(x)) Laplace form")
+        raise NotImplementedError(
+            "integrand is not a supported A(x,p)*exp(-p*phi(x)) Laplace form"
+        )
     prefactor, amplitude, phase, truncated_amplitude = extracted
     # Principal-branch logarithms arising from positive lattice/Stirling
     # factors can be expanded exactly on the open integration interval.  This
     # keeps the phase branch-correct while exposing entropy derivatives such as
     # log(x/(1-x)) to the stationary-point solver.
-    interior_assumptions = _interior_domain_assumptions(domain, variable)
+    interior_assumptions = normalize_assumptions(
+        sp.And(assumptions, _interior_domain_assumptions(domain, variable))
+    )
     phase = analytic_powsimp(sp.expand(power_expand_exact(phase, interior_assumptions)))
 
     derivative = sp.simplify(analytic_powsimp(sp.diff(phase, variable)))
@@ -1372,7 +1486,11 @@ def laplace_asymptotic_integral(
         slope_sign = bounded_assumption_sign(slope)
         if slope_sign == 1:
             local_candidates.append(
-                ("lower", domain.start, analytic_powsimp(phase.subs(variable, domain.start)))
+                (
+                    "lower",
+                    domain.start,
+                    analytic_powsimp(phase.subs(variable, domain.start)),
+                )
             )
         elif slope == 0:
             first = _first_nonzero_derivative_order(phase, variable, domain.start)
@@ -1389,7 +1507,11 @@ def laplace_asymptotic_integral(
         slope_sign = bounded_assumption_sign(slope)
         if slope_sign == -1:
             local_candidates.append(
-                ("upper", domain.end, analytic_powsimp(phase.subs(variable, domain.end)))
+                (
+                    "upper",
+                    domain.end,
+                    analytic_powsimp(phase.subs(variable, domain.end)),
+                )
             )
         elif slope == 0:
             first = _first_nonzero_derivative_order(phase, variable, domain.end)
@@ -1423,7 +1545,9 @@ def laplace_asymptotic_integral(
         elif sign == 1:
             continue
         else:
-            raise NotImplementedError("dominant Laplace points have unresolved phase ordering")
+            raise NotImplementedError(
+                "dominant Laplace points have unresolved phase ordering"
+            )
 
     contributions = []
     conditions: list[sp.Expr] = []
@@ -1476,7 +1600,11 @@ def laplace_asymptotic_integral(
                 lower=kind == "lower",
             )
             metric = "stat_laplace_endpoints"
-            method = "laplace-lower-endpoint" if kind == "lower" else "laplace-upper-endpoint"
+            method = (
+                "laplace-lower-endpoint"
+                if kind == "lower"
+                else "laplace-upper-endpoint"
+            )
         if expanded is None:
             raise NotImplementedError("dominant Laplace point could not be expanded")
         expression, local_conditions = expanded
@@ -1487,11 +1615,24 @@ def laplace_asymptotic_integral(
 
     expression = analytic_powsimp(sp.Add(*contributions))
     method = methods[0] if len(methods) == 1 else "laplace-co-dominant-points"
+    real_laplace_problem = (
+        parameter.is_positive is True
+        and variable.is_real is True
+        and phase.is_real is True
+    )
     certificate = (
         _polynomial_global_laplace_certificate(
-            phase, amplitude, prefactor, variable, domain, parameter, dominant, terms, expression
+            phase,
+            amplitude,
+            prefactor,
+            variable,
+            domain,
+            parameter,
+            dominant,
+            terms,
+            expression,
         )
-        if certify and not truncated_amplitude
+        if certify and not truncated_amplitude and real_laplace_problem
         else None
     )
     certified = certificate is not None and certificate.certified
@@ -1511,6 +1652,134 @@ def laplace_asymptotic_integral(
     )
 
 
+@dataclass(frozen=True)
+class _ContinuousStatProblem:
+    observable: sp.Expr
+    rv: RandomSymbol
+    domain: sp.Set
+    parameter: sp.Symbol
+    point: sp.Expr
+    terms: int
+    prefer_laplace: bool
+    allow_exact_special: bool
+    reduction_integrand: sp.Expr
+    variable: sp.Symbol
+    reduction: sp.Expr
+
+
+def _continuous_route_construct(
+    route: str, p: _ContinuousStatProblem
+) -> StatisticalResult | None:
+    if route == "exact-density":
+        if p.prefer_laplace:
+            return None
+        exact = _evaluate_reduction(p.reduction)
+        if exact is None:
+            return None
+        usable = _finite_asymptotic_series(
+            exact, p.parameter, p.point, p.terms, complete=True
+        )
+        if usable is None and not p.allow_exact_special:
+            return None
+        return _result_from_expression(
+            exact,
+            p.parameter,
+            p.point,
+            p.terms,
+            method="density-exact-integral",
+            status="EXACT",
+            reduction=p.reduction,
+            integration_variable=p.variable,
+            domain=p.domain,
+        )
+    if route == "moving-domain-laplace":
+        transformed = _moving_domain_transform(
+            p.reduction_integrand, p.variable, p.domain, p.parameter, p.point
+        )
+        if transformed is None:
+            return None
+        transformed, new_variable, new_domain, rule = transformed
+        try:
+            result = laplace_asymptotic_integral(
+                transformed,
+                new_variable,
+                new_domain,
+                parameter=p.parameter,
+                point=p.point,
+                terms=p.terms,
+            )
+        except NotImplementedError:
+            return None
+        return StatisticalResult(
+            result.expression,
+            result.parameter,
+            result.point,
+            "moving-domain/" + result.method,
+            result.status,
+            result.series,
+            p.reduction,
+            new_variable,
+            new_domain,
+            rule,
+            result.conditions,
+            result.remainder,
+            result.certificate,
+        )
+    if route == "laplace":
+        if not isinstance(p.domain, sp.Interval):
+            return None
+        try:
+            result = laplace_asymptotic_integral(
+                p.reduction_integrand,
+                p.variable,
+                p.domain,
+                parameter=p.parameter,
+                point=p.point,
+                terms=p.terms,
+            )
+        except NotImplementedError:
+            return None
+        return StatisticalResult(
+            result.expression,
+            result.parameter,
+            result.point,
+            result.method,
+            result.status,
+            result.series,
+            p.reduction,
+            p.variable,
+            p.domain,
+            None,
+            result.conditions,
+            result.remainder,
+            result.certificate,
+        )
+    raise ValueError(f"unknown continuous statistical theorem route: {route}")
+
+
+_CONTINUOUS_ROUTES = TheoremRegistry()
+for _priority, (_route, _strength) in enumerate(
+    (
+        ("exact-density", CertificationStrength.EXACT),
+        ("moving-domain-laplace", CertificationStrength.CERTIFIED),
+        ("laplace", CertificationStrength.CERTIFIED),
+    )
+):
+    _CONTINUOUS_ROUTES.register(
+        Theorem(
+            name=f"probability:{_route}",
+            family="probability-continuous",
+            applicability=lambda _problem: True,
+            hypotheses=lambda _problem: (),
+            constructor=lambda problem, route=_route: _continuous_route_construct(
+                route, problem
+            ),
+            certification=_strength,
+            priority=_priority,
+        )
+    )
+
+
 def _continuous_statistical_route(
     observable: sp.Expr,
     rv: RandomSymbol,
@@ -1521,82 +1790,29 @@ def _continuous_statistical_route(
     *,
     prefer_laplace: bool,
     allow_exact_special: bool,
-) -> StatisticalAsymptoticResult:
-    """Dispatch one continuous expectation or probability to exact, density, or Laplace machinery."""
+) -> StatisticalResult:
+    """Dispatch a continuous statistical reduction through the theorem registry."""
     reduction_integrand, variable = _continuous_reduction(observable, rv, domain)
     reduction = _set_integral(reduction_integrand, variable, domain)
-    if not prefer_laplace:
-        exact = _evaluate_reduction(reduction)
-        if exact is not None:
-            usable = _finite_asymptotic_series(exact, parameter, point, terms, complete=True)
-            if usable is not None or allow_exact_special:
-                return _result_from_expression(
-                    exact,
-                    parameter,
-                    point,
-                    terms,
-                    method="density-exact-integral",
-                    status="EXACT",
-                    reduction=reduction,
-                    integration_variable=variable,
-                    domain=domain,
-                )
-
-    transformed = _moving_domain_transform(reduction_integrand, variable, domain, parameter, point)
-    if transformed is not None:
-        transformed_expr, new_variable, new_domain, rule = transformed
-        try:
-            result = laplace_asymptotic_integral(
-                transformed_expr,
-                new_variable,
-                new_domain,
-                parameter=parameter,
-                point=point,
-                terms=terms,
-            )
-            return StatisticalAsymptoticResult(
-                result.expression,
-                result.parameter,
-                result.point,
-                "moving-domain/" + result.method,
-                result.status,
-                result.series,
-                reduction,
-                new_variable,
-                new_domain,
-                rule,
-                result.conditions,
-            )
-        except NotImplementedError:
-            pass
-
-    if isinstance(domain, sp.Interval):
-        try:
-            result = laplace_asymptotic_integral(
-                reduction_integrand,
-                variable,
-                domain,
-                parameter=parameter,
-                point=point,
-                terms=terms,
-            )
-            return StatisticalAsymptoticResult(
-                result.expression,
-                result.parameter,
-                result.point,
-                result.method,
-                result.status,
-                result.series,
-                reduction,
-                variable,
-                domain,
-                None,
-                result.conditions,
-            )
-        except NotImplementedError:
-            pass
-
-    return StatisticalAsymptoticResult(
+    problem = _ContinuousStatProblem(
+        observable,
+        rv,
+        domain,
+        parameter,
+        point,
+        terms,
+        prefer_laplace,
+        allow_exact_special,
+        reduction_integrand,
+        variable,
+        reduction,
+    )
+    context = AsymptoticContext(parameter, point=point)
+    for decision in _CONTINUOUS_ROUTES.candidates(problem, context=context):
+        result = decision.theorem.constructor(problem)
+        if result is not None:
+            return result
+    return StatisticalResult(
         reduction,
         parameter,
         point,
@@ -1618,7 +1834,7 @@ def _discrete_statistical_route(
     terms: int,
     *,
     sum_method: str = "auto",
-) -> StatisticalAsymptoticResult:
+) -> StatisticalResult:
     """Dispatch one discrete expectation or probability to exact, sum, Stirling, or lattice-saddle machinery."""
     observed, pmf, variable = _discrete_components(observable, rv)
     pmf = _restrict_piecewise_to_support(pmf, domain, variable)
@@ -1638,13 +1854,15 @@ def _discrete_statistical_route(
             domain=domain,
         )
     if isinstance(reduction, sp.Sum) and len(reduction.limits) == 1:
-        from .sums import _asymptotic_sum_impl
+        from .sums import _sum_impl
 
         _, lower, upper = reduction.limits[0]
         requested = sum_method if sum_method in SUM_METHODS else "auto"
         saddle_summand = summand
         normalization = None
-        if requested in {"auto", "saddle"} and pmf.has(sp.factorial, sp.gamma, sp.binomial):
+        if requested in {"auto", "saddle"} and pmf.has(
+            sp.factorial, sp.gamma, sp.binomial
+        ):
             from .stirling import normalize_positive_pmf
 
             support_assumptions = _support_assumptions(domain, variable)
@@ -1669,7 +1887,9 @@ def _discrete_statistical_route(
                 type(distribution).__name__ == "BinomialDistribution"
                 and len(distribution.args) >= 4
             ):
-                count, success_probability, success_value, failure_value = distribution.args[:4]
+                count, success_probability, success_value, failure_value = (
+                    distribution.args[:4]
+                )
                 bounds = _discrete_bounds(domain)
                 if bounds is not None and success_value == 1 and failure_value == 0:
                     from .binomial_lattice import binomial_lattice_tail_expansion
@@ -1689,13 +1909,19 @@ def _discrete_statistical_route(
                         lattice_tail = None
                     if lattice_tail is not None:
                         series = _finite_asymptotic_series(
-                            lattice_tail.expression, parameter, point, terms, complete=False
+                            lattice_tail.expression,
+                            parameter,
+                            point,
+                            terms,
+                            complete=False,
                         )
                         expression = (
-                            series.truncate() if series is not None else lattice_tail.expression
+                            series.truncate()
+                            if series is not None
+                            else lattice_tail.expression
                         )
                         record_symbolic_event("binomial_tail_routes")
-                        return StatisticalAsymptoticResult(
+                        return StatisticalResult(
                             expression,
                             parameter,
                             point,
@@ -1712,7 +1938,7 @@ def _discrete_statistical_route(
                             lattice_tail,
                         )
 
-        result = _asymptotic_sum_impl(
+        result = _sum_impl(
             saddle_summand,
             variable,
             lower,
@@ -1737,7 +1963,7 @@ def _discrete_statistical_route(
                     status = "FORMAL"
                     remainder = None
                 method_name = "pmf/stirling+" + result.method
-            return StatisticalAsymptoticResult(
+            return StatisticalResult(
                 result.expression,
                 parameter,
                 point,
@@ -1755,7 +1981,7 @@ def _discrete_statistical_route(
                 else None,
                 normalization,
             )
-    return StatisticalAsymptoticResult(
+    return StatisticalResult(
         reduction,
         parameter,
         point,
@@ -1768,7 +1994,7 @@ def _discrete_statistical_route(
     )
 
 
-def asymptotic_expectation(
+def expectation(
     expr: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -1794,7 +2020,8 @@ def asymptotic_expectation(
     ] = "auto",
     bindings: dict[object, object] | None = None,
     condition: sp.Expr | None = None,
-) -> StatisticalAsymptoticResult:
+    assumptions: sp.Expr = sp.S.true,
+) -> StatisticalResult:
     """Compute the asymptotic expectation of ``expr``.
 
     The first argument is always the expression being averaged and may depend
@@ -1808,15 +2035,19 @@ def asymptotic_expectation(
     reduction so concentration asymptotics can be inspected directly.
     """
 
+    assumptions = normalize_assumptions(assumptions)
     if terms < 1:
         raise ValueError("terms must be positive")
-    expr = _prepare_statistical_query(
-        expr,
-        bindings=bindings,
-        condition=condition,
-        random_symbol=random_symbol,
-        method=method,
-        label="expectation",
+    expr = sp.refine(
+        _prepare_statistical_query(
+            expr,
+            bindings=bindings,
+            condition=condition,
+            random_symbol=random_symbol,
+            method=method,
+            label="expectation",
+        ),
+        assumptions,
     )
     # Exact SymPy expectation can handle products of multiple random variables.
     # Resolve a single RV only when we actually need the one-dimensional
@@ -1824,14 +2055,25 @@ def asymptotic_expectation(
     if method in {"auto", "exact"}:
         exact = _try_exact_expectation(expr, parameter)
         if exact is not None:
-            usable = _finite_asymptotic_series(exact, parameter, point, terms, complete=True)
+            usable = _finite_asymptotic_series(
+                exact, parameter, point, terms, complete=True
+            )
             if usable is not None or method == "exact":
                 return _result_from_expression(
-                    exact, parameter, point, terms, method="exact-expectation", status="EXACT"
+                    exact,
+                    parameter,
+                    point,
+                    terms,
+                    method="exact-expectation",
+                    status="EXACT",
                 )
         if method == "exact":
-            return StatisticalAsymptoticResult(
-                E(expr, evaluate=False), parameter, point, "exact-expectation", "UNKNOWN"
+            return StatisticalResult(
+                E(expr, evaluate=False),
+                parameter,
+                point,
+                "exact-expectation",
+                "UNKNOWN",
             )
 
     rv = _resolve_random_symbol(expr, random_symbol)
@@ -1854,7 +2096,7 @@ def asymptotic_expectation(
     )
 
 
-def asymptotic_probability(
+def probability(
     event: sp.Expr,
     random_symbol: RandomSymbol | None = None,
     *,
@@ -1880,7 +2122,8 @@ def asymptotic_probability(
     ] = "auto",
     bindings: dict[object, object] | None = None,
     condition: sp.Expr | None = None,
-) -> StatisticalAsymptoticResult:
+    assumptions: sp.Expr = sp.S.true,
+) -> StatisticalResult:
     """Compute an asymptotic probability for an event.
 
     ``event`` may contain SymPy ``RandomSymbol`` objects directly, or ordinary
@@ -1891,30 +2134,45 @@ def asymptotic_probability(
     fallbacks remain one-dimensional.
     """
 
+    assumptions = normalize_assumptions(assumptions)
     if terms < 1:
         raise ValueError("terms must be positive")
-    event = _prepare_statistical_query(
-        event,
-        bindings=bindings,
-        condition=condition,
-        random_symbol=random_symbol,
-        method=method,
-        label="probability",
+    event = sp.refine(
+        _prepare_statistical_query(
+            event,
+            bindings=bindings,
+            condition=condition,
+            random_symbol=random_symbol,
+            method=method,
+            label="probability",
+        ),
+        assumptions,
     )
     if method in {"auto", "exact"}:
         exact = _try_exact_probability(event, parameter)
         if exact is not None:
-            series = _finite_asymptotic_series(exact, parameter, point, terms, complete=True)
+            series = _finite_asymptotic_series(
+                exact, parameter, point, terms, complete=True
+            )
             # Special-function tails such as erfc(a*sqrt(n)) are exact but not
             # useful to the asymptotic algebra.  In auto mode continue to the
             # defining density so the Laplace route can expose the tail scale.
             if series is not None or method == "exact":
                 return _result_from_expression(
-                    exact, parameter, point, terms, method="exact-probability", status="EXACT"
+                    exact,
+                    parameter,
+                    point,
+                    terms,
+                    method="exact-probability",
+                    status="EXACT",
                 )
         if method == "exact":
-            return StatisticalAsymptoticResult(
-                P(event, evaluate=False), parameter, point, "exact-probability", "UNKNOWN"
+            return StatisticalResult(
+                P(event, evaluate=False),
+                parameter,
+                point,
+                "exact-probability",
+                "UNKNOWN",
             )
 
     # Only the structural fallback requires one distinguished random variable.
@@ -1922,7 +2180,7 @@ def asymptotic_probability(
 
     event_set = _event_domain(event, rv)
     if event_set is None:
-        return StatisticalAsymptoticResult(
+        return StatisticalResult(
             P(event, evaluate=False), parameter, point, "event-reduction", "UNKNOWN"
         )
     domain = sp.Intersection(_support(rv), event_set)
@@ -1935,7 +2193,12 @@ def asymptotic_probability(
     if kind == "continuous":
         if isinstance(domain, sp.FiniteSet):
             return _result_from_expression(
-                sp.S.Zero, parameter, point, terms, method="continuous-point-event", status="EXACT"
+                sp.S.Zero,
+                parameter,
+                point,
+                terms,
+                method="continuous-point-event",
+                status="EXACT",
             )
         return _continuous_statistical_route(
             sp.S.One,

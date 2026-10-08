@@ -1,0 +1,392 @@
+[
+  {
+    "name": "AsymptoticContext",
+    "kind": "class",
+    "signature": "(variable: 'sp.Symbol', point: 'sp.Expr' = oo, direction: 'str' = '+', simplify_results: 'bool' = True, zero_confidence: 'str' = 'certified', use_sympy_zero_fallback: 'bool' = True, zero_oracle: 'Callable[..., bool | None] | None' = None, sector: 'ComplexSector | None' = None, branch: 'ComplexBranchMetadata | None' = None, assumptions: 'sp.Expr' = True) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "DSolveResult",
+    "kind": "class",
+    "signature": "(solutions: 'tuple[sp.Expr, ...]', function: 'sp.FunctionClass', variable: 'sp.Symbol', point: 'sp.Expr', status: 'str', method: 'str', branches: 'tuple[Any, ...]', complete: 'bool', limitation: 'str | None' = None, interchange: 'Any | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "DirectionalInfinity",
+    "kind": "class",
+    "signature": "(d)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "Evidence",
+    "kind": "class",
+    "signature": "(status: 'EvidenceStatus', statement: 'str', assumptions: 'tuple[str, ...]' = (), obligations: 'tuple[str, ...]' = (), details: 'tuple[tuple[str, object], ...]' = ()) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "EvidenceStatus",
+    "kind": "class",
+    "signature": "(*values)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "Multiseries",
+    "kind": "class",
+    "signature": "(expr: 'sp.Expr', scale: 'Scale', *, level: 'int | None' = None, context: 'AsymptoticContext | None' = None, default_terms: 'int' = 6, knowledge: 'AsymptoticKnowledge | None' = None, allow_series_fallback: 'bool' = True) -> 'None'",
+    "return_annotation": "None"
+  },
+  {
+    "name": "OptimizationResult",
+    "kind": "class",
+    "signature": "(optimum_value: 'sp.Expr', optimizers: 'tuple[sp.Expr, ...]', variable: 'sp.Symbol', parameter: 'sp.Symbol', point: 'sp.Expr', sense: \"Literal['min', 'max']\", status: 'str', method: 'str', conditions: 'tuple[sp.Expr, ...]' = (), certificate: 'object | None' = None, approached_boundaries: 'tuple[sp.Expr, ...]' = ()) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "ProductResult",
+    "kind": "class",
+    "signature": "(expression: 'sp.Expr', method: 'str', certified: 'bool', logarithmic_sum: 'SumResult | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "PublicResult",
+    "kind": "class",
+    "signature": "(*args, **kwargs)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "RSolveResult",
+    "kind": "class",
+    "signature": "(expression: 'sp.Expr', sequence: 'sp.Expr', index: 'sp.Symbol', point: 'sp.Expr', status: 'str', method: 'str', series: 'TransseriesExpansion | None' = None, limitation: 'str | None' = None, branches: 'tuple[DiscreteAsymptoticBranch, ...]' = (), particular_expression: 'sp.Expr | None' = None, particular_residual: 'sp.Expr | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "Remainder",
+    "kind": "class",
+    "signature": "(variable: 'sp.Symbol', point: 'sp.Expr', kind: 'RemainderKind', scale: 'sp.Expr | None' = None, exact_expression: 'sp.Expr | None' = None, provenance: 'tuple[RemainderProvenance, ...]' = ()) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "RemainderKind",
+    "kind": "class",
+    "signature": "(*values)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "Scale",
+    "kind": "class",
+    "signature": "(variable: 'sp.Symbol', elements: 'tuple[ScaleElement, ...]', point: 'sp.Expr' = oo) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "SolveResult",
+    "kind": "class",
+    "signature": "(branches: 'tuple[AsymptoticSolutionBranch, ...]', parameter: 'sp.Symbol', point: 'sp.Expr', status: 'str', method: 'str', certificate: 'object | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "SquareWave",
+    "kind": "class",
+    "signature": "(*args)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "StatisticalResult",
+    "kind": "class",
+    "signature": "(expression: 'sp.Expr', parameter: 'sp.Symbol', point: 'sp.Expr', method: 'str', status: 'StatisticalStatus', series: 'TransseriesExpansion | None' = None, reduction: 'sp.Expr | None' = None, integration_variable: 'sp.Symbol | None' = None, domain: 'sp.Set | None' = None, transformation: 'tuple[sp.Symbol, sp.Expr] | None' = None, conditions: 'tuple[sp.Expr, ...]' = (), remainder: 'Remainder | None' = None, certificate: 'object | None' = None, normalization: 'object | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "SumResult",
+    "kind": "class",
+    "signature": "(expression: 'sp.Expr', variable: 'sp.Symbol | tuple[sp.Symbol, ...]', lower: 'sp.Expr | tuple[sp.Expr, ...]', upper: 'sp.Expr | tuple[sp.Expr, ...]', parameter: 'sp.Symbol', point: 'sp.Expr', method: 'str', status: 'SumStatus', series: 'TransseriesExpansion | None' = None, remainder: 'Remainder | None' = None, reduction: 'sp.Sum | None' = None, transformation: 'tuple[sp.Symbol, sp.Expr] | None' = None, certificate: 'object | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "TransseriesExpansion",
+    "kind": "class",
+    "signature": "(expression: 'sp.Expr', variable: 'sp.Symbol', point: 'sp.Expr', terms: 'tuple[TransseriesTerm, ...]', center: 'sp.Expr' = 0, complete: 'bool' = False, metadata: 'dict[str, object]' = <factory>, remainder: 'Remainder | None' = None) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "Truncation",
+    "kind": "class",
+    "signature": "(prefix: 'sp.Expr', remainder: 'Remainder', terms_kept: 'int', total_known_terms: 'int') -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "analytic_limit",
+    "kind": "function",
+    "signature": "(expr, x, point, *, direction=None, analytic_functions=(), assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "argmax",
+    "kind": "function",
+    "signature": "(objective: 'sp.Expr', variable: 'sp.Symbol', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, domain: 'sp.Set' = Reals, assumptions: 'sp.Expr | bool' = True) -> 'tuple[sp.Expr, ...]'",
+    "return_annotation": "tuple[sp.Expr, ...]"
+  },
+  {
+    "name": "argmin",
+    "kind": "function",
+    "signature": "(objective: 'sp.Expr', variable: 'sp.Symbol', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, domain: 'sp.Set' = Reals, assumptions: 'sp.Expr | bool' = True) -> 'tuple[sp.Expr, ...]'",
+    "return_annotation": "tuple[sp.Expr, ...]"
+  },
+  {
+    "name": "as_element",
+    "kind": "function",
+    "signature": "(obj, variable: 'sp.Symbol | None' = None, *, point: 'sp.Expr | None' = None, context: 'AsymptoticContext | None' = None) -> 'AsymptoticElement'",
+    "return_annotation": "AsymptoticElement"
+  },
+  {
+    "name": "big_o",
+    "kind": "function",
+    "signature": "(left, right, variable, point=oo, *, assumptions=True, **kwargs) -> 'bool | ConditionalExpression | None'",
+    "return_annotation": "bool | ConditionalExpression | None"
+  },
+  {
+    "name": "complex_limit",
+    "kind": "function",
+    "signature": "(expression, variable, point=0, *, assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "complex_ray_limit",
+    "kind": "function",
+    "signature": "(expr, variable, point, *, ray, assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "cluster_set",
+    "kind": "function",
+    "signature": "(expression, variable, point, *, direction=None, assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "Circle",
+    "kind": "class",
+    "signature": "(center, radius)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "ExactClusterResult",
+    "kind": "class",
+    "signature": "(expression: sympy.core.expr.Expr, variable: sympy.core.symbol.Symbol, point: sympy.core.expr.Expr, cluster_set: sympy.sets.sets.Set | None = None, evidence: tuple[asymptotic.limit_models.LimitEvidence, ...] = (), assumptions: sympy.core.expr.Expr = True) -> None",
+    "return_annotation": "None"
+  },
+  {
+    "name": "compose",
+    "kind": "function",
+    "signature": "(outer, inner, *, argument: 'sp.Symbol | None' = None, terms: 'int' = 6, assumptions: 'sp.Expr | bool' = True, allow_unknown_properties: 'bool' = False, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "differentiate",
+    "kind": "function",
+    "signature": "(obj, order=1, *, variable=None, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "discover_scale",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', x: 'sp.Symbol', point: 'sp.Expr' = oo, *, assumptions: 'sp.Expr' = True) -> 'Scale'",
+    "return_annotation": "Scale"
+  },
+  {
+    "name": "discrete_limit",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', point: 'sp.Expr' = oo, *, assumptions=True, return_result: 'bool' = False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "dsolve",
+    "kind": "function",
+    "signature": "(equation: 'sp.Expr | sp.Equality', function: 'sp.FunctionClass', variable: 'sp.Symbol', *, point: 'sp.Expr' = oo, terms: 'int' = 6, assumptions: 'sp.Expr | bool' = True, method: 'str' = 'auto', return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "equivalent",
+    "kind": "function",
+    "signature": "(left, right, variable, point=oo, *, assumptions=True, **kwargs) -> 'bool | ConditionalExpression | None'",
+    "return_annotation": "bool | ConditionalExpression | None"
+  },
+  {
+    "name": "expectation",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', random_symbol: 'RandomSymbol | None' = None, *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, method: \"Literal['auto', 'exact', 'density', 'pmf', 'laplace', 'sum', 'series', 'summation-by-parts', 'saddle', 'euler-maclaurin', 'mellin', 'riemann', 'zeilberger', 'poisson', 'oscillatory']\" = 'auto', bindings: 'dict[object, object] | None' = None, condition: 'sp.Expr | None' = None, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "explain",
+    "kind": "function",
+    "signature": "(result: 'object') -> 'ResultExplanation'",
+    "return_annotation": "ResultExplanation"
+  },
+  {
+    "name": "hyperasymptotic_series",
+    "kind": "function",
+    "signature": "(poincare_prefix: 'sp.Expr', coefficient_provider: 'Callable[[int, int], Sequence[sp.Expr]]', scales: 'Sequence[ExponentialScale]', *, levels: 'int' = 1, reexpansion_terms: 'int' = 2, max_levels: 'int' = 3, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "implicit",
+    "kind": "function",
+    "signature": "(equation: 'sp.Expr', dependent: 'sp.Symbol', variable: 'sp.Symbol', *, point: 'sp.Expr' = 0, dependent_limit: 'sp.Expr' = 0, terms: 'int' = 6, context: 'AsymptoticContext | None' = None, taylor_degree: 'int' = 8, max_depth: 'int' = 32, corrections_must_vanish: 'bool' = True, assumptions: 'sp.Expr | bool' = True, stratify_parameters: 'bool' = True, max_parameter_splits: 'int' = 6, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "integrate",
+    "kind": "function",
+    "signature": "(obj, variable: 'sp.Symbol | None' = None, *, point: 'sp.Expr' = oo, constant: 'sp.Expr' = 0, terms: 'int | None' = None, assumptions: 'sp.Expr | bool' = True, allow_unknown_properties: 'bool' = False, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "inverse",
+    "kind": "function",
+    "signature": "(expr, variable: 'sp.Symbol | None' = None, inverse_variable: 'sp.Symbol | None' = None, *, point: 'sp.Expr' = oo, terms: 'int' = 6, branch: 'int | None' = 0, context: 'AsymptoticContext | None' = None, assumptions: 'sp.Expr | bool' = True, allow_unknown_properties: 'bool' = False, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "leading_term",
+    "kind": "function",
+    "signature": "(obj, *, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "limit",
+    "kind": "function",
+    "signature": "(expr, variables, target, *, domain=True, assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "lindstedt_poincare",
+    "kind": "function",
+    "signature": "(equation: 'EquationLike', unknown: 'sp.Expr', parameter: 'sp.Symbol', *, order: 'int' = 1, conditions: 'EquationLike | Sequence[EquationLike]' = (), base_frequency: 'sp.Expr | None' = None, fast_variable: 'sp.Symbol | None' = None, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "little_o",
+    "kind": "function",
+    "signature": "(left, right, variable, point=oo, *, assumptions=True, **kwargs) -> 'bool | ConditionalExpression | None'",
+    "return_annotation": "bool | ConditionalExpression | None"
+  },
+  {
+    "name": "local_series",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', point: 'sp.Expr' = 0, *, depth: 'int' = 4, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "maximize",
+    "kind": "function",
+    "signature": "(objective: 'sp.Expr', variable: 'sp.Symbol', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, domain: 'sp.Set' = Reals, assumptions: 'sp.Expr | bool' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "mellin",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', transform_variable: 'sp.Symbol', *, toward_zero: 'bool' = True, max_poles: 'int' = 4, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "minimize",
+    "kind": "function",
+    "signature": "(objective: 'sp.Expr', variable: 'sp.Symbol', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, domain: 'sp.Set' = Reals, assumptions: 'sp.Expr | bool' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "multiseries",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', *, scale: 'Scale | Iterable[sp.Expr] | None' = None, point: 'sp.Expr' = oo, terms: 'int' = 6, allow_series_fallback: 'bool' = True, assumptions: 'sp.Expr' = True, context: 'AsymptoticContext | None' = None, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "nested_series",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', *, depth: 'int' = 4, point: 'sp.Expr' = oo, max_exp_depth: 'int | None' = None, max_log_depth: 'int | None' = None, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "one_sided_limit",
+    "kind": "function",
+    "signature": "(expr, variable, point, *, direction: 'str', assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "path_limit",
+    "kind": "function",
+    "signature": "(expr, variable, point, *, path: 'ParametricContour', assumptions=True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "probability",
+    "kind": "function",
+    "signature": "(event: 'sp.Expr', random_symbol: 'RandomSymbol | None' = None, *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, method: \"Literal['auto', 'exact', 'density', 'pmf', 'laplace', 'sum', 'series', 'summation-by-parts', 'saddle', 'euler-maclaurin', 'mellin', 'riemann', 'zeilberger', 'poisson', 'oscillatory']\" = 'auto', bindings: 'dict[object, object] | None' = None, condition: 'sp.Expr | None' = None, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "product",
+    "kind": "function",
+    "signature": "(factor: 'sp.Expr', variable: 'sp.Symbol', lower: 'sp.Expr', upper: 'sp.Expr', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "puiseux_series",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', *, point: 'sp.Expr' = 0, terms: 'int' = 6, branch: 'BranchChoice | None' = None, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "regular_perturbation",
+    "kind": "function",
+    "signature": "(equations: 'EquationLike | Sequence[EquationLike]', unknowns: 'sp.Expr | Sequence[sp.Expr]', parameter: 'sp.Symbol', *, order: 'int | None' = None, gauges: 'Sequence[sp.Expr] | None' = None, conditions: 'EquationLike | Sequence[EquationLike]' = (), assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "relation",
+    "kind": "function",
+    "signature": "(left: 'sp.Expr', right: 'sp.Expr', variables: 'sp.Symbol | tuple[sp.Symbol, ...] | list[sp.Symbol]', points: 'sp.Expr | tuple[sp.Expr, ...] | list[sp.Expr]', *, relation: 'RelationKind' = 'equivalent', directions: \"Literal['real', 'complex']\" = 'real', ray_samples: 'int' = 8, assumptions: 'sp.Expr | bool' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "root",
+    "kind": "function",
+    "signature": "(expression: 'sp.Expr', variable: 'sp.Symbol', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, domain: 'sp.Set' = Complexes, assumptions: 'sp.Expr | bool' = True, limit: 'sp.Expr | None' = None, branch: 'int | None' = None, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "rsolve",
+    "kind": "function",
+    "signature": "(recurrence: 'sp.Expr | sp.Equality', sequence: 'sp.Expr', index: 'sp.Symbol', *, point: 'sp.Expr' = oo, terms: 'int' = 6, initial_conditions: 'dict | None' = None, method: 'str' = 'auto', assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "series",
+    "kind": "function",
+    "signature": "(expr: 'sp.Expr', variable: 'sp.Symbol', *, point: 'sp.Expr' = oo, terms: 'int' = 6, assumptions: 'sp.Expr' = True, method: 'ExpansionMethod' = 'auto', return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "solve",
+    "kind": "function",
+    "signature": "(system, variables, *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 6, limits: 'dict[sp.Symbol, sp.Expr] | None' = None, domain=Complexes, assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "stratified_series",
+    "kind": "function",
+    "signature": "(expr, variables, *, target=None, order=3, assumptions=True)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "sum",
+    "kind": "function",
+    "signature": "(summand: 'sp.Expr', variable: 'sp.Symbol | tuple[sp.Symbol, ...]', lower: 'sp.Expr | tuple[sp.Expr, ...]', upper: 'sp.Expr | tuple[sp.Expr, ...]', *, parameter: 'sp.Symbol', point: 'sp.Expr' = oo, terms: 'int' = 4, method: 'SumMethod' = 'auto', assumptions: 'sp.Expr' = True, return_result=False)",
+    "return_annotation": "<class 'inspect._empty'>"
+  },
+  {
+    "name": "truncate",
+    "kind": "function",
+    "signature": "(obj, terms: 'int | None' = None) -> 'sp.Expr'",
+    "return_annotation": "sp.Expr"
+  }
+]

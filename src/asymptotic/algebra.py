@@ -16,8 +16,8 @@ from typing import Protocol, runtime_checkable
 import sympy as sp
 
 from ._power_simplify import analytic_powsimp
-from .context import AsymptoticContext, GrowthComparison
-from .remainder import AsymptoticRemainder, AsymptoticTruncation
+from .context import AsymptoticContext, AsymptoticGrowthComparison
+from .remainder import Remainder, Truncation
 
 
 @runtime_checkable
@@ -31,20 +31,24 @@ class AsymptoticFieldElementProtocol(Protocol):
     def point(self) -> sp.Expr: ...
 
     @property
-    def remainder(self) -> AsymptoticRemainder: ...
+    def remainder(self) -> Remainder: ...
 
     def as_expr(self) -> sp.Expr: ...
     def truncate(self, terms: int | None = None) -> sp.Expr: ...
-    def truncation(self, terms: int | None = None) -> AsymptoticTruncation: ...
+    def truncation(self, terms: int | None = None) -> Truncation: ...
     def to_transseries(self, terms: int = 6): ...
     def differentiate(self, order: int = 1): ...
     def integrate(self, *, constant: sp.Expr = 0, terms: int = 6): ...
     def compose(self, outer, *, argument: sp.Symbol | None = None, terms: int = 6): ...
     def reciprocal(self, *, terms: int = 6): ...
-    def inverse_asymptotic(
-        self, inverse_variable: sp.Symbol | None = None, *, terms: int = 6, branch: int | None = 0
+    def inverse(
+        self,
+        inverse_variable: sp.Symbol | None = None,
+        *,
+        terms: int = 6,
+        branch: int | None = 0,
     ): ...
-    def compare(self, other) -> GrowthComparison: ...
+    def compare(self, other) -> AsymptoticGrowthComparison: ...
 
 
 def _call_signature(method):
@@ -70,7 +74,10 @@ def _accepts_keyword(method, name: str) -> bool:
         inspect.Parameter.KEYWORD_ONLY,
     ):
         return True
-    return any(item.kind is inspect.Parameter.VAR_KEYWORD for item in signature.parameters.values())
+    return any(
+        item.kind is inspect.Parameter.VAR_KEYWORD
+        for item in signature.parameters.values()
+    )
 
 
 def _callable_without_args(method) -> bool:
@@ -114,7 +121,9 @@ def _native_coordinates(obj, variable: sp.Symbol | None, point: sp.Expr | None):
         return obj.transseries.variable, obj.transseries.point
     if isinstance(obj, ScaleElement):
         if variable is None:
-            raise ValueError("variable is required when adapting a standalone ScaleElement")
+            raise ValueError(
+                "variable is required when adapting a standalone ScaleElement"
+            )
         return variable, sp.oo if point is None else sp.sympify(point)
     if isinstance(obj, sp.Expr):
         if variable is None:
@@ -157,7 +166,7 @@ def _native_expression(obj) -> sp.Expr:
         return obj.expr
     if isinstance(obj, sp.Expr):
         return obj
-    # Branch/series objects deliberately expose their finite represented prefix
+    # Branch/series objects expose their finite represented prefix
     # through truncate().  Prefer it to an original generating expression when
     # available so the common algebra never manufactures terms that were not
     # actually computed by the representation.
@@ -191,7 +200,9 @@ class AsymptoticAlgebra:
         if self.terms < 1:
             raise ValueError("terms must be positive")
         if self.context is None:
-            object.__setattr__(self, "context", AsymptoticContext(self.variable, self.point))
+            object.__setattr__(
+                self, "context", AsymptoticContext(self.variable, self.point)
+            )
         else:
             _validate_context_coordinates(self.context, self.variable, self.point)
 
@@ -203,8 +214,10 @@ class AsymptoticAlgebra:
                 raise ValueError("asymptotic elements use different coordinates")
             if obj.context is self.context:
                 return obj
-            return AsymptoticElement(obj.native, self.variable, self.point, self.context)
-        element = asymptotic_element(
+            return AsymptoticElement(
+                obj.native, self.variable, self.point, self.context
+            )
+        element = as_element(
             obj, variable=self.variable, point=self.point, context=self.context
         )
         if element.variable != self.variable or element.point != self.point:
@@ -221,15 +234,21 @@ class AsymptoticAlgebra:
 
     def add(self, left, right, *, terms: int | None = None) -> AsymptoticElement:
         n = self.terms if terms is None else int(terms)
-        return self.element(self.normal_form(left, terms=n) + self.normal_form(right, terms=n))
+        return self.element(
+            self.normal_form(left, terms=n) + self.normal_form(right, terms=n)
+        )
 
     def subtract(self, left, right, *, terms: int | None = None) -> AsymptoticElement:
         n = self.terms if terms is None else int(terms)
-        return self.element(self.normal_form(left, terms=n) - self.normal_form(right, terms=n))
+        return self.element(
+            self.normal_form(left, terms=n) - self.normal_form(right, terms=n)
+        )
 
     def multiply(self, left, right, *, terms: int | None = None) -> AsymptoticElement:
         n = self.terms if terms is None else int(terms)
-        return self.element(self.normal_form(left, terms=n) * self.normal_form(right, terms=n))
+        return self.element(
+            self.normal_form(left, terms=n) * self.normal_form(right, terms=n)
+        )
 
     def divide(self, left, right, *, terms: int | None = None) -> AsymptoticElement:
         n = self.terms if terms is None else int(terms)
@@ -241,7 +260,7 @@ class AsymptoticAlgebra:
         result = self.normal_form(value, terms=n).constant_power(sp.sympify(exponent))
         return self.element(result.prefix(n))
 
-    def compare(self, left, right) -> GrowthComparison:
+    def compare(self, left, right) -> AsymptoticGrowthComparison:
         lhs = self.element(left)
         rhs = self.element(right)
         if self.context is None:
@@ -249,7 +268,7 @@ class AsymptoticAlgebra:
         relation, _ = self.context.compare_growth(lhs.as_expr(), rhs.as_expr())
         return relation
 
-    def truncation(self, value, terms: int | None = None) -> AsymptoticTruncation:
+    def truncation(self, value, terms: int | None = None) -> Truncation:
         return self.element(value).truncation(terms)
 
     def differentiate(self, value, order: int = 1) -> AsymptoticElement:
@@ -290,7 +309,7 @@ class AsymptoticAlgebra:
             return self.element(method())
         return self.element(self.normal_form(element, terms=n).reciprocal(terms=n))
 
-    def inverse_asymptotic(
+    def inverse(
         self,
         value,
         inverse_variable: sp.Symbol | None = None,
@@ -300,12 +319,12 @@ class AsymptoticAlgebra:
     ):
         n = self.terms if terms is None else int(terms)
         element = self.element(value)
-        method = getattr(element.native, "inverse_asymptotic", None)
+        method = getattr(element.native, "inverse", None)
         if callable(method):
             return method(inverse_variable, terms=n, branch=branch)
-        from .reversion import inverse_asymptotic
+        from .reversion import inverse
 
-        return inverse_asymptotic(
+        return inverse(
             element.as_expr(),
             self.variable,
             inverse_variable,
@@ -328,7 +347,9 @@ class AsymptoticElement:
     def __post_init__(self) -> None:
         object.__setattr__(self, "point", sp.sympify(self.point))
         if self.context is None:
-            object.__setattr__(self, "context", AsymptoticContext(self.variable, self.point))
+            object.__setattr__(
+                self, "context", AsymptoticContext(self.variable, self.point)
+            )
         else:
             _validate_context_coordinates(self.context, self.variable, self.point)
 
@@ -342,7 +363,7 @@ class AsymptoticElement:
         return sp.sympify(_native_expression(self.native))
 
     @property
-    def remainder(self) -> AsymptoticRemainder:
+    def remainder(self) -> Remainder:
         """Return explicit remainder semantics for the wrapped representation."""
         from .nonlinear_ode import NonlinearDifferentialTransseriesBranch
         from .transseries import TransseriesExpansion
@@ -356,7 +377,7 @@ class AsymptoticElement:
                 raise RuntimeError("ODE transseries is missing its remainder")
             return self.native.transseries.remainder
         native_remainder = getattr(self.native, "remainder", None)
-        if isinstance(native_remainder, AsymptoticRemainder):
+        if isinstance(native_remainder, Remainder):
             return native_remainder
 
         from .multiseries import Multiseries
@@ -365,12 +386,14 @@ class AsymptoticElement:
         from .scale import ScaleElement
 
         if isinstance(self.native, PuiseuxSeries):
-            omitted = analytic_powsimp(sp.expand(self.native.expr - self.native.truncate()))
+            omitted = analytic_powsimp(
+                sp.expand(self.native.expr - self.native.truncate())
+            )
             if omitted == 0:
-                return AsymptoticRemainder.exact_zero(
+                return Remainder.exact_zero(
                     self.variable, self.point, source="complete Puiseux representation"
                 )
-            return AsymptoticRemainder.unknown(
+            return Remainder.unknown(
                 self.variable,
                 self.point,
                 exact_expression=omitted,
@@ -378,14 +401,15 @@ class AsymptoticElement:
             )
 
         if isinstance(
-            self.native, (sp.Expr, Multiseries, NestedExpansion, NestedForm, ScaleElement)
+            self.native,
+            (sp.Expr, Multiseries, NestedExpansion, NestedForm, ScaleElement),
         ):
-            return AsymptoticRemainder.exact_zero(
+            return Remainder.exact_zero(
                 self.variable,
                 self.point,
                 source=f"exact native {type(self.native).__name__} representation",
             )
-        return AsymptoticRemainder.unknown(
+        return Remainder.unknown(
             self.variable,
             self.point,
             source=f"{type(self.native).__name__} does not declare remainder semantics",
@@ -420,7 +444,7 @@ class AsymptoticElement:
             return sp.sympify(method() if terms is None else method(terms))
         return self.as_expr()
 
-    def truncation(self, terms: int | None = None) -> AsymptoticTruncation:
+    def truncation(self, terms: int | None = None) -> Truncation:
         from .transseries import TransseriesExpansion
 
         if isinstance(self.native, TransseriesExpansion):
@@ -443,14 +467,14 @@ class AsymptoticElement:
             # its stored finite prefix equals truncate().
             rem = self.remainder
         else:
-            rem = AsymptoticRemainder.unknown(
+            rem = Remainder.unknown(
                 self.variable,
                 self.point,
                 exact_expression=exact_error,
                 source=f"exact omitted tail of {type(self.native).__name__}; asymptotic scale not certified",
             )
         count = 0 if terms is None else max(0, int(terms))
-        return AsymptoticTruncation(prefix, rem, count, count)
+        return Truncation(prefix, rem, count, count)
 
     def to_transseries(self, terms: int = 6):
         from .nonlinear_ode import NonlinearDifferentialTransseriesBranch
@@ -508,10 +532,12 @@ class AsymptoticElement:
                 return self._wrap(method(**kwargs))
             if constant == 0 and _callable_without_args(method):
                 return self._wrap(method())
-        from .general_ops import asymptotic_integrate
+        from .general_ops import _integrate_expression
 
         return self._wrap(
-            asymptotic_integrate(self.to_transseries(terms), constant=constant, terms=terms)
+            _integrate_expression(
+                self.to_transseries(terms), constant=constant, terms=terms
+            )
         )
 
     def integrate(self, *, constant: sp.Expr = 0, terms: int = 6):
@@ -582,12 +608,16 @@ class AsymptoticElement:
     def reciprocal(self, *, terms: int = 6):
         return self.algebra.reciprocal(self, terms=terms)
 
-    def inverse_asymptotic(
-        self, inverse_variable: sp.Symbol | None = None, *, terms: int = 6, branch: int | None = 0
+    def inverse(
+        self,
+        inverse_variable: sp.Symbol | None = None,
+        *,
+        terms: int = 6,
+        branch: int | None = 0,
     ):
-        return self.algebra.inverse_asymptotic(self, inverse_variable, terms=terms, branch=branch)
+        return self.algebra.inverse(self, inverse_variable, terms=terms, branch=branch)
 
-    def compare(self, other) -> GrowthComparison:
+    def compare(self, other) -> AsymptoticGrowthComparison:
         return self.algebra.compare(self, other)
 
     def __add__(self, other):
@@ -618,7 +648,7 @@ class AsymptoticElement:
         return self.algebra.power(self, power)
 
 
-def asymptotic_element(
+def as_element(
     obj,
     variable: sp.Symbol | None = None,
     *,
