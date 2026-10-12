@@ -319,7 +319,12 @@ class ScaleDiscovery:
         return candidates
 
     def candidates(self) -> list[sp.Expr]:
-        candidates: list[sp.Expr] = [1 / self.variable]
+        # At a finite expansion point the small parameter is x - point.
+        # 1/x is appropriate at infinity, but diverges at zero and was
+        # inadvertently discarded, leaving no algebraic scale for 0+ germs.
+        point = sp.sympify(self.point)
+        base = self.variable - point if point.is_finite is True else 1 / self.variable
+        candidates: list[sp.Expr] = [base]
         candidates.extend(self._log_candidates())
         candidates.extend(self._exp_candidates())
         unique = []

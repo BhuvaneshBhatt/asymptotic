@@ -1,4 +1,11 @@
-## 0.2.0
+## Version 0.2.1
+
+- Added optional `multiseries(..., order=0)` to compute Laurent-logarithmic contributions through the inclusive algebraic degree, rather than asking for an arbitrary number of nonzero terms.
+- Added `OrderedMultiseries` (when `return_result=True`), which explicitly distinguishes a formally complete order-targeted prefix from an unresolved expansion and exposes the asymptotic remainder without claiming theorem-level certification.
+- Added a single-pass, budgeted local series route for expansions at real finite points and +/- infinity; unsupported coefficients fail closed.
+- Added regression tests for logarithmic tangent cutoffs, negative Laurent powers, regulator scaling, and shifted expansion points.
+
+## Version 0.2.0
 
 Version 0.2.0 substantially expands `asymptotic` from its original expansion-oriented functionality into a broader symbolic asymptotic-analysis system. Additions include limit analysis, classical perturbation methods, richer complex and multivariate geometry, expanded saddle/Laplace analysis.
 

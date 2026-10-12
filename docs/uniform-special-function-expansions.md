@@ -116,7 +116,7 @@ beyond-all-orders remainder theorem independently.
 
 ## Total-variation error control
 
-The uniform-expansion remainder contract now uses explicit Liouville--Green
+The uniform-expansion remainder contract now uses explicit Liouville-Green
 variation data. `VariationCertificate` records the path, endpoints, integrand
 family, and a proved majorant. For Debye polynomials the path is represented in
 `p=(1+z^2)^(-1/2)`: after parametrizing the straight segment from `0` to `p`,

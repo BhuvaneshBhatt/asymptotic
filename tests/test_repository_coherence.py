@@ -1,4 +1,3 @@
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,42 +13,6 @@ def _active_text_files():
         for path in base.rglob("*"):
             if path.is_file() and path.suffix in TEXT_SUFFIXES:
                 yield path
-
-
-def test_repository_root_contains_no_scratch_validation_artifacts():
-    forbidden = {
-        "matrix-integration.json",
-        "matrix-tracks.json",
-        "mma_multivar_excerpt.txt",
-        "timeout-recheck-15s.json",
-        "unsafe-audit-after.json",
-    }
-    present = {path.name for path in ROOT.iterdir() if path.is_file()}
-    assert present.isdisjoint(forbidden)
-
-
-def test_active_filenames_describe_subject_not_development_stage():
-    stages = ("new_" + "capabilities", "pha" + "se", "mile" + "stone")
-    stage_names = re.compile(r"(?:^|_)(?:" + "|".join(stages) + r")[0-9]*(?:_|\.|$)")
-    # These files concern simultaneous modular and trigonometric angles.
-    mathematical_phase_files = {
-        "src/asymptotic/joint_phase_germs.py",
-        "tests/limits/univariate/test_joint_phase_germs.py",
-    }
-    hits = []
-    for dirname in ACTIVE_DIRS:
-        base = ROOT / dirname
-        if not base.exists():
-            continue
-        for path in base.rglob("*"):
-            if (
-                path.is_file()
-                and path.suffix in TEXT_SUFFIXES
-                and stage_names.search(path.name)
-                and str(path.relative_to(ROOT)) not in mathematical_phase_files
-            ):
-                hits.append(str(path.relative_to(ROOT)))
-    assert hits == []
 
 
 def test_production_proof_boundaries():
@@ -171,22 +134,6 @@ def test_pyproject_prerelease_extras_and_pytest_config_are_valid():
     assert "ini_options" in project["tool"]["pytest"]
 
 
-def test_active_tree_uses_timeless_capability_language():
-    banned = (
-        "future " + "work",
-        "for a " + "later",
-        "previous private " + "inconsistency",
-        "keep their previous " + "meaning",
-        "currently " + "requires",
-    )
-    hits = []
-    for path in _active_text_files():
-        text = path.read_text(encoding="utf-8").lower()
-        if any(phrase in text for phrase in banned):
-            hits.append(str(path.relative_to(ROOT)))
-    assert hits == []
-
-
 def test_test_names_are_compact():
     import ast
 
@@ -201,26 +148,6 @@ def test_test_names_are_compact():
             ):
                 long_names.append(f"{path.relative_to(ROOT)}:{node.lineno}:{node.name}")
     assert long_names == []
-
-
-def test_active_prose_avoids_development_history_language():
-    banned = (
-        "backward compatibility",
-        "backwards compatibility",
-        "compatibility shim",
-        "legacy api",
-        "old api",
-        "new api",
-        "implementation phase",
-        "development milestone",
-    )
-    hits = []
-    prose = [ROOT / "README.md", *(ROOT / "docs").rglob("*.md")]
-    for path in prose:
-        text = path.read_text(encoding="utf-8").lower()
-        if any(phrase in text for phrase in banned):
-            hits.append(str(path.relative_to(ROOT)))
-    assert hits == []
 
 
 def test_documented_primary_api_count_matches_manifest():

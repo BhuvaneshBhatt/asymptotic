@@ -78,7 +78,7 @@ from .stratified_expansion import stratified_expand as stratified_series
 from .sums import SumResult
 from .transseries import TransseriesExpansion
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 
 
 __all__ = [

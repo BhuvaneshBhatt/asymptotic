@@ -341,7 +341,7 @@ discrete_limit(expr: 'sp.Expr', variable: 'sp.Symbol', point: 'sp.Expr' = oo, *,
 Compute a certified limit along integer values of ``variable``.
 
 The direct route is used when the ordinary real limit is proved.  For
-quotients at positive infinity, a Stolz--Cesaro reduction is attempted
+quotients at positive infinity, a Stolz-Cesaro reduction is attempted
 when the denominator is eventually increasing and unbounded.  Failure to
 prove those hypotheses leaves the result unknown.
 
@@ -555,10 +555,16 @@ The root API returns the mathematical value. Use ``return_result=True`` for the 
 ## `multiseries`
 
 ```python
-multiseries(expr: 'sp.Expr', variable: 'sp.Symbol', *, scale: 'Scale | Iterable[sp.Expr] | None' = None, point: 'sp.Expr' = oo, terms: 'int' = 6, allow_series_fallback: 'bool' = True, assumptions: 'sp.Expr' = True, context: 'AsymptoticContext | None' = None, return_result=False)
+multiseries(expr: 'sp.Expr', variable: 'sp.Symbol', *, scale: 'Scale | Iterable[sp.Expr] | None' = None, point: 'sp.Expr' = oo, terms: 'int' = 6, order: 'int | None' = None, allow_series_fallback: 'bool' = True, assumptions: 'sp.Expr' = True, context: 'AsymptoticContext | None' = None, return_result=False)
 ```
 
-Create a lazy multiseries, discovering an asymptotic scale when omitted.
+Create a lazy multiseries or request an inclusive algebraic ``order``.
+
+``terms`` retains its historical count-based behavior. ``order=0`` instead
+requests every Laurent-logarithmic contribution through algebraic degree
+zero (including divergent negative powers), with a formal completeness
+indicator. The order-targeted method performs one bounded local SymPy
+expansion; it does not run term-count doubling.
 
 The root API returns the mathematical value. Use ``return_result=True`` for the full representation and evidence record. Unresolved or unproved formal calculations retain their records.
 

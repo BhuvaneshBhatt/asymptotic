@@ -63,6 +63,24 @@ assert truncation.remainder.check() is True
 
 Here the omitted scale is `1/(6*t**3)`. A remainder certificate concerns the declared regime; a formal series alone does not establish a uniform error bound. Follow the [expansion guide](https://github.com/BhuvaneshBhatt/asymptotic/blob/main/docs/expansions.md) for the difference between a prefix, its remainder and a certified operation.
 
+## Expansion through algebraic order zero
+
+For a finite-part calculation, request all Laurent–logarithmic terms through order zero:
+
+```python
+from asymptotic import multiseries
+
+eps = sp.Symbol("eps", positive=True)
+f = 1 / eps**2 + sp.log(eps) / eps + 7 * sp.log(eps)**2 + 5 + eps
+result = multiseries(f, eps, point=0, order=0, return_result=True)
+assert result.is_complete_through(0)
+assert sp.simplify(result.truncate() - (f - eps)) == 0
+```
+
+Unlike SymPy's exclusive ``series(..., n=...)`` convention, ``order=0`` includes algebraic degree zero and its logarithmic coefficients. When ``return_result=True``, an unresolved order-targeted expansion has ``status="unknown"`` and ``truncate()`` refuses to invent a finite constant.
+Completeness here describes the *formal* series calculation, not an independent theorem-level remainder certificate. Existing ``terms`` calls are unchanged.
+See [order-targeted multiseries](https://github.com/BhuvaneshBhatt/asymptotic/blob/main/docs/order-targeted-multiseries.md).
+
 ## Choose the right workflow
 
 | Question | Entry point | What to inspect |

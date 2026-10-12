@@ -22,6 +22,7 @@ from .obligations import (
     LogarithmicScaleObligation,
     ZeroTestObligation,
 )
+from .order_expansion import OrderedMultiseries, expand_to_order
 from .scale import Scale, ScaleDiscovery
 from .sparse import LazySparseSeries
 from .tower import ExpLogTower
@@ -761,13 +762,35 @@ def multiseries(
     scale: Scale | Iterable[sp.Expr] | None = None,
     point: sp.Expr = sp.oo,
     terms: int = 6,
+    order: int | None = None,
     allow_series_fallback: bool = True,
     assumptions: sp.Expr = sp.S.true,
     context: AsymptoticContext | None = None,
-) -> Multiseries:
-    """Create a lazy multiseries, discovering an asymptotic scale when omitted."""
+) -> Multiseries | OrderedMultiseries:
+    """Create a lazy multiseries or request an inclusive algebraic ``order``.
+
+    ``terms`` retains its historical count-based behavior. ``order=0`` instead
+    requests every Laurent--logarithmic contribution through algebraic degree
+    zero (including divergent negative powers), with a formal completeness
+    indicator. The order-targeted method performs one bounded local SymPy
+    expansion; it does not run term-count doubling.
+    """
     assumptions = normalize_assumptions(assumptions)
     expr = sp.refine(sp.sympify(expr), assumptions)
+    if order is not None:
+        if terms != 6:
+            raise ValueError(
+                "order selects algebraic order; do not also set a term count"
+            )
+        if scale is not None:
+            raise ValueError(
+                "order-targeted expansion currently requires automatic local scale"
+            )
+        if not allow_series_fallback:
+            raise ValueError(
+                "order-targeted expansion requires allow_series_fallback=True"
+            )
+        return expand_to_order(expr, variable, point=point, order=order)
     discovery: ScaleDiscovery | None = None
     knowledge: AsymptoticKnowledge | None = None
     if scale is None:
