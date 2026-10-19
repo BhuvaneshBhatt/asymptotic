@@ -1,5 +1,7 @@
 """Asymptotic function-head adapter and limit-only fallback policy."""
+
 import sympy as sp
+from exprtools._recurrence_families import RecurrenceFamilies
 
 from .reference_normalization import RegularizedHypergeometric0F1
 from .special_functions import (
@@ -17,8 +19,6 @@ from .special_functions import (
     WhittakerM,
     WhittakerW,
 )
-
-from exprtools._recurrence_families import RecurrenceFamilies
 
 FAMILIES = RecurrenceFamilies(
     RegularizedHypergeometric0F1=RegularizedHypergeometric0F1,

@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_release_version_is_consistent():
     project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
-    assert project["version"] == "0.2.0"
+    assert project["version"] == "0.2.2"
     assert asymptotic.__version__ == project["version"]
 
 

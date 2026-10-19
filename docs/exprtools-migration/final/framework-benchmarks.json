@@ -1,0 +1,51 @@
+{
+  "real_even_root": {
+    "n": 100,
+    "total_seconds": 3.0002396300042165,
+    "median_seconds": 0.02876033300162817,
+    "p95_seconds": 0.039809000001696404,
+    "output": "Abs(Symbol('x'))"
+  },
+  "positive_absolute": {
+    "n": 100,
+    "total_seconds": 0.7870569990045624,
+    "median_seconds": 0.007770791000439203,
+    "p95_seconds": 0.007881167002778966,
+    "output": "Symbol('x')"
+  },
+  "real_log_exp": {
+    "n": 100,
+    "total_seconds": 1.7915829620105796,
+    "median_seconds": 0.017415146001440007,
+    "p95_seconds": 0.018266250001033768,
+    "output": "Symbol('x')"
+  },
+  "complex_log_refusal": {
+    "n": 100,
+    "total_seconds": 0.16162346400960814,
+    "median_seconds": 0.0015982709992385935,
+    "p95_seconds": 0.0018311249987164047,
+    "output": "log(exp(Symbol('x')))"
+  },
+  "pointwise_hole_refusal": {
+    "n": 100,
+    "total_seconds": 1.3351722049810633,
+    "median_seconds": 0.012885937498140265,
+    "p95_seconds": 0.013526290997106116,
+    "output": "Mul(Pow(Add(Symbol('x'), Integer(-1)), Integer(-1)), Add(Pow(Symbol('x'), Integer(2)), Integer(-1)))"
+  },
+  "guarded_rational": {
+    "n": 100,
+    "total_seconds": 6.491194041976996,
+    "median_seconds": 0.062294791499880375,
+    "p95_seconds": 0.07860533300117822,
+    "output": "Add(Symbol('x'), Integer(1))"
+  },
+  "positive_gamma": {
+    "n": 100,
+    "total_seconds": 1.4430827539908933,
+    "median_seconds": 0.014065332999962266,
+    "p95_seconds": 0.014929000000847736,
+    "output": "Add(Pow(Symbol('x'), Integer(2)), Symbol('x'))"
+  }
+}

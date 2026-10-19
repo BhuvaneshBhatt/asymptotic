@@ -1,3 +1,7 @@
+> The expression oracle and recurrence implementation now come from `exprtools`
+> (>=0.1.0). The compatibility adapter preserves existing recurrence behavior.
+> See [migration validation](docs/exprtools-migration/final/README.md).
+
 # asymptotic
 
 `asymptotic` is a symbolic asymptotic-analysis package built on SymPy. It spans directed real and multivariate asymptotics together with complex/sector-aware branch geometry, formal ODE/transseries interchange, asymptotic expansions, limits, sums, recurrences, implicit asymptotics, perturbation methods, and probability/Laplace asymptotics, and it includes certification and evidence for the conditions that make results valid. It handles simultaneous multivariate approaches, competing power/logarithmic/exponential scales, parameter conditions, and selected special-function and perturbation problems.

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="28" time="3.606" timestamp="2026-10-18T21:10:51.372076-05:00" hostname="bbhattmaclap"><testcase classname="tests.test_publish_workflow" name="test_publish_workflow_uses_trusted_publishing_after_release_gates" time="0.001"><failure message="assert 'python tools/run_test_shard.py' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - &quot;v*&quot;\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'">def test_publish_workflow_uses_trusted_publishing_after_release_gates():
+        text = Path(".github/workflows/publish.yml").read_text()
+
+        assert "tags:" in text and '"v*"' in text
+        assert "Require tag to match package version" in text
+&gt;       assert "python tools/run_test_shard.py" in text
+E       assert 'python tools/run_test_shard.py' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - "v*"\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'
+
+tests/test_publish_workflow.py:12: AssertionError</failure></testcase><testcase classname="tests.test_publish_workflow" name="test_public_sum_signature_has_no_internal_normalization_hook" time="0.000" /><testcase classname="tests.test_publish_workflow" name="test_publish_workflow_shards_match_release_layout" time="0.000"><failure message="IndexError: list index out of range">def test_publish_workflow_shards_match_release_layout():
+        text = Path(".github/workflows/publish.yml").read_text()
+&gt;       block = text.split("shard:", 1)[1].split("runs-on:", 1)[0]
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_publish_workflow.py:31: IndexError</failure></testcase><testcase classname="tests.test_publish_workflow" name="test_regular_workflow_shards_match_layout" time="0.000" /><testcase classname="tests.test_publish_workflow" name="test_workflows_check_formatting" time="0.000"><failure message="assert 'ruff format --check src tests benchmarks tools examples' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - &quot;v*&quot;\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'">def test_workflows_check_formatting():
+        for name in ("tests.yml", "publish.yml"):
+            text = (Path(".github/workflows") / name).read_text()
+&gt;           assert "ruff format --check src tests benchmarks tools examples" in text
+E           assert 'ruff format --check src tests benchmarks tools examples' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - "v*"\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'
+
+tests/test_publish_workflow.py:47: AssertionError</failure></testcase><testcase classname="tests.test_publish_workflow" name="test_publish_waits_for_backend_and_wheel_checks" time="0.000"><failure message="assert 'needs: [static, shards, optional-backends, reference-corpus-aggregate]' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - &quot;v*&quot;\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'">def test_publish_waits_for_backend_and_wheel_checks():
+        text = Path(".github/workflows/publish.yml").read_text()
+&gt;       assert (
+            "needs: [static, shards, optional-backends, reference-corpus-aggregate]" in text
+        )
+E       assert 'needs: [static, shards, optional-backends, reference-corpus-aggregate]' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - "v*"\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'
+
+tests/test_publish_workflow.py:52: AssertionError</failure></testcase><testcase classname="tests.test_release_metadata" name="test_release_version_is_consistent" time="0.001" /><testcase classname="tests.test_release_metadata" name="test_supported_python_floor_is_consistent" time="0.001"><failure message="assert '[&quot;3.11&quot;, &quot;3.12&quot;, &quot;3.13&quot;, &quot;3.14&quot;]' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - &quot;v*&quot;\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'">def test_supported_python_floor_is_consistent():
+        project = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]
+        assert project["requires-python"] == "&gt;=3.11"
+        assert "Python 3.11" in (ROOT / "README.md").read_text()
+        for workflow in ("tests.yml", "publish.yml"):
+            text = (ROOT / ".github" / "workflows" / workflow).read_text()
+&gt;           assert '["3.11", "3.12", "3.13", "3.14"]' in text
+E           assert '["3.11", "3.12", "3.13", "3.14"]' in 'name: publish-to-pypi\n\non:\n  push:\n    tags:\n      - "v*"\n\npermissions:\n  contents: read\n\njobs:\n  build:\n...ith:\n          name: pypi-distributions\n          path: dist\n      - uses: pypa/gh-action-pypi-publish@release/v1\n'
+
+tests/test_release_metadata.py:23: AssertionError</failure></testcase><testcase classname="tests.test_release_metadata" name="test_semialg_is_a_required_dependency" time="0.000" /><testcase classname="tests.test_release_metadata" name="test_ode_dependency_uses_distribution_version" time="0.000" /><testcase classname="tests.test_root_import_boundaries" name="test_repository_python_uses_only_primary_root_imports" time="0.360"><failure message="AssertionError: assert {'tests/test_...r_expansion']} == {}&#10;  &#10;  Left contains 1 more item:&#10;  {'tests/test_order_remainder_limit_policy.py': ['order_expansion']}&#10;  Use -v to get more diff">def test_repository_python_uses_only_primary_root_imports():
+        violations: dict[str, list[str]] = {}
+        for directory in _SCAN_DIRS:
+            for path in directory.rglob("*.py"):
+                retired = sorted(_retired_root_imports(path.read_text()))
+                if retired:
+                    violations[str(path)] = retired
+&gt;       assert violations == {}
+E       AssertionError: assert {'tests/test_...r_expansion']} == {}
+E
+E         Left contains 1 more item:
+E         {'tests/test_order_remainder_limit_policy.py': ['order_expansion']}
+E         Use -v to get more diff
+
+tests/test_root_import_boundaries.py:35: AssertionError</failure></testcase><testcase classname="tests.test_root_import_boundaries" name="test_documentation_python_fences_use_only_primary_root_imports" time="0.010" /><testcase classname="tests.test_suite_layout" name="test_every_test_module_belongs_to_one_shard" time="0.010" /><testcase classname="tests.test_suite_layout" name="test_every_module_has_known_cost_class" time="0.000" /><testcase classname="tests.test_suite_layout" name="test_every_cost_class_has_an_execution_budget" time="0.000" /><testcase classname="tests.test_suite_layout" name="test_reference_corpus_is_explicitly_budgeted" time="0.000" /><testcase classname="tests.test_repository_coherence" name="test_production_proof_boundaries" time="0.708" /><testcase classname="tests.test_repository_coherence" name="test_tests_do_not_use_monkeypatch_fixture" time="0.188"><failure message="AssertionError: assert ['tests/test_...policy.py:45'] == []&#10;  &#10;  Left contains 3 more items, first extra item: 'tests/test_order_remainder_limit_policy.py:11'&#10;  Use -v to get more diff">def test_tests_do_not_use_monkeypatch_fixture():
+        import ast
+
+        hits = []
+        fixture_name = "monkey" + "patch"
+        for path in (ROOT / "tests").glob("test_*.py"):
+            tree = ast.parse(path.read_text(encoding="utf-8"))
+            for node in ast.walk(tree):
+                if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    args = (*node.args.posonlyargs, *node.args.args, *node.args.kwonlyargs)
+                    if any(arg.arg == fixture_name for arg in args):
+                        hits.append(f"{path.relative_to(ROOT)}:{node.lineno}")
+&gt;       assert hits == []
+E       AssertionError: assert ['tests/test_...policy.py:45'] == []
+E
+E         Left contains 3 more items, first extra item: 'tests/test_order_remainder_limit_policy.py:11'
+E         Use -v to get more diff
+
+tests/test_repository_coherence.py:52: AssertionError</failure></testcase><testcase classname="tests.test_repository_coherence" name="test_production_scopes_have_no_overridden_function_definitions" time="0.438" /><testcase classname="tests.test_repository_coherence" name="test_local_names_and_parameters_remain_readable_and_compact" time="0.753" /><testcase classname="tests.test_repository_coherence" name="test_active_text_has_no_trailing_whitespace" time="0.054" /><testcase classname="tests.test_repository_coherence" name="test_project_identity_and_license_are_consistent" time="0.001" /><testcase classname="tests.test_repository_coherence" name="test_sum_method_registry_is_shared_with_statistics" time="0.000" /><testcase classname="tests.test_repository_coherence" name="test_pyproject_prerelease_extras_and_pytest_config_are_valid" time="0.001"><failure message="AssertionError: assert {'docs', 'release', 'test'} &lt;= dict_keys(['flint', 'optimization', 'ode', 'test', 'release', 'benchmark', 'lint'])&#10; +  where dict_keys(['flint', 'optimization', 'ode', 'test', 'release', 'benchmark', 'lint']) = &lt;built-in method keys of dict object at 0x10a5f1600&gt;()&#10; +    where &lt;built-in method keys of dict object at 0x10a5f1600&gt; = {'flint': ['python-flint&gt;=0.9.0'], 'optimization': ['symbopt&gt;=0.1.0'], 'ode': ['odeanalysis&gt;=0.1.0'], 'test': ['pytest&gt;=8', 'hypothesis&gt;=6'], ...}.keys">def test_pyproject_prerelease_extras_and_pytest_config_are_valid():
+        import tomllib
+
+        raw = (ROOT / "pyproject.toml").read_bytes()
+        project = tomllib.loads(raw.decode("utf-8"))
+        extras = project["project"]["optional-dependencies"]
+
+&gt;       assert {"test", "docs", "release"} &lt;= extras.keys()
+E       AssertionError: assert {'docs', 'release', 'test'} &lt;= dict_keys(['flint', 'optimization', 'ode', 'test', 'release', 'benchmark', 'lint'])
+E        +  where dict_keys(['flint', 'optimization', 'ode', 'test', 'release', 'benchmark', 'lint']) = &lt;built-in method keys of dict object at 0x10a5f1600&gt;()
+E        +    where &lt;built-in method keys of dict object at 0x10a5f1600&gt; = {'flint': ['python-flint&gt;=0.9.0'], 'optimization': ['symbopt&gt;=0.1.0'], 'ode': ['odeanalysis&gt;=0.1.0'], 'test': ['pytest&gt;=8', 'hypothesis&gt;=6'], ...}.keys
+
+tests/test_repository_coherence.py:133: AssertionError</failure></testcase><testcase classname="tests.test_repository_coherence" name="test_test_names_are_compact" time="0.186" /><testcase classname="tests.test_repository_coherence" name="test_documented_primary_api_count_matches_manifest" time="0.002" /><testcase classname="tests.test_repository_coherence" name="test_class_field_names" time="0.615" /><testcase classname="tests.test_exprtools_adapter" name="test_adapter_preserves_evidence_and_instrumentation" time="0.003" /></testsuite></testsuites>

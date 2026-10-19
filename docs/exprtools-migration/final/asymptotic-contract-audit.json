@@ -1,0 +1,27 @@
+{
+  "baseline_failures": [
+    "test_publish_workflow::test_publish_waits_for_backend_and_wheel_checks",
+    "test_publish_workflow::test_publish_workflow_shards_match_release_layout",
+    "test_publish_workflow::test_publish_workflow_uses_trusted_publishing_after_release_gates",
+    "test_publish_workflow::test_workflows_check_formatting",
+    "test_release_metadata::test_release_version_is_consistent",
+    "test_release_metadata::test_supported_python_floor_is_consistent",
+    "test_repository_coherence::test_pyproject_prerelease_extras_and_pytest_config_are_valid",
+    "test_repository_coherence::test_tests_do_not_use_monkeypatch_fixture",
+    "test_root_import_boundaries::test_repository_python_uses_only_primary_root_imports"
+  ],
+  "final_failures": [
+    "test_publish_workflow::test_publish_waits_for_backend_and_wheel_checks",
+    "test_publish_workflow::test_publish_workflow_shards_match_release_layout",
+    "test_publish_workflow::test_publish_workflow_uses_trusted_publishing_after_release_gates",
+    "test_publish_workflow::test_workflows_check_formatting",
+    "test_release_metadata::test_supported_python_floor_is_consistent",
+    "test_repository_coherence::test_pyproject_prerelease_extras_and_pytest_config_are_valid",
+    "test_repository_coherence::test_tests_do_not_use_monkeypatch_fixture",
+    "test_root_import_boundaries::test_repository_python_uses_only_primary_root_imports"
+  ],
+  "new_failures": [],
+  "resolved": [
+    "test_release_metadata::test_release_version_is_consistent"
+  ]
+}

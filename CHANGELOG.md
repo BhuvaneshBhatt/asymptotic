@@ -1,3 +1,11 @@
+## Version 0.2.2
+
+- Use exprtools for expression predicates and bounded recurrence simplification.
+- Preserve the recurrence API, special-function conventions, limit evidence and
+  instrumentation through explicit host adapters.
+- Install exprtools 0.1.0 before using this release. Migration tests and benchmark
+  results are recorded in docs/exprtools-migration/.
+
 ## Version 0.2.1
 
 - Added optional `multiseries(..., order=0)` to compute Laurent-logarithmic contributions through the inclusive algebraic degree, rather than asking for an arbitrary number of nonzero terms.

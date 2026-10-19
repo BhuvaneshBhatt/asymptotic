@@ -1,0 +1,889 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="68" skipped="2" tests="320" time="25.756" timestamp="2026-10-18T21:04:06.747487" hostname="bbhattmaclap"><testcase classname="tests.test_algebraic" name="test_algebraic_expression_classifier_rejects_inexact_values" time="0.001" /><testcase classname="tests.test_algebraic" name="test_algebraic_model_extracts_generators_and_minpolys" time="0.007" /><testcase classname="tests.test_algebraic" name="test_minpoly_remainder_proves_root_relation_without_common_field" time="0.022"><failure message="AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;&#10; +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic-remainder: could not build an algebraic generator model&gt;.verdict&#10; +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN">def test_minpoly_remainder_proves_root_relation_without_common_field():
+        from exprtest._algebraic import algebraic_relation_reduction_test
+
+        t = sp.symbols("t")
+        root = sp.CRootOf(t**3 - 2, 0)
+        expr = sp.Add(sp.Pow(root, 3, evaluate=False), -2, evaluate=False)
+        result = algebraic_relation_reduction_test(expr)
+&gt;       assert result.verdict is Verdict.ZERO_PROVEN
+E       AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;
+E        +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic-remainder: could not build an algebraic generator model&gt;.verdict
+E        +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN
+
+work/min-baseline/tests/test_algebraic.py:47: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_nonzero_independent_generator_remainder_is_inconclusive" time="0.005" /><testcase classname="tests.test_algebraic" name="test_common_number_field_resolves_generator_dependency" time="0.035" /><testcase classname="tests.test_algebraic" name="test_common_number_field_proves_nonzero_algebraic_value" time="0.009" /><testcase classname="tests.test_algebraic" name="test_exact_algebraic_pipeline_uses_relation_reduction_first" time="0.029"><failure message="AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;&#10; +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic: expression is not known to be algebraic&gt;.verdict&#10; +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN">def test_exact_algebraic_pipeline_uses_relation_reduction_first():
+        from exprtest._algebraic import exact_algebraic_number_test
+
+        t = sp.symbols("t")
+        root = sp.CRootOf(t**4 - 10, 0)
+        expr = sp.Add(sp.Pow(root, 4, evaluate=False), -10, evaluate=False)
+        result = exact_algebraic_number_test(expr)
+&gt;       assert result.verdict is Verdict.ZERO_PROVEN
+E       AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;
+E        +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic: expression is not known to be algebraic&gt;.verdict
+E        +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN
+
+work/min-baseline/tests/test_algebraic.py:81: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_complete_root_set_uses_symmetric_coefficient_identities" time="0.010" /><testcase classname="tests.test_algebraic" name="test_majority_root_set_rewrites_through_complement" time="0.266" /><testcase classname="tests.test_algebraic" name="test_half_or_smaller_root_set_is_left_unchanged" time="0.003" /><testcase classname="tests.test_algebraic" name="test_majority_root_product_uses_complement" time="0.013" /><testcase classname="tests.test_algebraic" name="test_rational_radicals_share_prime_power_basis" time="0.002" /><testcase classname="tests.test_algebraic" name="test_algebraic_gap_bound_is_positive_and_valid" time="0.008" /><testcase classname="tests.test_algebraic" name="test_algebraic_gap_test_proves_nonzero" time="0.003" /><testcase classname="tests.test_algebraic" name="test_exact_pipeline_can_use_root_set_preprocessing" time="10.231"><failure message="AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;&#10; +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic: expression is not known to be algebraic&gt;.verdict&#10; +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN">def test_exact_pipeline_can_use_root_set_preprocessing():
+        from exprtest._algebraic import exact_algebraic_number_test
+
+        u = sp.symbols("u")
+        roots = [sp.CRootOf(u**3 - u + 1, pos) for pos in range(3)]
+        result = exact_algebraic_number_test(sum(roots))
+&gt;       assert result.verdict is Verdict.ZERO_PROVEN
+E       AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;
+E        +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic: expression is not known to be algebraic&gt;.verdict
+E        +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN
+
+work/min-baseline/tests/test_algebraic.py:159: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_nested_radical_tower_reduces_defining_relation" time="0.006" /><testcase classname="tests.test_algebraic" name="test_nested_radical_tower_can_prove_real_sign" time="0.002" /><testcase classname="tests.test_algebraic" name="test_fujiwara_candidate_can_improve_cauchy_gap" time="0.003"><failure message="assert None is not None">def test_fujiwara_candidate_can_improve_cauchy_gap():
+        from exprtest._algebraic import algebraic_gap_bound
+
+        u = sp.symbols("u")
+        root = sp.CRootOf(100 * u**3 + 1, 0)
+        gap = algebraic_gap_bound(root)
+&gt;       assert gap is not None
+E       assert None is not None
+
+work/min-baseline/tests/test_algebraic.py:197: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_gap_bound_never_exceeds_sampled_root_magnitude" time="0.002"><failure message="assert None is not None">def test_gap_bound_never_exceeds_sampled_root_magnitude():
+        from exprtest._algebraic import algebraic_gap_bound
+
+        u = sp.symbols("u")
+        roots = [sp.CRootOf(100 * u**3 + 1, pos) for pos in range(3)]
+        for root in roots:
+            gap = algebraic_gap_bound(root)
+&gt;           assert gap is not None
+E           assert None is not None
+
+work/min-baseline/tests/test_algebraic.py:209: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_algebraic_model_prunes_cancelled_generators" time="0.003" /><testcase classname="tests.test_algebraic" name="test_high_power_algebraic_reduction_uses_exact_modular_powering" time="0.018"><failure message="AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;&#10; +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic-remainder: could not build an algebraic generator model&gt;.verdict&#10; +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN">def test_high_power_algebraic_reduction_uses_exact_modular_powering():
+        from exprtest._algebraic import algebraic_relation_reduction_test
+
+        t = sp.symbols("t")
+        root = sp.CRootOf(t**2 - 2, 0)
+        expr = sp.Add(
+            sp.Pow(root, 80, evaluate=False), -(sp.Integer(2) ** 40), evaluate=False
+        )
+        result = algebraic_relation_reduction_test(expr)
+&gt;       assert result.verdict is Verdict.ZERO_PROVEN
+E       AssertionError: assert &lt;Verdict.UNKNOWN: 'could not determine'&gt; is &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt;
+E        +  where &lt;Verdict.UNKNOWN: 'could not determine'&gt; = &lt;ZeroClassification could not determine via algebraic-remainder: could not build an algebraic generator model&gt;.verdict
+E        +  and   &lt;Verdict.ZERO_PROVEN: 'zero (proven)'&gt; = Verdict.ZERO_PROVEN
+
+work/min-baseline/tests/test_algebraic.py:236: AssertionError</failure></testcase><testcase classname="tests.test_algebraic" name="test_model_prunes_generators_cancelled_before_modeling" time="0.004" /><testcase classname="tests.test_algebraic" name="test_square_root_sum_fast_path_proves_nonzero" time="0.005" /><testcase classname="tests.test_algebraic" name="test_square_root_sum_combines_unsimplified_radicands" time="0.001" /><testcase classname="tests.test_algebraic" name="test_quadratic_nested_radical_pre_denests_exactly" time="0.001" /><testcase classname="tests.test_algebraic" name="test_quadratic_nested_radical_rejects_nonsquare_discriminant" time="0.001" /><testcase classname="tests.test_assumption_equivalence" name="test_positive_assumption_forms_prove_cosh_and_log_cases[assumptions0]" time="0.002" /><testcase classname="tests.test_assumption_equivalence" name="test_positive_assumption_forms_prove_cosh_and_log_cases[assumptions1]" time="0.144"><failure message="assert None is True&#10; +  where None = is_real(log(x), assumptions=x &gt; 0)&#10; +    where log(x) = log(x)&#10; +      where log = sp.log">assumptions = x &gt; 0
+
+    @pytest.mark.parametrize(
+        "assumptions",
+        [sp.Q.positive(x), x &gt; 0, x &gt;= 1, sp.And(sp.Q.real(x), x &gt; 0)],
+    )
+    def test_positive_assumption_forms_prove_cosh_and_log_cases(assumptions):
+        assert zerotest(sp.cosh(x), assumptions=assumptions, use_cache=False) is False
+        if assumptions != sp.Q.positive(x):
+&gt;           assert is_real(sp.log(x), assumptions=assumptions) is True
+E           assert None is True
+E            +  where None = is_real(log(x), assumptions=x &gt; 0)
+E            +    where log(x) = log(x)
+E            +      where log = sp.log
+
+work/min-baseline/tests/test_assumption_equivalence.py:18: AssertionError</failure></testcase><testcase classname="tests.test_assumption_equivalence" name="test_positive_assumption_forms_prove_cosh_and_log_cases[assumptions2]" time="0.110"><failure message="assert None is True&#10; +  where None = is_real(log(x), assumptions=x &gt;= 1)&#10; +    where log(x) = log(x)&#10; +      where log = sp.log">assumptions = x &gt;= 1
+
+    @pytest.mark.parametrize(
+        "assumptions",
+        [sp.Q.positive(x), x &gt; 0, x &gt;= 1, sp.And(sp.Q.real(x), x &gt; 0)],
+    )
+    def test_positive_assumption_forms_prove_cosh_and_log_cases(assumptions):
+        assert zerotest(sp.cosh(x), assumptions=assumptions, use_cache=False) is False
+        if assumptions != sp.Q.positive(x):
+&gt;           assert is_real(sp.log(x), assumptions=assumptions) is True
+E           assert None is True
+E            +  where None = is_real(log(x), assumptions=x &gt;= 1)
+E            +    where log(x) = log(x)
+E            +      where log = sp.log
+
+work/min-baseline/tests/test_assumption_equivalence.py:18: AssertionError</failure></testcase><testcase classname="tests.test_assumption_equivalence" name="test_positive_assumption_forms_prove_cosh_and_log_cases[assumptions3]" time="0.126"><failure message="assert None is True&#10; +  where None = is_real(log(x), assumptions=Q.real(x) &amp; (x &gt; 0))&#10; +    where log(x) = log(x)&#10; +      where log = sp.log">assumptions = Q.real(x) &amp; (x &gt; 0)
+
+    @pytest.mark.parametrize(
+        "assumptions",
+        [sp.Q.positive(x), x &gt; 0, x &gt;= 1, sp.And(sp.Q.real(x), x &gt; 0)],
+    )
+    def test_positive_assumption_forms_prove_cosh_and_log_cases(assumptions):
+        assert zerotest(sp.cosh(x), assumptions=assumptions, use_cache=False) is False
+        if assumptions != sp.Q.positive(x):
+&gt;           assert is_real(sp.log(x), assumptions=assumptions) is True
+E           assert None is True
+E            +  where None = is_real(log(x), assumptions=Q.real(x) &amp; (x &gt; 0))
+E            +    where log(x) = log(x)
+E            +      where log = sp.log
+
+work/min-baseline/tests/test_assumption_equivalence.py:18: AssertionError</failure></testcase><testcase classname="tests.test_assumption_equivalence" name="test_subexpression_assumption_is_used_without_rewriting_symbol_domain" time="0.148" /><testcase classname="tests.test_assumption_equivalence" name="test_logical_equivalents_produce_same_zero_result" time="0.001" /><testcase classname="tests.test_assumption_equivalence" name="test_contradictory_assumptions_remain_inconclusive" time="0.004" /><testcase classname="tests.test_boundaries_and_caches" name="test_square_root_term_budget_boundary" time="0.002" /><testcase classname="tests.test_boundaries_and_caches" name="test_square_root_radicand_bit_boundary" time="0.001" /><testcase classname="tests.test_boundaries_and_caches" name="test_exponent_gap_refuses_expression_over_operation_budget" time="0.002" /><testcase classname="tests.test_boundaries_and_caches" name="test_negative_applicability_caches_record_and_clear_results" time="0.001" /><testcase classname="tests.test_boundaries_and_caches" name="test_global_cache_clear_resets_new_exact_and_negative_caches" time="0.001" /><testcase classname="tests.test_contract_matrix" name="test_public_oracle_contract[expr0-True-True-Verdict.ZERO_PROVEN-certified-literal]" time="0.001" /><testcase classname="tests.test_contract_matrix" name="test_public_oracle_contract[expr1-True-False-Verdict.NONZERO_PROVEN-certified-literal]" time="0.001" /><testcase classname="tests.test_contract_matrix" name="test_public_oracle_contract[expr2-True-False-Verdict.NONZERO_LIKELY-probable-numeric-probe]" time="0.029"><failure message="assert None is False&#10; +  where None = zerotest(sin(x) + 2, assumptions=True, seed=1, use_cache=False)">expr = sin(x) + 2, assumptions = True, expected = False
+verdict = &lt;Verdict.NONZERO_LIKELY: 'nonzero (likely)'&gt;, certainty = 'probable'
+method = 'numeric-probe'
+
+    @pytest.mark.parametrize(
+        "expr,assumptions,expected,verdict,certainty,method",
+        [
+            (sp.Integer(0), True, True, Verdict.ZERO_PROVEN, "certified", "literal"),
+            (sp.Integer(7), True, False, Verdict.NONZERO_PROVEN, "certified", "literal"),
+            (
+                sp.sin(x) + 2,
+                True,
+                False,
+                Verdict.NONZERO_LIKELY,
+                "probable",
+                "numeric-probe",
+            ),
+            (1 / x, sp.Eq(x, 0), None, Verdict.UNKNOWN, "unknown", "definedness"),
+        ],
+    )
+    def test_public_oracle_contract(
+        expr, assumptions, expected, verdict, certainty, method
+    ):
+        profile = profile_zerotest(expr, assumptions=assumptions, seed=1)
+&gt;       assert zerotest(expr, assumptions=assumptions, seed=1, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, assumptions=True, seed=1, use_cache=False)
+
+work/min-baseline/tests/test_contract_matrix.py:32: AssertionError</failure></testcase><testcase classname="tests.test_contract_matrix" name="test_public_oracle_contract[expr3-assumptions3-None-Verdict.UNKNOWN-unknown-definedness]" time="0.001" /><testcase classname="tests.test_contract_matrix" name="test_probable_policy_changes_only_likely_nonzero_boolean" time="0.013"><failure message="assert None is False&#10; +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)">def test_probable_policy_changes_only_likely_nonzero_boolean():
+        expr = sp.sin(x) + 2
+&gt;       assert zerotest(expr, seed=1, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)
+
+work/min-baseline/tests/test_contract_matrix.py:41: AssertionError</failure></testcase><testcase classname="tests.test_contract_matrix" name="test_internal_heuristic_zero_remains_non_boolean_evidence" time="0.000" /><testcase classname="tests.test_contract_matrix" name="test_proven_and_likely_nonzero_classification_semantics_are_distinct" time="0.000" /><testcase classname="tests.test_differential_exact" name="test_square_root_fast_path_agrees_with_general_algebraic_engine[expr0]" time="0.004" /><testcase classname="tests.test_differential_exact" name="test_square_root_fast_path_agrees_with_general_algebraic_engine[expr1]" time="0.202" /><testcase classname="tests.test_differential_exact" name="test_square_root_fast_path_agrees_with_general_algebraic_engine[expr2]" time="0.005" /><testcase classname="tests.test_differential_exact" name="test_square_root_fast_path_agrees_with_general_algebraic_engine[expr3]" time="0.017" /><testcase classname="tests.test_differential_exact" name="test_small_generated_square_root_sums_agree_with_exact_engine" time="0.573" /><testcase classname="tests.test_differential_exact" name="test_rational_function_identity_matches_exact_numerator_test" time="0.150"><failure message="assert None is False&#10; +  where None = zerotest(-(x + 1)/(x + 3) + (x + 2)/(x + 3), seed=1, use_cache=False)">def test_rational_function_identity_matches_exact_numerator_test():
+        x = sp.symbols("x")
+        exprs = [
+            1 / x + 1 / (x + 1) - (2 * x + 1) / (x * (x + 1)),
+            (x**2 - 1) / (x - 1) - (x + 1),
+            (x + 2) / (x + 3) - (x + 1) / (x + 3),
+        ]
+        for expr in exprs:
+            num, _ = sp.cancel(expr).as_numer_denom()
+            expected = bool(num == 0)
+&gt;           assert zerotest(expr, seed=1, use_cache=False) is expected
+E           assert None is False
+E            +  where None = zerotest(-(x + 1)/(x + 3) + (x + 2)/(x + 3), seed=1, use_cache=False)
+
+work/min-baseline/tests/test_differential_exact.py:54: AssertionError</failure></testcase><testcase classname="tests.test_domains" name="test_existing_domain_api_is_public" time="0.000" /><testcase classname="tests.test_domains" name="test_integer_predicate" time="0.000" /><testcase classname="tests.test_domains" name="test_rational_predicate" time="0.000" /><testcase classname="tests.test_domains" name="test_real_predicate" time="0.000" /><testcase classname="tests.test_domains" name="test_algebraic_predicate" time="0.000" /><testcase classname="tests.test_domains" name="test_prime_predicate" time="0.000" /><testcase classname="tests.test_domains" name="test_predicates_use_assumptions" time="0.036" /><testcase classname="tests.test_exact_methods" name="test_rational_function_in_pi_is_proven_transcendental" time="0.015" /><testcase classname="tests.test_exact_methods" name="test_rational_function_cancellation_can_be_algebraic" time="0.001" /><testcase classname="tests.test_exact_methods" name="test_exact_object_caches_record_reuse" time="0.001" /><testcase classname="tests.test_exact_methods" name="test_pslq_relation_requires_exact_verification" time="0.016" /><testcase classname="tests.test_exact_methods" name="test_special_value_registry" time="0.002" /><testcase classname="tests.test_exact_methods" name="test_rational_log_prime_vectors" time="0.013" /><testcase classname="tests.test_exact_methods" name="test_richer_domain_facts_and_elementof" time="0.002" /><testcase classname="tests.test_examples" name="test_quickstart_example_runs" time="0.008" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[Abs-term0-integer-assumptions0-concrete0]" time="0.003" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[Abs-term1-real-True-concrete1]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[Abs-term2-positive-assumptions2-concrete2]" time="0.004" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[Abs-term3-nonnegative-True-concrete3]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[acos-term4-real-assumptions4-concrete4]" time="0.027"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(acos(x), 'real', (x &gt;= -1) &amp; (x &lt;= 1))">name = 'acos', term = acos(x), prop = 'real', assumptions = (x &gt;= -1) &amp; (x &lt;= 1)
+concrete = pi/2
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(acos(x), 'real', (x &gt;= -1) &amp; (x &lt;= 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[acos-term5-positive-assumptions5-concrete5]" time="0.099"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(acos(x), 'positive', (x &gt;= -1) &amp; (x &lt; 1))">name = 'acos', term = acos(x), prop = 'positive'
+assumptions = (x &gt;= -1) &amp; (x &lt; 1), concrete = pi/2
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(acos(x), 'positive', (x &gt;= -1) &amp; (x &lt; 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[acos-term6-nonnegative-assumptions6-concrete6]" time="0.024"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(acos(x), 'nonnegative', (x &gt;= -1) &amp; (x &lt;= 1))">name = 'acos', term = acos(x), prop = 'nonnegative'
+assumptions = (x &gt;= -1) &amp; (x &lt;= 1), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(acos(x), 'nonnegative', (x &gt;= -1) &amp; (x &lt;= 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[asin-term7-real-assumptions7-concrete7]" time="0.023"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(asin(x), 'real', (x &gt;= -1) &amp; (x &lt;= 1))">name = 'asin', term = asin(x), prop = 'real', assumptions = (x &gt;= -1) &amp; (x &lt;= 1)
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(asin(x), 'real', (x &gt;= -1) &amp; (x &lt;= 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[asin-term8-positive-assumptions8-concrete8]" time="0.028"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(asin(x), 'positive', (x &lt;= 1) &amp; (x &gt; 0))">name = 'asin', term = asin(x), prop = 'positive'
+assumptions = (x &lt;= 1) &amp; (x &gt; 0), concrete = pi/6
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(asin(x), 'positive', (x &lt;= 1) &amp; (x &gt; 0))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[asin-term9-negative-assumptions9-concrete9]" time="0.029"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(asin(x), 'negative', (x &gt;= -1) &amp; (x &lt; 0))">name = 'asin', term = asin(x), prop = 'negative'
+assumptions = (x &gt;= -1) &amp; (x &lt; 0), concrete = -pi/6
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(asin(x), 'negative', (x &gt;= -1) &amp; (x &lt; 0))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[asin-term10-nonnegative-assumptions10-concrete10]" time="0.028"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(asin(x), 'nonnegative', (x &gt;= 0) &amp; (x &lt;= 1))">name = 'asin', term = asin(x), prop = 'nonnegative'
+assumptions = (x &gt;= 0) &amp; (x &lt;= 1), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(asin(x), 'nonnegative', (x &gt;= 0) &amp; (x &lt;= 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[asin-term11-nonpositive-assumptions11-concrete11]" time="0.029"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(asin(x), 'nonpositive', (x &gt;= -1) &amp; (x &lt;= 0))">name = 'asin', term = asin(x), prop = 'nonpositive'
+assumptions = (x &gt;= -1) &amp; (x &lt;= 0), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(asin(x), 'nonpositive', (x &gt;= -1) &amp; (x &lt;= 0))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[atan-term12-real-True-concrete12]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[atan-term13-positive-assumptions13-concrete13]" time="0.003"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(atan(x), 'positive', x &gt; 0)">name = 'atan', term = atan(x), prop = 'positive', assumptions = x &gt; 0
+concrete = pi/4
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(atan(x), 'positive', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[atan-term14-negative-assumptions14-concrete14]" time="0.003"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(atan(x), 'negative', x &lt; 0)">name = 'atan', term = atan(x), prop = 'negative', assumptions = x &lt; 0
+concrete = -pi/4
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(atan(x), 'negative', x &lt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[atan-term15-nonnegative-assumptions15-concrete15]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(atan(x), 'nonnegative', x &gt;= 0)">name = 'atan', term = atan(x), prop = 'nonnegative', assumptions = x &gt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(atan(x), 'nonnegative', x &gt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[atan-term16-nonpositive-assumptions16-concrete16]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(atan(x), 'nonpositive', x &lt;= 0)">name = 'atan', term = atan(x), prop = 'nonpositive', assumptions = x &lt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(atan(x), 'nonpositive', x &lt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term17-integer-True-concrete17]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term18-real-True-concrete18]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term19-positive-assumptions19-concrete19]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(ceiling(x), 'positive', x &gt; 0)">name = 'ceiling', term = ceiling(x), prop = 'positive', assumptions = x &gt; 0
+concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(ceiling(x), 'positive', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term20-negative-assumptions20-concrete20]" time="0.010"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(ceiling(x), 'negative', x &lt;= -1)">name = 'ceiling', term = ceiling(x), prop = 'negative', assumptions = x &lt;= -1
+concrete = -1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(ceiling(x), 'negative', x &lt;= -1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term21-nonnegative-assumptions21-concrete21]" time="0.015"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(ceiling(x), 'nonnegative', x &gt; -1)">name = 'ceiling', term = ceiling(x), prop = 'nonnegative', assumptions = x &gt; -1
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(ceiling(x), 'nonnegative', x &gt; -1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[ceiling-term22-nonpositive-assumptions22-concrete22]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(ceiling(x), 'nonpositive', x &lt;= 0)">name = 'ceiling', term = ceiling(x), prop = 'nonpositive', assumptions = x &lt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(ceiling(x), 'nonpositive', x &lt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[cos-term23-real-True-concrete23]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[cosh-term24-real-True-concrete24]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[cosh-term25-positive-True-concrete25]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[cosh-term26-nonnegative-True-concrete26]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erf-term27-real-True-concrete27]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erf-term28-positive-assumptions28-concrete28]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(erf(x), 'positive', x &gt; 0)">name = 'erf', term = erf(x), prop = 'positive', assumptions = x &gt; 0
+concrete = erf(1)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(erf(x), 'positive', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erf-term29-negative-assumptions29-concrete29]" time="0.003"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(erf(x), 'negative', x &lt; 0)">name = 'erf', term = erf(x), prop = 'negative', assumptions = x &lt; 0
+concrete = -erf(1)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(erf(x), 'negative', x &lt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erf-term30-nonnegative-assumptions30-concrete30]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(erf(x), 'nonnegative', x &gt;= 0)">name = 'erf', term = erf(x), prop = 'nonnegative', assumptions = x &gt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(erf(x), 'nonnegative', x &gt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erf-term31-nonpositive-assumptions31-concrete31]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(erf(x), 'nonpositive', x &lt;= 0)">name = 'erf', term = erf(x), prop = 'nonpositive', assumptions = x &lt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(erf(x), 'nonpositive', x &lt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erfc-term32-real-True-concrete32]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erfc-term33-positive-True-concrete33]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[erfc-term34-nonnegative-True-concrete34]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[factorial-term35-integer-True-concrete35]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[factorial-term36-real-assumptions36-concrete36]" time="0.025"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(factorial(x), 'real', x &gt; -1)">name = 'factorial', term = factorial(x), prop = 'real', assumptions = x &gt; -1
+concrete = factorial(1/2)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(factorial(x), 'real', x &gt; -1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[factorial-term37-positive-assumptions37-concrete37]" time="0.024"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(factorial(x), 'positive', x &gt; -1)">name = 'factorial', term = factorial(x), prop = 'positive', assumptions = x &gt; -1
+concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(factorial(x), 'positive', x &gt; -1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[factorial-term38-nonnegative-assumptions38-concrete38]" time="0.024"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(factorial(x), 'nonnegative', x &gt; -1)">name = 'factorial', term = factorial(x), prop = 'nonnegative'
+assumptions = x &gt; -1, concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(factorial(x), 'nonnegative', x &gt; -1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term39-integer-True-concrete39]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term40-real-True-concrete40]" time="0.002" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term41-positive-assumptions41-concrete41]" time="0.013"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(floor(x), 'positive', x &gt;= 1)">name = 'floor', term = floor(x), prop = 'positive', assumptions = x &gt;= 1
+concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(floor(x), 'positive', x &gt;= 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term42-negative-assumptions42-concrete42]" time="0.005"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(floor(x), 'negative', x &lt; 0)">name = 'floor', term = floor(x), prop = 'negative', assumptions = x &lt; 0
+concrete = -1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(floor(x), 'negative', x &lt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term43-nonnegative-assumptions43-concrete43]" time="0.004"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(floor(x), 'nonnegative', x &gt;= 0)">name = 'floor', term = floor(x), prop = 'nonnegative', assumptions = x &gt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(floor(x), 'nonnegative', x &gt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[floor-term44-nonpositive-assumptions44-concrete44]" time="0.018"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(floor(x), 'nonpositive', x &lt; 1)">name = 'floor', term = floor(x), prop = 'nonpositive', assumptions = x &lt; 1
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(floor(x), 'nonpositive', x &lt; 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[gamma-term45-integer-True-concrete45]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[gamma-term46-real-True-concrete46]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[gamma-term47-positive-assumptions47-concrete47]" time="0.011"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(gamma(x), 'positive', x &gt; 0)">name = 'gamma', term = gamma(x), prop = 'positive', assumptions = x &gt; 0
+concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(gamma(x), 'positive', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[gamma-term48-nonnegative-assumptions48-concrete48]" time="0.011"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(gamma(x), 'nonnegative', x &gt; 0)">name = 'gamma', term = gamma(x), prop = 'nonnegative', assumptions = x &gt; 0
+concrete = 1
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(gamma(x), 'nonnegative', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[log-term49-real-assumptions49-concrete49]" time="0.008"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(log(x), 'real', x &gt; 0)">name = 'log', term = log(x), prop = 'real', assumptions = x &gt; 0
+concrete = log(2)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(log(x), 'real', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[log-term50-positive-assumptions50-concrete50]" time="0.018"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(log(x), 'positive', x &gt; 1)">name = 'log', term = log(x), prop = 'positive', assumptions = x &gt; 1
+concrete = log(2)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(log(x), 'positive', x &gt; 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[log-term51-negative-assumptions51-concrete51]" time="0.030"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(log(x), 'negative', (x &gt; 0) &amp; (x &lt; 1))">name = 'log', term = log(x), prop = 'negative', assumptions = (x &gt; 0) &amp; (x &lt; 1)
+concrete = -log(2)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(log(x), 'negative', (x &gt; 0) &amp; (x &lt; 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[log-term52-nonnegative-assumptions52-concrete52]" time="0.017"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(log(x), 'nonnegative', x &gt;= 1)">name = 'log', term = log(x), prop = 'nonnegative', assumptions = x &gt;= 1
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(log(x), 'nonnegative', x &gt;= 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[log-term53-nonpositive-assumptions53-concrete53]" time="0.023"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(log(x), 'nonpositive', (x &lt;= 1) &amp; (x &gt; 0))">name = 'log', term = log(x), prop = 'nonpositive'
+assumptions = (x &lt;= 1) &amp; (x &gt; 0), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(log(x), 'nonpositive', (x &lt;= 1) &amp; (x &gt; 0))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[loggamma-term54-real-assumptions54-concrete54]" time="0.013"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(loggamma(x), 'real', x &gt; 0)">name = 'loggamma', term = loggamma(x), prop = 'real', assumptions = x &gt; 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(loggamma(x), 'real', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[loggamma-term55-positive-assumptions55-concrete55]" time="0.107"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(loggamma(x), 'positive', (x &gt; 0) &amp; (x &lt; 1))">name = 'loggamma', term = loggamma(x), prop = 'positive'
+assumptions = (x &gt; 0) &amp; (x &lt; 1), concrete = log(sqrt(pi))
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(loggamma(x), 'positive', (x &gt; 0) &amp; (x &lt; 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[loggamma-term56-negative-assumptions56-concrete56]" time="0.096"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(loggamma(x), 'negative', (x &gt; 1) &amp; (x &lt; 2))">name = 'loggamma', term = loggamma(x), prop = 'negative'
+assumptions = (x &gt; 1) &amp; (x &lt; 2), concrete = log(sqrt(pi)/2)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(loggamma(x), 'negative', (x &gt; 1) &amp; (x &lt; 2))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[loggamma-term57-nonnegative-assumptions57-concrete57]" time="0.048"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(loggamma(x), 'nonnegative', (x &lt;= 1) &amp; (x &gt; 0))">name = 'loggamma', term = loggamma(x), prop = 'nonnegative'
+assumptions = (x &lt;= 1) &amp; (x &gt; 0), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(loggamma(x), 'nonnegative', (x &lt;= 1) &amp; (x &gt; 0))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[loggamma-term58-nonpositive-assumptions58-concrete58]" time="0.077"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(loggamma(x), 'nonpositive', (x &gt;= 1) &amp; (x &lt;= 2))">name = 'loggamma', term = loggamma(x), prop = 'nonpositive'
+assumptions = (x &gt;= 1) &amp; (x &lt;= 2), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(loggamma(x), 'nonpositive', (x &gt;= 1) &amp; (x &lt;= 2))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[sin-term59-real-True-concrete59]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[sinh-term60-real-True-concrete60]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[tanh-term61-real-True-concrete61]" time="0.132" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[tanh-term62-positive-assumptions62-concrete62]" time="0.144"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(tanh(x), 'positive', x &gt; 0)">name = 'tanh', term = tanh(x), prop = 'positive', assumptions = x &gt; 0
+concrete = tanh(1)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(tanh(x), 'positive', x &gt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[tanh-term63-negative-assumptions63-concrete63]" time="0.150"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(tanh(x), 'negative', x &lt; 0)">name = 'tanh', term = tanh(x), prop = 'negative', assumptions = x &lt; 0
+concrete = -tanh(1)
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(tanh(x), 'negative', x &lt; 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[tanh-term64-nonnegative-assumptions64-concrete64]" time="0.111"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(tanh(x), 'nonnegative', x &gt;= 0)">name = 'tanh', term = tanh(x), prop = 'nonnegative', assumptions = x &gt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(tanh(x), 'nonnegative', x &gt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[tanh-term65-nonpositive-assumptions65-concrete65]" time="0.143"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(tanh(x), 'nonpositive', x &lt;= 0)">name = 'tanh', term = tanh(x), prop = 'nonpositive', assumptions = x &lt;= 0
+concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(tanh(x), 'nonpositive', x &lt;= 0)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[zeta-term66-real-assumptions66-concrete66]" time="0.023" /><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[zeta-term67-positive-assumptions67-concrete67]" time="0.021"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(zeta(x), 'positive', x &gt; 1)">name = 'zeta', term = zeta(x), prop = 'positive', assumptions = x &gt; 1
+concrete = pi**2/6
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(zeta(x), 'positive', x &gt; 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[zeta-term68-negative-assumptions68-concrete68]" time="0.093"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(zeta(x), 'negative', (x &gt; -2) &amp; (x &lt; 1))">name = 'zeta', term = zeta(x), prop = 'negative'
+assumptions = (x &gt; -2) &amp; (x &lt; 1), concrete = -1/2
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(zeta(x), 'negative', (x &gt; -2) &amp; (x &lt; 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[zeta-term69-nonnegative-assumptions69-concrete69]" time="0.020"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(zeta(x), 'nonnegative', x &gt; 1)">name = 'zeta', term = zeta(x), prop = 'nonnegative', assumptions = x &gt; 1
+concrete = pi**2/6
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(zeta(x), 'nonnegative', x &gt; 1)
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_property_has_a_regression[zeta-term70-nonpositive-assumptions70-concrete70]" time="0.107"><failure message="AssertionError: assert None is True&#10; +  where None = function_property(zeta(x), 'nonpositive', (x &gt;= -2) &amp; (x &lt; 1))">name = 'zeta', term = zeta(x), prop = 'nonpositive'
+assumptions = (x &gt;= -2) &amp; (x &lt; 1), concrete = 0
+
+    @pytest.mark.parametrize("name,term,prop,assumptions,concrete", PROPERTY_CASES)
+    def test_every_retained_property_has_a_regression(
+        name, term, prop, assumptions, concrete
+    ):
+        assert term.func.__name__ == name
+&gt;       assert function_property(term, prop, assumptions) is True
+E       AssertionError: assert None is True
+E        +  where None = function_property(zeta(x), 'nonpositive', (x &gt;= -2) &amp; (x &lt; 1))
+
+work/min-baseline/tests/test_function_facts.py:183: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[Abs-term0]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[acos-term1]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[asin-term2]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[atan-term3]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[cos-term4]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[cosh-term5]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[erf-term6]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[erfc-term7]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[factorial-term8]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[gamma-term9]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[log-term10]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[loggamma-term11]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[sin-term12]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[sinc-term13]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[sinh-term14]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[tan-term15]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[tanh-term16]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_every_retained_domain_fact_has_a_regression[zeta-term17]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term0]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term1]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term2]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term3]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term4]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term5]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term6]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_discrete_singularities_are_rejected[term7]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_principal_branch_cuts_are_not_misclassified_as_poles" time="0.001" /><testcase classname="tests.test_function_facts" name="test_factorial_extension_matches_sympy_gamma_rewrite" time="0.000" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term0-integer]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term1-real]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term2-positive]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term3-positive]" time="0.000" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term4-positive]" time="0.001" /><testcase classname="tests.test_function_facts" name="test_sufficient_conditions_never_become_false_property_proofs[term5-positive]" time="0.003" /><testcase classname="tests.test_function_facts" name="test_floor_and_ceiling_rules_are_real_input_rules_only" time="0.005" /><testcase classname="tests.test_function_facts" name="test_function_facts_feed_public_zero_and_domain_apis" time="0.017"><failure message="assert None is False&#10; +  where None = zerotest(erf(x), assumptions=x &gt; 0, use_cache=False)&#10; +    where erf(x) = erf(x)&#10; +      where erf = sp.erf">def test_function_facts_feed_public_zero_and_domain_apis():
+        assert zerotest(sp.cosh(x), assumptions=sp.Q.real(x), use_cache=False) is False
+        assert zerotest(sp.erfc(x), assumptions=sp.Q.real(x), use_cache=False) is False
+&gt;       assert zerotest(sp.erf(x), assumptions=x &gt; 0, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest(erf(x), assumptions=x &gt; 0, use_cache=False)
+E        +    where erf(x) = erf(x)
+E        +      where erf = sp.erf
+
+work/min-baseline/tests/test_function_facts.py:243: AssertionError</failure></testcase><testcase classname="tests.test_function_facts" name="test_every_documented_property_is_covered_by_the_regression_table" time="0.001" /><testcase classname="tests.test_function_facts" name="test_every_documented_domain_fact_is_covered_by_the_regression_table" time="0.000" /><testcase classname="tests.test_function_facts" name="test_committed_function_inventory_matches_runtime_registry" time="0.000" /><testcase classname="tests.test_fuzz_invariants" name="test_bounded_generated_expressions_never_escape_and_cache_agrees" time="3.501" /><testcase classname="tests.test_fuzz_invariants" name="test_srepr_round_trip_preserves_classification_for_generated_exact_trees" time="2.089" /><testcase classname="tests.test_metamorphic" name="test_exact_answer_survives_neutral_structure[expr0-True]" time="0.006" /><testcase classname="tests.test_metamorphic" name="test_exact_answer_survives_neutral_structure[expr1-False]" time="0.031"><failure message="assert None is False&#10; +  where None = zerotest(x**2 + 1, use_cache=False)">expr = x**2 + 1, expected = False
+
+    @pytest.mark.parametrize(
+        "expr,expected",
+        [
+            ((x + 1) * (x - 1) - x**2 + 1, True),
+            (x**2 + 1, False),
+            (sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5), False),
+        ],
+    )
+    def test_exact_answer_survives_neutral_structure(expr, expected):
+        forms = [
+            expr,
+            sp.Add(expr, sp.Integer(0), evaluate=False),
+            sp.Mul(expr, sp.Integer(1), evaluate=False),
+            sp.Mul(sp.Rational(7, 5), expr, evaluate=False),
+        ]
+        for form in forms:
+&gt;           assert zerotest(form, use_cache=False) is expected
+E           assert None is False
+E            +  where None = zerotest(x**2 + 1, use_cache=False)
+
+work/min-baseline/tests/test_metamorphic.py:28: AssertionError</failure></testcase><testcase classname="tests.test_metamorphic" name="test_exact_answer_survives_neutral_structure[expr2-False]" time="0.006" /><testcase classname="tests.test_metamorphic" name="test_symbol_renaming_preserves_exact_identity" time="0.008" /><testcase classname="tests.test_metamorphic" name="test_add_and_mul_argument_order_do_not_change_answer" time="0.002" /><testcase classname="tests.test_metamorphic" name="test_branch_sensitive_rewrite_is_not_a_metamorphic_identity" time="0.116" /><testcase classname="tests.test_oracle" name="test_literal_zero_and_nonzero" time="0.001" /><testcase classname="tests.test_oracle" name="test_closed_exact_identities" time="0.084" /><testcase classname="tests.test_oracle" name="test_croot_relation" time="0.044"><failure message="assert None is True&#10; +  where None = zerotest(((CRootOf(t**3 - 2, 0) ** 3) - 2), use_cache=False)">def test_croot_relation():
+        t = sp.symbols("t")
+        root = sp.CRootOf(t**3 - 2, 0)
+&gt;       assert zerotest(root**3 - 2, use_cache=False) is True
+E       assert None is True
+E        +  where None = zerotest(((CRootOf(t**3 - 2, 0) ** 3) - 2), use_cache=False)
+
+work/min-baseline/tests/test_oracle.py:40: AssertionError</failure></testcase><testcase classname="tests.test_oracle" name="test_profile_reports_fast_oracle_work" time="0.001" /><testcase classname="tests.test_oracle" name="test_cache_key_preserves_expression_and_target" time="0.000" /><testcase classname="tests.test_oracle" name="test_use_cache_false_does_not_populate_final_cache" time="0.055" /><testcase classname="tests.test_oracle" name="test_repeated_cached_calls_remain_inexpensive" time="0.025" /><testcase classname="tests.test_oracle" name="test_nested_time_budget_preserves_outer_deadline" time="0.310" /><testcase classname="tests.test_oracle" name="test_assumptions_refine_safe_identities" time="0.003" /><testcase classname="tests.test_oracle" name="test_rng_and_seed_are_mutually_exclusive" time="0.001" /><testcase classname="tests.test_oracle" name="test_seed_is_reproducible_for_public_verdict" time="0.080" /><testcase classname="tests.test_oracle" name="test_result_type_proof_semantics" time="0.000" /><testcase classname="tests.test_oracle" name="test_rigorous_ball_path_handles_abs_and_projections" time="0.000"><skipped type="pytest.skip" message="python-flint is required">/Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/work/min-baseline/tests/test_oracle.py:116: python-flint is required</skipped></testcase><testcase classname="tests.test_oracle" name="test_finite_field_identity_reports_error_bound" time="0.000"><skipped type="pytest.skip" message="python-flint is required">/Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/work/min-baseline/tests/test_oracle.py:127: python-flint is required</skipped></testcase><testcase classname="tests.test_oracle" name="test_fast_oracle_source_avoids_generic_simplification" time="0.001" /><testcase classname="tests.test_oracle" name="test_public_namespace_is_intentionally_small" time="0.000" /><testcase classname="tests.test_oracle" name="test_profile_exposes_classification_evidence" time="0.001" /><testcase classname="tests.test_oracle" name="test_profile_exposes_decision_reason" time="0.000" /><testcase classname="tests.test_oracle" name="test_profile_exposes_unknown_strength" time="0.050" /><testcase classname="tests.test_oracle" name="test_time_budget_propagates_callable_errors" time="0.001" /><testcase classname="tests.test_oracle" name="test_time_budget_is_safe_in_worker_threads" time="0.001" /><testcase classname="tests.test_performance_contract" name="test_inapplicable_stage_checks_are_bounded_on_large_plain_expression" time="0.005" /><testcase classname="tests.test_performance_contract" name="test_square_root_fast_path_respects_term_budget_without_field_construction" time="0.001" /><testcase classname="tests.test_release_gate" name="test_finite_float_literals_use_stored_value" time="0.001" /><testcase classname="tests.test_release_gate" name="test_nonfinite_values_never_prove_nonzero" time="0.001" /><testcase classname="tests.test_release_gate" name="test_branch_sensitive_log_rewrite_is_not_forced" time="0.093" /><testcase classname="tests.test_release_gate" name="test_principal_square_root_identity_is_not_overgeneralized" time="0.094" /><testcase classname="tests.test_release_gate" name="test_dependent_radicals_do_not_create_false_nonzero_proof" time="0.001" /><testcase classname="tests.test_release_gate" name="test_near_zero_exact_algebraic_value_is_not_called_zero" time="0.016" /><testcase classname="tests.test_release_gate" name="test_known_pole_does_not_become_nonzero_proof" time="0.000" /><testcase classname="tests.test_release_gate" name="test_inconsistent_assumptions_are_inconclusive" time="0.000" /><testcase classname="tests.test_release_gate" name="test_mixed_transcendental_combination_is_never_called_zero" time="0.003" /><testcase classname="tests.test_release_gate" name="test_symbolic_function_value_is_inconclusive" time="0.005" /><testcase classname="tests.test_release_gate" name="test_float_zero_literals_across_precisions" time="0.001" /><testcase classname="tests.test_release_gate" name="test_compound_inexact_cancellation_is_not_an_identity_proof" time="0.002" /><testcase classname="tests.test_release_gate" name="test_bounded_identity_extensions" time="0.023" /><testcase classname="tests.test_release_gate" name="test_assumption_nonzero_and_definedness" time="0.019"><failure message="assert None is False&#10; +  where None = zerotest((x + 1), assumptions=x &gt; 0, use_cache=False)">def test_assumption_nonzero_and_definedness():
+        x = sp.symbols("x", real=True)
+        q = sp.symbols("q")
+&gt;       assert zerotest(x + 1, assumptions=x &gt; 0, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest((x + 1), assumptions=x &gt; 0, use_cache=False)
+
+work/min-baseline/tests/test_release_gate.py:95: AssertionError</failure></testcase><testcase classname="tests.test_release_gate" name="test_probable_confidence_is_default" time="0.014"><failure message="assert None is False&#10; +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)">def test_probable_confidence_is_default():
+        x = sp.symbols("x")
+        expr = sp.sin(x) + 2
+&gt;       assert zerotest(expr, seed=1, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)
+
+work/min-baseline/tests/test_release_gate.py:104: AssertionError</failure></testcase><testcase classname="tests.test_routing" name="test_quick_nonzero_short_circuits_exact_exponential" time="0.001" /><testcase classname="tests.test_routing" name="test_expression_features_are_cached_and_route_structure" time="0.002" /><testcase classname="tests.test_routing" name="test_shared_normal_forms_reuse_cached_results" time="0.001" /><testcase classname="tests.test_routing" name="test_algebraic_gap_has_cheap_then_refined_layers" time="0.003"><failure message="assert (None is not None)">def test_algebraic_gap_has_cheap_then_refined_layers():
+        x = sp.Symbol("x")
+        root = sp.CRootOf(100 * x**3 + 1, 0)
+        cheap = algebraic_gap_bound(root, refine=False)
+        strong = algebraic_gap_bound(root, refine=True)
+&gt;       assert cheap is not None and strong is not None
+E       assert (None is not None)
+
+work/min-baseline/tests/test_routing.py:74: AssertionError</failure></testcase><testcase classname="tests.test_routing" name="test_separation_bound_selects_higher_start_precision" time="0.000" /><testcase classname="tests.test_routing" name="test_tower_tracks_independent_subtree_supports" time="0.006" /><testcase classname="tests.test_routing" name="test_symbolic_assumption_nonzero_uses_structural_engine" time="0.000" /><testcase classname="tests.test_routing" name="test_bounded_exponential_independence" time="0.005" /><testcase classname="tests.test_routing" name="test_exponential_independence_rejects_equal_exponents" time="0.006" /><testcase classname="tests.test_routing" name="test_denominator_and_nonpole_facts" time="0.001" /><testcase classname="tests.test_routing" name="test_call_local_memo_reuses_facts" time="0.001" /><testcase classname="tests.test_routing" name="test_structural_precision_prediction_tracks_cancellation_risk" time="0.003" /><testcase classname="tests.test_routing" name="test_exact_rewrite_registry" time="0.001" /><testcase classname="tests.test_routing" name="test_sparse_tower_reduction_nested_radicals" time="0.006" /><testcase classname="tests.test_routing" name="test_finite_float_literals_use_their_stored_value" time="0.001" /><testcase classname="tests.test_routing" name="test_profile_is_opt_in_and_reports_stages" time="0.002" /><testcase classname="tests.test_routing" name="test_negative_applicability_cache_reuses_structure" time="0.005" /><testcase classname="tests.test_routing" name="test_tower_nested_radical_zero" time="0.001" /><testcase classname="tests.test_routing" name="test_tower_product_relation_zero" time="0.003" /><testcase classname="tests.test_routing" name="test_dyadic_gap_sharpens_simple_cubic" time="0.001"><failure message="assert None is not None">def test_dyadic_gap_sharpens_simple_cubic():
+        x = sp.Symbol("x")
+        root = sp.CRootOf(100 * x**3 + 1, 0)
+        gap = algebraic_gap_bound(root)
+&gt;       assert gap is not None
+E       assert None is not None
+
+work/min-baseline/tests/test_routing.py:202: AssertionError</failure></testcase><testcase classname="tests.test_routing" name="test_expanded_special_values" time="0.003" /><testcase classname="tests.test_routing" name="test_rational_log_radicals_reduce_to_prime_vector" time="0.005" /><testcase classname="tests.test_routing" name="test_algebraic_unit_log_relation" time="0.017" /><testcase classname="tests.test_routing" name="test_exponential_independence_uses_algebraic_separation_for_larger_exponents" time="0.201" /><testcase classname="tests.test_routing" name="test_new_structural_negative_caches" time="0.001" /><testcase classname="tests.test_transcendental" name="test_unevaluated_periodic_zero_is_proven_exactly" time="0.001" /><testcase classname="tests.test_transcendental" name="test_periodic_zero_uses_integer_assumption" time="0.004" /><testcase classname="tests.test_transcendental" name="test_positive_log_power_normalizes_without_forcing_branches" time="0.006" /><testcase classname="tests.test_transcendental" name="test_log_power_is_not_split_without_positive_base" time="0.017" /><testcase classname="tests.test_transcendental" name="test_exact_algebraic_sign_and_comparison" time="0.031" /><testcase classname="tests.test_transcendental" name="test_canonicalize_nested_algebraic_constant" time="0.006" /><testcase classname="tests.test_transcendental" name="test_rational_pi_trig_constant_reduction_is_exact" time="0.007" /><testcase classname="tests.test_transcendental" name="test_rational_pi_trig_constant_respects_degree_budget" time="0.058" /><testcase classname="tests.test_transcendental" name="test_cyclotomic_reduction_proves_seventh_root_cosine_identity" time="0.012" /><testcase classname="tests.test_transcendental" name="test_root_of_unity_arithmetic_reduces_exactly" time="0.020" /><testcase classname="tests.test_transcendental" name="test_log_dependence_detects_exact_positive_algebraic_relation" time="0.007" /><testcase classname="tests.test_transcendental" name="test_log_dependence_can_prove_nonzero_relation" time="0.001" /><testcase classname="tests.test_transcendental" name="test_closed_exp_log_normalization_respects_real_principal_branch" time="0.001" /><testcase classname="tests.test_transcendental" name="test_closed_exp_log_normalization_handles_positive_algebraic_base" time="0.001" /><testcase classname="tests.test_transcendental" name="test_main_cascade_uses_cyclotomic_identity_stage" time="0.024" /><testcase classname="tests.test_transcendental" name="test_main_cascade_uses_log_dependence_stage" time="0.002" /><testcase classname="tests.test_transcendental" name="test_exp_of_positive_log_sum_normalizes_to_algebraic_product" time="0.018" /><testcase classname="tests.test_transcendental" name="test_log_exp_uses_exact_principal_strip_for_complex_constant" time="0.008" /><testcase classname="tests.test_transcendental" name="test_log_exp_does_not_cross_negative_principal_boundary" time="0.001" /><testcase classname="tests.test_transcendental" name="test_zerotest_is_proof_oriented_tri_state" time="0.007" /><testcase classname="tests.test_transcendental" name="test_number_kind_uses_cheap_transcendence_theorems" time="0.002" /><testcase classname="tests.test_transcendental" name="test_number_kind_does_not_combine_two_transcendentals_unsafely" time="0.003" /><testcase classname="tests.test_transcendental" name="test_elementof_strips_stable_domain_parts" time="0.300" /><testcase classname="tests.test_transcendental" name="test_elementof_uses_transcendence_for_algebraic_membership" time="0.001" /><testcase classname="tests.test_transcendental" name="test_fast_oracle_source_has_no_generic_simplify_call" time="0.000" /><testcase classname="tests.test_transcendental" name="test_exact_budget_rejects_large_expression_before_exact_methods" time="0.033" /><testcase classname="tests.test_transcendental" name="test_elementof_does_not_strip_nonunit_integer_factor" time="0.112" /><testcase classname="tests.test_transcendental" name="test_zerotest_source_avoids_generic_simplify" time="0.001" /><testcase classname="tests.test_transcendental" name="test_elementof_reduces_rational_power_for_algebraic_membership" time="0.085" /><testcase classname="tests.test_transcendental" name="test_gelfond_schneider_power_kind_and_difference" time="0.005" /><testcase classname="tests.test_transcendental" name="test_rational_log_relation_fast_path_remains_exact" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr0-True]" time="0.097" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr1-True]" time="0.048" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr2-False]" time="0.026"><failure message="assert None is False&#10; +  where None = zerotest(-1 + exp(exp(-exp(6))), use_cache=False)">expr = -1 + exp(exp(-exp(6))), expected = False
+
+    @pytest.mark.parametrize(
+        ("expr", "expected"),
+        [
+            (
+                sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (
+                2 * sp.log(sp.sqrt(2) + sp.sqrt(3)) - sp.log(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (-1 + sp.exp(sp.E ** (-(sp.E**6))), False),
+            (sp.exp(sp.I * sp.pi / 4) - (-1) ** sp.Rational(1, 4), True),
+            ((sp.E + sp.pi) ** 2 - sp.E**2 - sp.pi**2 - 2 * sp.E * sp.pi, True),
+            (sp.exp(sp.pi) - sp.pi**sp.E, False),
+            (2 * sp.log(5) - sp.log(25), True),
+            (sp.sqrt((-2) ** sp.I) - (-2) ** (sp.I / 2), True),
+            (sp.exp(sp.I * sp.pi + x) + sp.exp(x), True),
+            (
+                sp.Integer(245416245445421954452459541)
+                - 3
+                * sp.sqrt(sp.Integer(6692125947614176911440676402530490513423056191461390)),
+                False,
+            ),
+            (-sp.exp(sp.Rational(62795307, 45297239)), False),
+            ((sp.pi + 8 * sp.atan(1 - sp.sqrt(2))) / (8 * sp.pi), True),
+            (
+                sp.Integer(34967586868203284666575423396341074438)
+                - sp.Integer(21208913531730155539833556128356679037) * sp.sqrt(sp.E),
+                False,
+            ),
+            (sp.cos(4 * sp.pi / 59), False),
+            (sp.GoldenRatio - 1 / sp.GoldenRatio - 1, True),
+            (
+                sp.GoldenRatio - 1 / sp.GoldenRatio - 1 + sp.Rational(1, 10**100),
+                False,
+            ),
+            (sp.tan(sp.tan(sp.tan(sp.E))), False),
+            (-1 + (-1) ** sp.Rational(1, 3) - (-1) ** sp.Rational(2, 3), True),
+        ],
+    )
+    def test_closed_expression_regressions(expr, expected):
+&gt;       assert zerotest(expr, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(-1 + exp(exp(-exp(6))), use_cache=False)
+
+work/min-baseline/tests/test_zero_regressions.py:58: AssertionError</failure></testcase><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr3-True]" time="0.062" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr4-True]" time="0.003" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr5-False]" time="0.006" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr6-True]" time="0.003" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr7-True]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr8-True]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr9-False]" time="1.024" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr10-False]" time="0.003" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr11-True]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr12-False]" time="0.006" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr13-False]" time="0.003" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr14-True]" time="0.037" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr15-False]" time="0.062" /><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr16-False]" time="0.213"><failure message="assert None is False&#10; +  where None = zerotest(tan(tan(tan(E))), use_cache=False)">expr = tan(tan(tan(E))), expected = False
+
+    @pytest.mark.parametrize(
+        ("expr", "expected"),
+        [
+            (
+                sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (
+                2 * sp.log(sp.sqrt(2) + sp.sqrt(3)) - sp.log(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (-1 + sp.exp(sp.E ** (-(sp.E**6))), False),
+            (sp.exp(sp.I * sp.pi / 4) - (-1) ** sp.Rational(1, 4), True),
+            ((sp.E + sp.pi) ** 2 - sp.E**2 - sp.pi**2 - 2 * sp.E * sp.pi, True),
+            (sp.exp(sp.pi) - sp.pi**sp.E, False),
+            (2 * sp.log(5) - sp.log(25), True),
+            (sp.sqrt((-2) ** sp.I) - (-2) ** (sp.I / 2), True),
+            (sp.exp(sp.I * sp.pi + x) + sp.exp(x), True),
+            (
+                sp.Integer(245416245445421954452459541)
+                - 3
+                * sp.sqrt(sp.Integer(6692125947614176911440676402530490513423056191461390)),
+                False,
+            ),
+            (-sp.exp(sp.Rational(62795307, 45297239)), False),
+            ((sp.pi + 8 * sp.atan(1 - sp.sqrt(2))) / (8 * sp.pi), True),
+            (
+                sp.Integer(34967586868203284666575423396341074438)
+                - sp.Integer(21208913531730155539833556128356679037) * sp.sqrt(sp.E),
+                False,
+            ),
+            (sp.cos(4 * sp.pi / 59), False),
+            (sp.GoldenRatio - 1 / sp.GoldenRatio - 1, True),
+            (
+                sp.GoldenRatio - 1 / sp.GoldenRatio - 1 + sp.Rational(1, 10**100),
+                False,
+            ),
+            (sp.tan(sp.tan(sp.tan(sp.E))), False),
+            (-1 + (-1) ** sp.Rational(1, 3) - (-1) ** sp.Rational(2, 3), True),
+        ],
+    )
+    def test_closed_expression_regressions(expr, expected):
+&gt;       assert zerotest(expr, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(tan(tan(tan(E))), use_cache=False)
+
+work/min-baseline/tests/test_zero_regressions.py:58: AssertionError</failure></testcase><testcase classname="tests.test_zero_regressions" name="test_closed_expression_regressions[expr17-True]" time="0.062" /><testcase classname="tests.test_zero_regressions" name="test_hidden_zero_perturbed_by_tiny_exact_nonzero_term" time="0.137" /><testcase classname="tests.test_zero_regressions" name="test_finite_float_literals_are_classified_by_stored_value" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[1]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[4]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[11]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[20]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[53]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_float_zero_is_zero_at_any_precision[100]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_principal_square_root_is_not_identity_without_assumptions" time="0.162" /><testcase classname="tests.test_zero_regressions" name="test_principal_square_root_with_positive_symbol" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_known_identity_cases_not_falsely_called_nonzero[expr0]" time="0.047" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr0]" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr1]" time="0.032" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr2]" time="0.033" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr3]" time="0.006" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr4]" time="0.005" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr5]" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr6]" time="0.005" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr7]" time="0.002" /><testcase classname="tests.test_zero_regressions" name="test_bounded_identity_normalizers_prove_common_identities[expr8]" time="0.000" /><testcase classname="tests.test_zero_regressions" name="test_rational_cancellation_with_transcendental_subexpression" time="0.014" /><testcase classname="tests.test_zero_regressions" name="test_profile_reports_bounded_identity_decision" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_large_power_is_not_expanded_by_rational_identity_layer" time="0.001" /><testcase classname="tests.test_zero_regressions" name="test_exact_exp_log_extensions" time="0.006" /></testsuite></testsuites>
