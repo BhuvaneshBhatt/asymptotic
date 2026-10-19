@@ -29,7 +29,9 @@ def test_context_uses_exprtools_default_oracle_and_preserves_unknown():
     from asymptotic.context import AsymptoticContext
 
     x = sp.Symbol("x")
-    context = AsymptoticContext(x, simplify_results=False, use_sympy_zero_fallback=False)
+    context = AsymptoticContext(
+        x, simplify_results=False, use_sympy_zero_fallback=False
+    )
     with patch.object(exprtools, "zerotest", return_value=None) as oracle:
         assert context.is_zero(sp.sin(x)) is None
     oracle.assert_called_once_with(
