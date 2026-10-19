@@ -1,0 +1,26 @@
+{
+  "baseline": {
+    "exit_code": 1,
+    "failures": [
+      "tests.test_contract_matrix::test_public_oracle_contract[expr2-True-False-Verdict.NONZERO_LIKELY-probable-numeric-probe]",
+      "tests.test_contract_matrix::test_probable_policy_changes_only_likely_nonzero_boolean",
+      "tests.test_differential_exact::test_rational_function_identity_matches_exact_numerator_test",
+      "tests.test_metamorphic::test_exact_answer_survives_neutral_structure[expr1-False]",
+      "tests.test_release_gate::test_probable_confidence_is_default",
+      "tests.test_zero_regressions::test_closed_expression_regressions[expr2-False]",
+      "tests.test_zero_regressions::test_closed_expression_regressions[expr16-False]"
+    ]
+  },
+  "final": {
+    "exit_code": 1,
+    "failures": [
+      "tests.test_contract_matrix::test_public_oracle_contract[expr2-True-False-Verdict.NONZERO_LIKELY-probable-numeric-probe]",
+      "tests.test_contract_matrix::test_probable_policy_changes_only_likely_nonzero_boolean",
+      "tests.test_differential_exact::test_rational_function_identity_matches_exact_numerator_test",
+      "tests.test_metamorphic::test_exact_answer_survives_neutral_structure[expr1-False]",
+      "tests.test_release_gate::test_probable_confidence_is_default",
+      "tests.test_zero_regressions::test_closed_expression_regressions[expr2-False]",
+      "tests.test_zero_regressions::test_closed_expression_regressions[expr16-False]"
+    ]
+  }
+}

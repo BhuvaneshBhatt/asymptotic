@@ -1,0 +1,238 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/work/exprtest
+configfile: pyproject.toml
+testpaths: tests, exprtools/tests
+plugins: hypothesis-6.170.2
+collected 404 items / 17 deselected / 387 selected
+
+tests/test_algebraic.py ..........................                       [  6%]
+tests/test_assumption_equivalence.py .......                             [  8%]
+tests/test_boundaries_and_caches.py .....                                [  9%]
+tests/test_contract_matrix.py ..F.F..                                    [ 11%]
+tests/test_differential_exact.py .....F                                  [ 13%]
+tests/test_domains.py .......                                            [ 14%]
+tests/test_exact_methods.py .......                                      [ 16%]
+tests/test_examples.py .                                                 [ 17%]
+tests/test_function_facts.py ........................................... [ 28%]
+...................................................................      [ 45%]
+tests/test_fuzz_invariants.py ..                                         [ 45%]
+tests/test_metamorphic.py .F....                                         [ 47%]
+tests/test_migration_compatibility.py ...                                [ 48%]
+tests/test_oracle.py ............ss.......                               [ 53%]
+tests/test_performance_contract.py ..                                    [ 54%]
+tests/test_release_gate.py ..............F                               [ 58%]
+tests/test_routing.py .........................                          [ 64%]
+tests/test_transcendental.py ...............................             [ 72%]
+tests/test_zero_regressions.py ..F.............F........................ [ 83%]
+.                                                                        [ 83%]
+exprtools/tests/test_recurrence.py ....                                  [ 84%]
+exprtools/tests/test_refinement.py ...................................   [ 93%]
+exprtools/tests/test_simplification.py ..........                        [ 96%]
+exprtools/tests/test_structural_gap.py ...............                   [100%]
+
+=================================== FAILURES ===================================
+_ test_public_oracle_contract[expr2-True-False-Verdict.NONZERO_LIKELY-probable-numeric-probe] _
+
+expr = sin(x) + 2, assumptions = True, expected = False
+verdict = <Verdict.NONZERO_LIKELY: 'nonzero (likely)'>, certainty = 'probable'
+method = 'numeric-probe'
+
+    @pytest.mark.parametrize(
+        "expr,assumptions,expected,verdict,certainty,method",
+        [
+            (sp.Integer(0), True, True, Verdict.ZERO_PROVEN, "certified", "literal"),
+            (sp.Integer(7), True, False, Verdict.NONZERO_PROVEN, "certified", "literal"),
+            (
+                sp.sin(x) + 2,
+                True,
+                False,
+                Verdict.NONZERO_LIKELY,
+                "probable",
+                "numeric-probe",
+            ),
+            (1 / x, sp.Eq(x, 0), None, Verdict.UNKNOWN, "unknown", "definedness"),
+        ],
+    )
+    def test_public_oracle_contract(
+        expr, assumptions, expected, verdict, certainty, method
+    ):
+        profile = profile_zerotest(expr, assumptions=assumptions, seed=1)
+>       assert zerotest(expr, assumptions=assumptions, seed=1, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, assumptions=True, seed=1, use_cache=False)
+
+tests/test_contract_matrix.py:32: AssertionError
+___________ test_probable_policy_changes_only_likely_nonzero_boolean ___________
+
+    def test_probable_policy_changes_only_likely_nonzero_boolean():
+        expr = sp.sin(x) + 2
+>       assert zerotest(expr, seed=1, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)
+
+tests/test_contract_matrix.py:41: AssertionError
+_________ test_rational_function_identity_matches_exact_numerator_test _________
+
+    def test_rational_function_identity_matches_exact_numerator_test():
+        x = sp.symbols("x")
+        exprs = [
+            1 / x + 1 / (x + 1) - (2 * x + 1) / (x * (x + 1)),
+            (x**2 - 1) / (x - 1) - (x + 1),
+            (x + 2) / (x + 3) - (x + 1) / (x + 3),
+        ]
+        for expr in exprs:
+            num, _ = sp.cancel(expr).as_numer_denom()
+            expected = bool(num == 0)
+>           assert zerotest(expr, seed=1, use_cache=False) is expected
+E           assert None is False
+E            +  where None = zerotest(-(x + 1)/(x + 3) + (x + 2)/(x + 3), seed=1, use_cache=False)
+
+tests/test_differential_exact.py:54: AssertionError
+__________ test_exact_answer_survives_neutral_structure[expr1-False] ___________
+
+expr = x**2 + 1, expected = False
+
+    @pytest.mark.parametrize(
+        "expr,expected",
+        [
+            ((x + 1) * (x - 1) - x**2 + 1, True),
+            (x**2 + 1, False),
+            (sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5), False),
+        ],
+    )
+    def test_exact_answer_survives_neutral_structure(expr, expected):
+        forms = [
+            expr,
+            sp.Add(expr, sp.Integer(0), evaluate=False),
+            sp.Mul(expr, sp.Integer(1), evaluate=False),
+            sp.Mul(sp.Rational(7, 5), expr, evaluate=False),
+        ]
+        for form in forms:
+>           assert zerotest(form, use_cache=False) is expected
+E           assert None is False
+E            +  where None = zerotest(x**2 + 1, use_cache=False)
+
+tests/test_metamorphic.py:28: AssertionError
+_____________________ test_probable_confidence_is_default ______________________
+
+    def test_probable_confidence_is_default():
+        x = sp.symbols("x")
+        expr = sp.sin(x) + 2
+>       assert zerotest(expr, seed=1, use_cache=False) is False
+E       assert None is False
+E        +  where None = zerotest(sin(x) + 2, seed=1, use_cache=False)
+
+tests/test_release_gate.py:104: AssertionError
+_______________ test_closed_expression_regressions[expr2-False] ________________
+
+expr = -1 + exp(exp(-exp(6))), expected = False
+
+    @pytest.mark.parametrize(
+        ("expr", "expected"),
+        [
+            (
+                sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (
+                2 * sp.log(sp.sqrt(2) + sp.sqrt(3)) - sp.log(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (-1 + sp.exp(sp.E ** (-(sp.E**6))), False),
+            (sp.exp(sp.I * sp.pi / 4) - (-1) ** sp.Rational(1, 4), True),
+            ((sp.E + sp.pi) ** 2 - sp.E**2 - sp.pi**2 - 2 * sp.E * sp.pi, True),
+            (sp.exp(sp.pi) - sp.pi**sp.E, False),
+            (2 * sp.log(5) - sp.log(25), True),
+            (sp.sqrt((-2) ** sp.I) - (-2) ** (sp.I / 2), True),
+            (sp.exp(sp.I * sp.pi + x) + sp.exp(x), True),
+            (
+                sp.Integer(245416245445421954452459541)
+                - 3
+                * sp.sqrt(sp.Integer(6692125947614176911440676402530490513423056191461390)),
+                False,
+            ),
+            (-sp.exp(sp.Rational(62795307, 45297239)), False),
+            ((sp.pi + 8 * sp.atan(1 - sp.sqrt(2))) / (8 * sp.pi), True),
+            (
+                sp.Integer(34967586868203284666575423396341074438)
+                - sp.Integer(21208913531730155539833556128356679037) * sp.sqrt(sp.E),
+                False,
+            ),
+            (sp.cos(4 * sp.pi / 59), False),
+            (sp.GoldenRatio - 1 / sp.GoldenRatio - 1, True),
+            (
+                sp.GoldenRatio - 1 / sp.GoldenRatio - 1 + sp.Rational(1, 10**100),
+                False,
+            ),
+            (sp.tan(sp.tan(sp.tan(sp.E))), False),
+            (-1 + (-1) ** sp.Rational(1, 3) - (-1) ** sp.Rational(2, 3), True),
+        ],
+    )
+    def test_closed_expression_regressions(expr, expected):
+>       assert zerotest(expr, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(-1 + exp(exp(-exp(6))), use_cache=False)
+
+tests/test_zero_regressions.py:58: AssertionError
+_______________ test_closed_expression_regressions[expr16-False] _______________
+
+expr = tan(tan(tan(E))), expected = False
+
+    @pytest.mark.parametrize(
+        ("expr", "expected"),
+        [
+            (
+                sp.sqrt(2) + sp.sqrt(3) - sp.sqrt(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (
+                2 * sp.log(sp.sqrt(2) + sp.sqrt(3)) - sp.log(5 + 2 * sp.sqrt(6)),
+                True,
+            ),
+            (-1 + sp.exp(sp.E ** (-(sp.E**6))), False),
+            (sp.exp(sp.I * sp.pi / 4) - (-1) ** sp.Rational(1, 4), True),
+            ((sp.E + sp.pi) ** 2 - sp.E**2 - sp.pi**2 - 2 * sp.E * sp.pi, True),
+            (sp.exp(sp.pi) - sp.pi**sp.E, False),
+            (2 * sp.log(5) - sp.log(25), True),
+            (sp.sqrt((-2) ** sp.I) - (-2) ** (sp.I / 2), True),
+            (sp.exp(sp.I * sp.pi + x) + sp.exp(x), True),
+            (
+                sp.Integer(245416245445421954452459541)
+                - 3
+                * sp.sqrt(sp.Integer(6692125947614176911440676402530490513423056191461390)),
+                False,
+            ),
+            (-sp.exp(sp.Rational(62795307, 45297239)), False),
+            ((sp.pi + 8 * sp.atan(1 - sp.sqrt(2))) / (8 * sp.pi), True),
+            (
+                sp.Integer(34967586868203284666575423396341074438)
+                - sp.Integer(21208913531730155539833556128356679037) * sp.sqrt(sp.E),
+                False,
+            ),
+            (sp.cos(4 * sp.pi / 59), False),
+            (sp.GoldenRatio - 1 / sp.GoldenRatio - 1, True),
+            (
+                sp.GoldenRatio - 1 / sp.GoldenRatio - 1 + sp.Rational(1, 10**100),
+                False,
+            ),
+            (sp.tan(sp.tan(sp.tan(sp.E))), False),
+            (-1 + (-1) ** sp.Rational(1, 3) - (-1) ** sp.Rational(2, 3), True),
+        ],
+    )
+    def test_closed_expression_regressions(expr, expected):
+>       assert zerotest(expr, use_cache=False) is expected
+E       assert None is False
+E        +  where None = zerotest(tan(tan(tan(E))), use_cache=False)
+
+tests/test_zero_regressions.py:58: AssertionError
+- generated xml file: /Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/outputs/stages5-6/noflint-final.xml -
+=========================== short test summary info ============================
+FAILED tests/test_contract_matrix.py::test_public_oracle_contract[expr2-True-False-Verdict.NONZERO_LIKELY-probable-numeric-probe]
+FAILED tests/test_contract_matrix.py::test_probable_policy_changes_only_likely_nonzero_boolean
+FAILED tests/test_differential_exact.py::test_rational_function_identity_matches_exact_numerator_test
+FAILED tests/test_metamorphic.py::test_exact_answer_survives_neutral_structure[expr1-False]
+FAILED tests/test_release_gate.py::test_probable_confidence_is_default - asse...
+FAILED tests/test_zero_regressions.py::test_closed_expression_regressions[expr2-False]
+FAILED tests/test_zero_regressions.py::test_closed_expression_regressions[expr16-False]
+=========== 7 failed, 378 passed, 2 skipped, 17 deselected in 12.02s ===========

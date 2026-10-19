@@ -50,3 +50,5 @@ Publish exprtools before new downstream releases, then semialg/funcprops before
 their consumers. CI uses an immutable source pin pending the first exprtools
 release. These changes are delivered for review; no merge or package publication
 was performed. Downstream package versions are left for their release process.
+
+See `CI-AUDIT.md` for the no-flint baseline comparison and CI follow-up.
