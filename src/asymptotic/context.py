@@ -175,7 +175,7 @@ class AsymptoticContext:
         """Return whether *expr* is identically zero.
 
         Bounded rational-polynomial identities use exact coefficient arithmetic.
-        ``exprtest.zerotest`` handles the remaining identities. The default
+        ``exprtools.zerotest`` handles the remaining identities. The default
         confidence policy is ``"certified"`` because asymptotic cancellation
         must not discard a term merely because it is probably nonzero.  A
         bounded SymPy ``equals(0)`` fallback remains available for cases
@@ -200,11 +200,11 @@ class AsymptoticContext:
             oracle = self.zero_oracle
             if oracle is None:
                 try:
-                    import exprtest
+                    import exprtools
                 except ImportError:
                     result = None
                 else:
-                    oracle = exprtest.zerotest
+                    oracle = exprtools.zerotest
             if oracle is not None:
                 record_symbolic_event("zero_oracle_calls")
                 # The context cache handles repeated questions within one
