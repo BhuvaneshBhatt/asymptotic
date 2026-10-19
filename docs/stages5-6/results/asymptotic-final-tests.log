@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/work/asymptotic
+configfile: pytest.ini (WARNING: ignoring pytest config in pyproject.toml!)
+plugins: hypothesis-6.170.1, cov-7.1.0
+collected 41 items
+
+work/asymptotic/tests/limits/univariate/test_recurrence_simplification.py . [  2%]
+............                                                             [ 31%]
+work/asymptotic/tests/limits/univariate/test_recurrence_families.py .... [ 41%]
+.............                                                            [ 73%]
+work/asymptotic/tests/test_polynomial_zero_context.py ...                [ 80%]
+work/asymptotic/tests/test_symbolic_instrumentation.py ....              [ 90%]
+work/asymptotic/tests/test_exprtools_adapter.py ..                       [ 95%]
+work/asymptotic/tests/test_mrv_hardy_cache_sharing.py ..                 [100%]
+
+============================== 41 passed in 1.34s ==============================

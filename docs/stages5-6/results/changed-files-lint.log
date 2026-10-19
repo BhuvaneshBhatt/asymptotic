@@ -1,0 +1,15 @@
+probstats: 0
+All checks passed!
+
+semialg: 0
+All checks passed!
+warning: Selection `RUF068` has no effect because preview is not enabled.
+
+funcprops: 0
+All checks passed!
+
+odeanalysis: 0
+All checks passed!
+
+asymptotic: 0
+All checks passed!

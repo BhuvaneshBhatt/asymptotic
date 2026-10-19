@@ -104,7 +104,7 @@ class NestedExpansion:
     Successive forms are generated from the exact terminal residual only when
     requested.  The object therefore has no fixed expansion depth. Arithmetic
     creates another lazy ``NestedExpansion`` from exact operands; cancellation
-    is checked by the shared ``AsymptoticContext``/``exprtest`` zero oracle
+    is checked by the shared ``AsymptoticContext``/``exprtools`` zero oracle
     before another residual form is requested.
     """
 

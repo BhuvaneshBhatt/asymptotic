@@ -97,7 +97,7 @@ def main():
             "mpmath",
             "python-flint",
             "semialg",
-            "exprtest",
+            "exprtools",
             "funcprops",
             "pytest",
             "hypothesis",

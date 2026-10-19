@@ -37,7 +37,7 @@ def main():
     )
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
-    for module in ("sympy", "asymptotic", "semialg", "exprtest"):
+    for module in ("sympy", "asymptotic", "semialg", "exprtools"):
         __import__(module)
 
     original = json.loads((ROOT / args.input).read_text())

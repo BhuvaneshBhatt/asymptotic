@@ -1,0 +1,42 @@
+{
+  "baseline": {
+    "cold": {
+      "n": 5000,
+      "seconds": 0.5630136670006323,
+      "verdicts": {
+        "True": 2332,
+        "False": 2668,
+        "None": 0
+      }
+    },
+    "repeated": {
+      "n": 5000,
+      "seconds": 0.09928333300194936,
+      "verdicts": {
+        "True": 2280,
+        "False": 2720,
+        "None": 0
+      }
+    }
+  },
+  "candidate": {
+    "cold": {
+      "n": 5000,
+      "seconds": 0.4856957909942139,
+      "verdicts": {
+        "True": 2332,
+        "False": 2668,
+        "None": 0
+      }
+    },
+    "repeated": {
+      "n": 5000,
+      "seconds": 0.09785258400370367,
+      "verdicts": {
+        "True": 2280,
+        "False": 2720,
+        "None": 0
+      }
+    }
+  }
+}

@@ -15,7 +15,7 @@ jobs:
           python-version: "3.13"
       - run: python -m pip install -U pip
       - name: Install extracted exprtools before its first release
-        run: python -m pip install "exprtools @ git+https://github.com/BhuvaneshBhatt/exprtest.git@ccc7b78744cc76551da742de80f8b55d8e01b31b#subdirectory=exprtools"
+        run: python -m pip install "exprtools @ git+https://github.com/BhuvaneshBhatt/exprtest.git@b6c38bd2b5fc27d8f88e30026d52868050308e18#subdirectory=exprtools"
       - run: python -m pip install -e ".[test,benchmark]"
       - run: pytest benchmarks/benchmark_*.py --benchmark-only --benchmark-json=pytest-benchmark.json
       - run: PYTHONPATH=src python -m benchmarks.run_benchmarks --cycles 6 --json stateful.json

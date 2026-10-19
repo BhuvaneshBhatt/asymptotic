@@ -49,7 +49,7 @@ class AsymptoticContext:
 
     The implementation keeps zero tests and limit/growth queries
     centralized because they are the expensive operations in Shackell-style
-    algorithms.  The optional ``exprtest`` zero oracle is preferred for nontrivial identity
+    algorithms.  The optional ``exprtools`` zero oracle is preferred for nontrivial identity
     tests, with bounded SymPy fallbacks for limits, signs, and growth.
     """
 
@@ -179,7 +179,7 @@ class AsymptoticContext:
         confidence policy is ``"certified"`` because asymptotic cancellation
         must not discard a term merely because it is probably nonzero.  A
         bounded SymPy ``equals(0)`` fallback remains available for cases
-        outside exprtest's current bounded oracle.
+        outside exprtools's current bounded oracle.
         """
 
         expr = self.normalize(expr)
@@ -208,7 +208,7 @@ class AsymptoticContext:
             if oracle is not None:
                 record_symbolic_event("zero_oracle_calls")
                 # The context cache handles repeated questions within one
-                # asymptotic computation.  Exprtest's bounded proof-only cache
+                # asymptotic computation.  Exprtools' bounded proof-only cache
                 # additionally shares certified classifications across nested
                 # contexts created by localization and scale discovery.
                 try:

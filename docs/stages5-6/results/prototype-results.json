@@ -1,0 +1,77 @@
+{
+  "sqrt_primes": {
+    "expression": "Add(Pow(Integer(1000000007), Rational(1, 2)), Pow(Integer(1000000009), Rational(1, 2)), Pow(Integer(1000000033), Rational(1, 2)), Pow(Integer(1000000087), Rational(1, 2)))",
+    "baseline": {
+      "median": 1.8082995666190982e-05,
+      "total": 0.0004704160019173287,
+      "result": "<ZeroClassification nonzero (proven) via sqrt-sum: squarefree radical coefficient vector is nonzero>"
+    },
+    "candidate": {
+      "median": 2.2250002075452358e-05,
+      "total": 0.00017675000708550215,
+      "result": "{1000000007: 1, 1000000009: 1, 1000000033: 1, 1000000087: 1}"
+    },
+    "bound": "Bound(bits=270, degree=16, u=18, l=0)",
+    "speedup": 0.8127188305362593
+  },
+  "sqrt_relation": {
+    "expression": "Add(Mul(Integer(-1), Integer(4), Pow(Integer(998244353), Rational(1, 2))), Pow(Integer(998244353), Rational(1, 2)))",
+    "baseline": {
+      "median": 1.1916999937966466e-05,
+      "total": 0.00013970801228424534,
+      "result": "<ZeroClassification nonzero (proven) via sqrt-sum: squarefree radical coefficient vector is nonzero>"
+    },
+    "candidate": {
+      "median": 1.3666998711414635e-05,
+      "total": 8.020800305530429e-05,
+      "result": "{998244353: -3}"
+    },
+    "bound": "Bound(bits=18, degree=2, u=18, l=0)",
+    "speedup": 0.8719544202498113
+  },
+  "nested_zero": {
+    "expression": "Add(Mul(Integer(-1), Pow(Add(Mul(Integer(2), Pow(Integer(6), Rational(1, 2))), Integer(5)), Rational(1, 2))), Pow(Integer(2), Rational(1, 2)), Pow(Integer(3), Rational(1, 2)))",
+    "baseline": {
+      "median": 0.0045627500003320165,
+      "total": 0.03709829099534545,
+      "result": "<ZeroClassification zero (proven) via algebraic-canonical: exact algebraic canonicalization reduced expression to zero>"
+    },
+    "candidate": {
+      "median": 4.3082996853627264e-05,
+      "total": 0.003699665998283308,
+      "result": "True"
+    },
+    "bound": "Bound(bits=45, degree=16, u=3, l=0)",
+    "speedup": 105.90604956831983
+  },
+  "denest_zero": {
+    "expression": "Add(Mul(Integer(-1), Pow(Integer(2), Rational(1, 2))), Integer(-1), Pow(Add(Mul(Integer(2), Pow(Integer(2), Rational(1, 2))), Integer(3)), Rational(1, 2)))",
+    "baseline": {
+      "median": 0.003968249999161344,
+      "total": 0.025513499000226147,
+      "result": "<ZeroClassification zero (proven) via algebraic-canonical: exact algebraic canonicalization reduced expression to zero>"
+    },
+    "candidate": {
+      "median": 2.787500125123188e-05,
+      "total": 0.00016179099475266412,
+      "result": "True"
+    },
+    "bound": "Bound(bits=12, degree=4, u=4, l=0)",
+    "speedup": 142.35873797444137
+  },
+  "tiny_nonzero": {
+    "expression": "Add(Integer(-100000000000000000000), Pow(Integer(10000000000000000000000000000000000000001), Rational(1, 2)))",
+    "baseline": {
+      "median": 0.006259082998440135,
+      "total": 0.04119037299824413,
+      "result": "<ZeroClassification nonzero (proven) via algebraic-common-field: common number-field representation is exactly nonzero>"
+    },
+    "candidate": {
+      "median": 1.9874998542945832e-05,
+      "total": 0.00013479299377650023,
+      "result": "False"
+    },
+    "bound": "Bound(bits=68, degree=2, u=68, l=0)",
+    "speedup": 314.92243810310373
+  }
+}

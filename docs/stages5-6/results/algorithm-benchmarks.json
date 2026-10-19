@@ -1,0 +1,229 @@
+{
+  "environment": {
+    "python": "3.12.14",
+    "sympy": "1.14.0",
+    "baseline_ref": "ccc7b78744cc76551da742de80f8b55d8e01b31b"
+  },
+  "cases": {
+    "quadratic_nested_zero": {
+      "expression": "Add(Mul(Integer(-1), Pow(Integer(2), Rational(1, 2))), Integer(-1), Pow(Add(Mul(Integer(2), Pow(Integer(2), Rational(1, 2))), Integer(3)), Rational(1, 2)))",
+      "bound": "StructuralSeparationBound(bits=12, degree=4, numerator_bits=4, denominator_bits=0)",
+      "cold": {
+        "baseline": {
+          "n": 7,
+          "median_seconds": 0.007286499996553175,
+          "p95_seconds": 0.007423416995152365,
+          "total_seconds": 0.050011375002213754,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 7,
+          "median_seconds": 0.00010674999793991446,
+          "p95_seconds": 0.0001200420010718517,
+          "total_seconds": 0.0008278750028694049,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 68.25761252617981
+      },
+      "warm": {
+        "baseline": {
+          "n": 60,
+          "median_seconds": 0.003716250001161825,
+          "p95_seconds": 0.0038589169998886064,
+          "total_seconds": 0.22361454198835418,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 60,
+          "median_seconds": 3.07080008496996e-05,
+          "p95_seconds": 3.324999852338806e-05,
+          "total_seconds": 0.0019339119899086654,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 121.0189494051085
+      },
+      "public": {
+        "baseline": {
+          "n": 20,
+          "median_seconds": 0.010097229500388494,
+          "p95_seconds": 0.012432666000677273,
+          "total_seconds": 0.224770126020303,
+          "verdict": "True"
+        },
+        "candidate": {
+          "n": 20,
+          "median_seconds": 0.0001539170007163193,
+          "p95_seconds": 0.00026662500022212043,
+          "total_seconds": 0.0033253359943046235,
+          "verdict": "True"
+        },
+        "speedup": 65.60178182654724
+      }
+    },
+    "dependent_radicals_zero": {
+      "expression": "Add(Mul(Integer(-1), Pow(Add(Mul(Integer(2), Pow(Integer(6), Rational(1, 2))), Integer(5)), Rational(1, 2))), Pow(Integer(2), Rational(1, 2)), Pow(Integer(3), Rational(1, 2)))",
+      "bound": "StructuralSeparationBound(bits=45, degree=16, numerator_bits=3, denominator_bits=0)",
+      "cold": {
+        "baseline": {
+          "n": 7,
+          "median_seconds": 0.0074507499957690015,
+          "p95_seconds": 0.008532457999535836,
+          "total_seconds": 0.054079956986242905,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 7,
+          "median_seconds": 0.00011091600026702508,
+          "p95_seconds": 0.00013229100295575336,
+          "total_seconds": 0.0008437470023636706,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 67.1747085887669
+      },
+      "warm": {
+        "baseline": {
+          "n": 60,
+          "median_seconds": 0.004644145501515595,
+          "p95_seconds": 0.006500041999970563,
+          "total_seconds": 0.2911467090380029,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 60,
+          "median_seconds": 3.6229499528417364e-05,
+          "p95_seconds": 3.766600275412202e-05,
+          "total_seconds": 0.0022617909926339053,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 128.18685220514467
+      },
+      "public": {
+        "baseline": {
+          "n": 20,
+          "median_seconds": 0.014972770997701446,
+          "p95_seconds": 0.016556208000110928,
+          "total_seconds": 0.3258467100095004,
+          "verdict": "True"
+        },
+        "candidate": {
+          "n": 20,
+          "median_seconds": 0.00016520799908903427,
+          "p95_seconds": 0.00018237499898532405,
+          "total_seconds": 0.0034025009954348207,
+          "verdict": "True"
+        },
+        "speedup": 90.62981865443625
+      }
+    },
+    "rational_nested_zero": {
+      "expression": "Add(Mul(Integer(-1), Pow(Add(Mul(Rational(2, 21), Pow(Integer(210), Rational(1, 2))), Rational(29, 21)), Rational(1, 2))), Mul(Rational(1, 3), Pow(Integer(6), Rational(1, 2))), Mul(Rational(1, 7), Pow(Integer(35), Rational(1, 2))))",
+      "bound": "StructuralSeparationBound(bits=270, degree=16, numerator_bits=17, denominator_bits=15)",
+      "cold": {
+        "baseline": {
+          "n": 7,
+          "median_seconds": 0.011169500001415145,
+          "p95_seconds": 0.011221290995308664,
+          "total_seconds": 0.0785518729899195,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 7,
+          "median_seconds": 0.00015220799832604825,
+          "p95_seconds": 0.00017674999980954453,
+          "total_seconds": 0.001157044003775809,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 73.38313442299334
+      },
+      "warm": {
+        "baseline": {
+          "n": 60,
+          "median_seconds": 0.00788852099867654,
+          "p95_seconds": 0.009160542002064176,
+          "total_seconds": 0.4978609579993645,
+          "verdict": "ZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 60,
+          "median_seconds": 6.035450132912956e-05,
+          "p95_seconds": 7.170800381572917e-05,
+          "total_seconds": 0.0037769590053358115,
+          "verdict": "ZERO_PROVEN"
+        },
+        "speedup": 130.70310954369887
+      },
+      "public": {
+        "baseline": {
+          "n": 20,
+          "median_seconds": 0.0234957505017519,
+          "p95_seconds": 0.027270209000562318,
+          "total_seconds": 0.5141579150076723,
+          "verdict": "True"
+        },
+        "candidate": {
+          "n": 20,
+          "median_seconds": 0.00023108349705580622,
+          "p95_seconds": 0.00040350000199396163,
+          "total_seconds": 0.005047792008554097,
+          "verdict": "True"
+        },
+        "speedup": 101.6764537541931
+      }
+    },
+    "nearby_nonzero": {
+      "expression": "Add(Integer(-100000000000000000000), Pow(Integer(10000000000000000000000000000000000000001), Rational(1, 2)))",
+      "bound": "StructuralSeparationBound(bits=68, degree=2, numerator_bits=68, denominator_bits=0)",
+      "cold": {
+        "baseline": {
+          "n": 7,
+          "median_seconds": 0.007950042003358249,
+          "p95_seconds": 0.008067041999311186,
+          "total_seconds": 0.05574654300289694,
+          "verdict": "NONZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 7,
+          "median_seconds": 5.2041999879293144e-05,
+          "p95_seconds": 6.341600237647071e-05,
+          "total_seconds": 0.0004380000027595088,
+          "verdict": "NONZERO_PROVEN"
+        },
+        "speedup": 152.7620387724852
+      },
+      "warm": {
+        "baseline": {
+          "n": 60,
+          "median_seconds": 0.00662481250037672,
+          "p95_seconds": 0.007283874998393003,
+          "total_seconds": 0.403783248984837,
+          "verdict": "NONZERO_PROVEN"
+        },
+        "candidate": {
+          "n": 60,
+          "median_seconds": 2.154200046788901e-05,
+          "p95_seconds": 2.4374996428377926e-05,
+          "total_seconds": 0.0014058779561310075,
+          "verdict": "NONZERO_PROVEN"
+        },
+        "speedup": 307.53005089995304
+      },
+      "public": {
+        "baseline": {
+          "n": 20,
+          "median_seconds": 3.75420022464823e-05,
+          "p95_seconds": 5.033399793319404e-05,
+          "total_seconds": 0.0017763340074452572,
+          "verdict": "False"
+        },
+        "candidate": {
+          "n": 20,
+          "median_seconds": 3.8312497053993866e-05,
+          "p95_seconds": 3.866599581670016e-05,
+          "total_seconds": 0.000765538978157565,
+          "verdict": "False"
+        },
+        "speedup": 0.9798892041302943
+      }
+    }
+  }
+}

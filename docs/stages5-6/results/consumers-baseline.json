@@ -1,0 +1,42 @@
+{
+  "semialg": {
+    "exit_code": 0,
+    "seconds": 4.771905791996687,
+    "paths": [
+      "work/semialg/tests/test_certified_zero_boundaries.py",
+      "work/semialg/tests/test_certified_decision_portfolio.py",
+      "work/semialg/tests/test_symbolic_assumption_simplification.py",
+      "work/semialg/tests/test_exact_arithmetic_and_symbol_resolution.py"
+    ]
+  },
+  "funcprops": {
+    "exit_code": 0,
+    "seconds": 5.028461292000429,
+    "paths": [
+      "work/funcprops/tests/test_exactness_boundary.py",
+      "work/funcprops/tests/test_public_assumptions_contract.py",
+      "work/funcprops/tests/test_certified_operations.py"
+    ]
+  },
+  "odeanalysis": {
+    "exit_code": 0,
+    "seconds": 19.717040916999395,
+    "paths": [
+      "work/odeanalysis/tests/test_verification_contracts.py",
+      "work/odeanalysis/tests/test_parameterized_local_analysis.py",
+      "work/odeanalysis/tests/test_power_simplification_policy.py",
+      "work/odeanalysis/tests/test_dependency_direction.py"
+    ]
+  },
+  "probstats": {
+    "exit_code": 0,
+    "seconds": 5.214164290999179,
+    "paths": [
+      "work/probstats/tests/bayes/test_certification.py",
+      "work/probstats/tests/bayes/test_exact.py",
+      "work/probstats/tests/test_algebraic_semialgebraic_testing.py",
+      "work/probstats/tests/test_failure_semantics.py",
+      "work/probstats/tests/test_exact_linear_algebra.py"
+    ]
+  }
+}

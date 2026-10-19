@@ -1,0 +1,92 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.1.1, pluggy-1.7.0
+rootdir: /Users/bbhatt/Documents/Codex/2026-10-18/referenced-chatgpt-conversation-this-is-an/work/exprtest
+configfile: pyproject.toml
+plugins: hypothesis-6.170.1, cov-7.1.0
+collected 404 items
+
+work/exprtest/tests/test_algebraic.py ..........................         [  6%]
+work/exprtest/tests/test_assumption_equivalence.py .......               [  8%]
+work/exprtest/tests/test_boundaries_and_caches.py .....                  [  9%]
+work/exprtest/tests/test_contract_matrix.py .......                      [ 11%]
+work/exprtest/tests/test_differential_exact.py ......                    [ 12%]
+work/exprtest/tests/test_domains.py .......                              [ 14%]
+work/exprtest/tests/test_exact_methods.py .......                        [ 16%]
+work/exprtest/tests/test_examples.py .                                   [ 16%]
+work/exprtest/tests/test_function_facts.py ............................. [ 23%]
+........................................................................ [ 41%]
+.........                                                                [ 43%]
+work/exprtest/tests/test_fuzz_invariants.py ..                           [ 44%]
+work/exprtest/tests/test_metamorphic.py ......                           [ 45%]
+work/exprtest/tests/test_migration_compatibility.py ...                  [ 46%]
+work/exprtest/tests/test_oracle.py .....................                 [ 51%]
+work/exprtest/tests/test_performance_contract.py ..                      [ 51%]
+work/exprtest/tests/test_release_gate.py ...............                 [ 55%]
+work/exprtest/tests/test_routing.py .........................            [ 61%]
+work/exprtest/tests/test_scipy_function_compat.py ...........            [ 64%]
+work/exprtest/tests/test_transcendental.py ............................. [ 71%]
+..                                                                       [ 72%]
+work/exprtest/tests/test_zero_regressions.py ........................... [ 78%]
+...............                                                          [ 82%]
+work/exprtest/exprtools/tests/test_recurrence.py ....                    [ 83%]
+work/exprtest/exprtools/tests/test_refinement.py ....................... [ 89%]
+............                                                             [ 92%]
+work/exprtest/exprtools/tests/test_simplification.py ..........          [ 94%]
+work/exprtest/exprtools/tests/test_structural_gap.py ................... [ 99%]
+..                                                                       [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.14-final-0 _______________
+
+Name                                                              Stmts   Miss  Cover
+-------------------------------------------------------------------------------------
+work/exprtest/exprtools/src/exprtools/__init__.py                    17      2    88%
+work/exprtest/exprtools/src/exprtools/_algebraic.py                  51     16    69%
+work/exprtest/exprtools/src/exprtools/_algebraic_bounds.py          230     48    79%
+work/exprtest/exprtools/src/exprtools/_algebraic_model.py           228     50    78%
+work/exprtest/exprtools/src/exprtools/_algebraic_normalize.py       144     15    90%
+work/exprtest/exprtools/src/exprtools/_algebraic_tower.py           274     50    82%
+work/exprtest/exprtools/src/exprtools/_assumptions.py               130     24    82%
+work/exprtest/exprtools/src/exprtools/_cache.py                      38      1    97%
+work/exprtest/exprtools/src/exprtools/_call_memo.py                  39     12    69%
+work/exprtest/exprtools/src/exprtools/_config.py                     92      0   100%
+work/exprtest/exprtools/src/exprtools/_cost.py                       46      2    96%
+work/exprtest/exprtools/src/exprtools/_cyclotomic.py                189     47    75%
+work/exprtest/exprtools/src/exprtools/_defined.py                   106     28    74%
+work/exprtest/exprtools/src/exprtools/_domains.py                   314     27    91%
+work/exprtest/exprtools/src/exprtools/_errors.py                      5      0   100%
+work/exprtest/exprtools/src/exprtools/_exact_constants.py           116     29    75%
+work/exprtest/exprtools/src/exprtools/_exp_independence.py           87     19    78%
+work/exprtest/exprtools/src/exprtools/_fast.py                       59      5    92%
+work/exprtest/exprtools/src/exprtools/_features.py                  112      5    96%
+work/exprtest/exprtools/src/exprtools/_finite_field.py              154     21    86%
+work/exprtest/exprtools/src/exprtools/_flint_values.py               30     16    47%
+work/exprtest/exprtools/src/exprtools/_function_facts.py            175      9    95%
+work/exprtest/exprtools/src/exprtools/_identity.py                  106     18    83%
+work/exprtest/exprtools/src/exprtools/_memo.py                       42      1    98%
+work/exprtest/exprtools/src/exprtools/_negative_cache.py             62      4    94%
+work/exprtest/exprtools/src/exprtools/_nonzero.py                   157     48    69%
+work/exprtest/exprtools/src/exprtools/_normal_forms.py               28      0   100%
+work/exprtest/exprtools/src/exprtools/_numeric.py                   219     34    84%
+work/exprtest/exprtools/src/exprtools/_profile.py                    50      1    98%
+work/exprtest/exprtools/src/exprtools/_pslq.py                       69     10    86%
+work/exprtest/exprtools/src/exprtools/_recurrence_families.py       197    129    35%
+work/exprtest/exprtools/src/exprtools/_result.py                     55      4    93%
+work/exprtest/exprtools/src/exprtools/_rewrite.py                    72     34    53%
+work/exprtest/exprtools/src/exprtools/_simplification_models.py      41      0   100%
+work/exprtest/exprtools/src/exprtools/_special.py                   131     31    76%
+work/exprtest/exprtools/src/exprtools/_sqrt_sum.py                   55      4    93%
+work/exprtest/exprtools/src/exprtools/_structural_gap.py            107      2    98%
+work/exprtest/exprtools/src/exprtools/_timing.py                     33      0   100%
+work/exprtest/exprtools/src/exprtools/_transcendental.py            281     64    77%
+work/exprtest/exprtools/src/exprtools/algebraic.py                    2      0   100%
+work/exprtest/exprtools/src/exprtools/context.py                    274     52    81%
+work/exprtest/exprtools/src/exprtools/core.py                       279     49    82%
+work/exprtest/exprtools/src/exprtools/evidence.py                     8      0   100%
+work/exprtest/exprtools/src/exprtools/recurrence.py                 366    157    57%
+work/exprtest/exprtools/src/exprtools/refinement.py                 159     13    92%
+work/exprtest/exprtools/src/exprtools/simplification.py             129      6    95%
+-------------------------------------------------------------------------------------
+TOTAL                                                              5558   1087    80%
+Coverage JSON written to file outputs/stages5-6/final-coverage.json
+============================= 404 passed in 28.02s =============================

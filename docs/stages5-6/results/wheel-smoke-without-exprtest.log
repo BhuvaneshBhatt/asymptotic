@@ -1,0 +1,12 @@
+{
+  "compatibility": false,
+  "packages": {
+    "exprtools": "0.1.0",
+    "asymptotic": "0.2.2",
+    "semialg": "1.3.2",
+    "funcprops": "0.3.0",
+    "odeanalysis": "0.1.0",
+    "probstats": "0.1.0"
+  },
+  "checks": "passed"
+}

@@ -484,7 +484,7 @@ def main():
         # Preload only imports in the parent. Every solver invocation runs in a
         # disposable process with separate caches and a separate wall watchdog.
         sys.path.insert(0, str(ROOT / "src"))
-        for module in ("sympy", "asymptotic", "semialg", "exprtest"):
+        for module in ("sympy", "asymptotic", "semialg", "exprtools"):
             importlib.import_module(module)
         pending = iter(i for i in indices if i not in records)
         active = {}
